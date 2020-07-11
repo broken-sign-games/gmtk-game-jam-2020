@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GMTK2020;
 using GMTK2020.Data;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.TestTools;
 
 namespace Tests
 {
     public class ValidatorTest
     {
-
         private Validator validator = new Validator();
 
         [TestCaseSource(nameof(Cases))]
         public void TestAll(Case testCase)
         {
             var steps = validator.ValidatePrediction(
-                new Simulation(testCase.Simulated.Select((tiles) => step(tiles)).ToList()),
+                new Simulation(testCase.Simulated.Select((tiles) => Step(tiles)).ToList()),
                 new Prediction(testCase.Predicted)
             );
 
@@ -101,7 +97,7 @@ namespace Tests
             }
         }
 
-        private static SimulationStep step(HashSet<Tile> matchedTiles) =>
+        private static SimulationStep Step(HashSet<Tile> matchedTiles) =>
             new SimulationStep(matchedTiles, new List<(Tile, Vector2Int)>());
     }
 }

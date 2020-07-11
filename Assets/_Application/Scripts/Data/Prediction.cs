@@ -11,5 +11,10 @@ namespace GMTK2020.Data
             for (int i = 0; i < Simulator.MAX_SIMULATION_STEPS; ++i)
                 MatchedTilesPerStep.Add(new HashSet<Tile>());
         }
+
+        public Prediction(List<HashSet<Tile>> matchedTilesPerStep)
+        {
+            MatchedTilesPerStep = matchedTilesPerStep;
+        }
     }
 }
