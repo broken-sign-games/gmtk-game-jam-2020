@@ -1,4 +1,5 @@
 ﻿using GMTK2020.Data;
+using GMTK2020.Rendering;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,8 @@ namespace GMTK2020
 {
     public class LevelLoader : MonoBehaviour
     {
-        [SerializeField] private BoardRenderer renderer;
+        [SerializeField] private BoardRenderer boardRenderer = null;
+        [SerializeField] private PredictionEditor predictionEditor = null;
 
         private void Start()
         {
@@ -26,16 +28,17 @@ namespace GMTK2020
             
             Level level = GenerateValidLevel(simulator);
 
-            renderer.RenderInitial(level.Grid);
+            predictionEditor.Initialize(level.Grid);
+            boardRenderer.RenderInitial(level.Grid);
 
             return;
 
             // It's the Human's turn.
             Validator validator = new Validator();
-            Prediction prediction = GetPredictionsFromHumansBrain();
+            Prediction prediction = predictionEditor.GetPredictions();
             int correctSteps = validator.ValidatePrediction(level.Simulation, prediction);
 
-            renderer.RenderSimulation(level.Simulation, correctSteps);
+            boardRenderer.RenderSimulation(level.Simulation, correctSteps);
         }
 
         private Level GenerateValidLevel(Simulator simulator)

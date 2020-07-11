@@ -4,11 +4,12 @@ namespace GMTK2020.Data
 {
     public class Prediction
     {
-        public List<HashSet<Tile>> MatchedTilesPerStep { get; }
+        public List<HashSet<Tile>> MatchedTilesPerStep { get; } = new List<HashSet<Tile>>();
 
-        public Prediction(List<HashSet<Tile>> matchedTilesPerStep)
+        public Prediction()
         {
-            MatchedTilesPerStep = matchedTilesPerStep;
+            for (int i = 0; i < Simulator.MAX_SIMULATION_STEPS; ++i)
+                MatchedTilesPerStep.Add(new HashSet<Tile>());
         }
     }
 }

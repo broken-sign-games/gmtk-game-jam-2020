@@ -8,7 +8,7 @@ namespace GMTK2020
 {
     public class Simulator
     {
-        private const int MAX_SIMULATION_STEPS = 5;
+        public const int MAX_SIMULATION_STEPS = 5;
         private readonly List<HashSet<Vector2Int>> matchingPatterns;
 
         public Simulator(HashSet<Vector2Int> matchingPattern)
