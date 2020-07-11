@@ -21,11 +21,11 @@ namespace GMTK2020
         public void PrintToConsole()
         {
             var message = new StringBuilder();
-            for (int x = 0; x < Grid.GetLength(0); x++)
+            for (int y = Grid.GetLength(1) - 1; y >= 0; --y)
             {
-                for (int y = 0; y < Grid.GetLength(1); y++)
+                for (int x = 0; x < Grid.GetLength(0); ++x)
                 {
-                    message.Append($"{Grid[x, y].Color}\t");
+                    message.Append($"{Grid[x, y]?.Color ?? 0}\t");
                 }
                 message.AppendLine("");
             }
@@ -125,7 +125,7 @@ namespace GMTK2020
                 matchingPattern = RotatePattern(matchingPattern);
                 matchingPatterns.Add(matchingPattern);
             }
-            
+
             matchingPattern = MirrorPattern(matchingPattern);
             matchingPatterns.Add(matchingPattern);
 
@@ -158,7 +158,7 @@ namespace GMTK2020
             return new Simulation(simulationSteps);
         }
 
-        private HashSet<Tile> RemoveMatchedTiles(Tile[,] workingGrid)
+        public HashSet<Tile> RemoveMatchedTiles(Tile[,] workingGrid)
         {
             HashSet<Tile> matchedTiles = new HashSet<Tile>();
 
@@ -253,7 +253,7 @@ namespace GMTK2020
                         && workingGrid[candidate.x, candidate.y]?.Color == color)
                     {
                         positionsToProcess.Enqueue(candidate);
-                        fullMatch.Add(pos);
+                        fullMatch.Add(candidate);
                     }
                 }
             }
@@ -261,13 +261,38 @@ namespace GMTK2020
             return fullMatch;
         }
 
-        private List<(Tile, Vector2Int)> MoveTilesDown(Tile[,] workingGrid)
+        public List<(Tile, Vector2Int)> MoveTilesDown(Tile[,] workingGrid)
         {
-            throw new NotImplementedException();
+            int width = workingGrid.GetLength(0);
+            int height = workingGrid.GetLength(1);
+
+            var movedTiles = new List<(Tile, Vector2Int)>();
+
+            for (int x = 0; x < width; ++x)
+            {
+                int top = 0;
+                for (int y = 0; y < height; ++y)
+                {
+                    Tile tile = workingGrid[x, y];
+                    if (tile is null)
+                        continue;
+
+                    if (y > top)
+                    {
+                        movedTiles.Add((tile, new Vector2Int(x, top)));
+                        workingGrid[x, top] = tile;
+                        workingGrid[x, y] = null;
+                    }
+
+                    ++top;
+                }
+            }
+
+            return movedTiles;
         }
 
         private HashSet<Vector2Int> MirrorPattern(HashSet<Vector2Int> pattern)
-        { 
+        {
             return new HashSet<Vector2Int>(pattern.Select((vec2) =>
             {
                 (int x, int y) = vec2;
