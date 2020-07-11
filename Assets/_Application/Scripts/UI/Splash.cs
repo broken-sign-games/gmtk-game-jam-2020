@@ -10,7 +10,7 @@ public class Splash : MonoBehaviour
         if (!playerIsReady && Input.anyKeyDown)
         {
             playerIsReady = true;
-            SceneManager.LoadScene("LevelScene");
+            SceneManager.LoadScene("TutorialScene");
         }
     }
 }
