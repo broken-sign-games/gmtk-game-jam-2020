@@ -57,16 +57,16 @@ namespace GMTK2020
             Renderer renderer = new Renderer();
 
 
-            BetterLevel level = GenerateValidLevel();
+            BetterLevel level = GenerateValidLevel(simulator);
 
-            renderer.RenderInitial(grid);
+            renderer.RenderInitial(level.Grid);
 
             // It's the Human's turn.
             Validator validator = new Validator();
             Prediction prediction = GetPredictionsFromHumansBrain();
-            int correctSteps = validator.ValidatePrediction(simulation, prediction);
+            int correctSteps = validator.ValidatePrediction(level.Simulation, prediction);
 
-            renderer.RenderSimulation(simulation, correctSteps);
+            renderer.RenderSimulation(level.Simulation, correctSteps);
         }
     }
 
