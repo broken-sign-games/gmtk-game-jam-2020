@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GMTK2020.Rendering
 {
@@ -13,6 +14,8 @@ namespace GMTK2020.Rendering
         [SerializeField] private Camera mainCamera = null;
         [SerializeField] private TileData tileData = null;
         [SerializeField] private StepRenderer[] stepRenderers = null;
+        [SerializeField] private Button retryButton = null;
+        [SerializeField] private Button nextButton = null;
 
         private Dictionary<Tile, TileRenderer> tileDictionary = new Dictionary<Tile, TileRenderer>();
         private Tile[,] initialGrid;
@@ -83,11 +86,14 @@ namespace GMTK2020.Rendering
                 await CompletionOf(seq);
             }
 
-            // TODO: progression
-            // if correct solution:
-            //   show "next level" button
-            // else
-            //   show "retry level" button
+            if (correctPredictions < Simulator.MAX_SIMULATION_STEPS)
+            {
+                retryButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                nextButton.gameObject.SetActive(true);
+            }
         }
 
         System.Collections.IEnumerator CompletionOf(Tween tween)
