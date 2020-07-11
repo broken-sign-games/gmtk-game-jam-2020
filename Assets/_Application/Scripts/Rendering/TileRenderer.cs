@@ -5,7 +5,7 @@ namespace GMTK2020.Rendering
 {
     public class TileRenderer : MonoBehaviour
     {
-        [SerializeField] private TextMeshPro text;
+        [SerializeField] private TextMeshPro text = null;
 
         public void UpdatePrediction(int value)
         {

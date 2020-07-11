@@ -12,6 +12,8 @@ namespace GMTK2020
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private PredictionEditor predictionEditor = null;
 
+        public Level Level { get; private set; }
+
         private void Start()
         {
             RunIt();
@@ -26,19 +28,10 @@ namespace GMTK2020
             };
             Simulator simulator = new Simulator(level1Pattern);
             
-            Level level = GenerateValidLevel(simulator);
+            Level = GenerateValidLevel(simulator);
 
-            predictionEditor.Initialize(level.Grid);
-            boardRenderer.RenderInitial(level.Grid);
-
-            return;
-
-            // It's the Human's turn.
-            Validator validator = new Validator();
-            Prediction prediction = predictionEditor.GetPredictions();
-            int correctSteps = validator.ValidatePrediction(level.Simulation, prediction);
-
-            boardRenderer.RenderSimulation(level.Simulation, correctSteps);
+            predictionEditor.Initialize(Level.Grid);
+            boardRenderer.RenderInitial(Level.Grid);
         }
 
         private Level GenerateValidLevel(Simulator simulator)
@@ -72,7 +65,7 @@ namespace GMTK2020
             {
                 for (int y = 0; y < tiles.GetLength(1); ++y)
                 {
-                    tiles[x, y] = new Tile(rand.Next(0, 9));
+                    tiles[x, y] = new Tile(rand.Next(0, 5));
                 }
             }
             return tiles;

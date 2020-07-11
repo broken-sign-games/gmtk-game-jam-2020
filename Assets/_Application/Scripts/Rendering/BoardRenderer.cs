@@ -1,6 +1,7 @@
 ﻿using GMTK2020.Data;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace GMTK2020.Rendering
@@ -33,9 +34,24 @@ namespace GMTK2020.Rendering
                 }
         }
 
-        public void RenderSimulation(Simulation simulation, int correctPredictions)
+        public async void KickOffRenderSimulation(Simulation simulation, int correctPredictions)
         {
+            await RenderSimulationAsync(simulation, correctPredictions);
+        }
 
+        public async Task RenderSimulationAsync(Simulation simulation, int correctPredictions)
+        {
+            // iterate over steps
+            //   Destroy(tileRenderer.gameObject);
+            //   animate disappearing tiles + checkmark/cross
+            //   TODO: indicate incorrect guesses
+            //   wait for completion
+            //   tween falling tiles
+            //   wait for completion
+            // if correct solution:
+            //   show "next level" button
+            // else
+            //   show "retry level" button
         }
 
         public Vector2Int? PixelSpaceToGridCoordinates(Vector3 mousePosition)
