@@ -13,6 +13,7 @@ namespace GMTK2020
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private PatternRenderer patternRenderer = null;
         [SerializeField] private PredictionEditor predictionEditor = null;
+        [SerializeField] private LevelSequence levelSequence = null;
 
         public Level Level { get; private set; }
 
@@ -23,57 +24,16 @@ namespace GMTK2020
 
         public void RunIt()
         {
-            var level1Pattern = new HashSet<Vector2Int>()
-            {
-                new Vector2Int(0, 0),
-                new Vector2Int(1, 0),
-            };
-            var level1Size = new Vector2Int(6, 4);
-            int level1ColorCount = 5;
-            Simulator simulator = new Simulator(level1Pattern);
+            LevelSpecification levelSpec = levelSequence.Levels[GameProgression.CurrentLevelIndex];
+            HashSet<Vector2Int> levelPattern = new HashSet<Vector2Int>(levelSpec.MatchingPattern);
 
-            Level = GenerateValidLevel(simulator, level1Size, level1ColorCount);
+            Simulator simulator = new Simulator(levelPattern);
+
+            Level = new LevelGenerator(levelSpec, simulator).GenerateValidLevel();
 
             predictionEditor.Initialize(Level.Grid);
             boardRenderer.RenderInitial(Level.Grid);
-            patternRenderer.RenderPattern(level1Pattern);
-        }
-
-        private Level GenerateValidLevel(Simulator simulator, Vector2Int boardSize, int colorCount)
-        {
-            Tile[,] grid;
-            Simulation simulation = null;
-            bool isValid;
-            do
-            {
-                grid = GenerateLevel(boardSize, colorCount);
-                isValid = true;
-                try
-                {
-                    simulation = simulator.Simulate(grid);
-                }
-                catch (ArgumentException)
-                {
-                    isValid = false;
-                }
-            }
-            while (!isValid);
-
-            return new Level(grid, simulation);
-        }
-
-        private Tile[,] GenerateLevel(Vector2Int boardSize, int colorCount)
-        {
-            var rand = new Random();
-            var tiles = new Tile[boardSize.x, boardSize.y];
-            for (int x = 0; x < boardSize.x; ++x)
-            {
-                for (int y = 0; y < boardSize.y; ++y)
-                {
-                    tiles[x, y] = new Tile(rand.Next(0, colorCount));
-                }
-            }
-            return tiles;
+            patternRenderer.RenderPattern(levelPattern);
         }
     } 
 }

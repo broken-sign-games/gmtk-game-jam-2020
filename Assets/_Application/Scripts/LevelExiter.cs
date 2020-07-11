@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using GMTK2020.Data;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace GMTK2020
@@ -7,12 +8,19 @@ namespace GMTK2020
     {
         public void RestartLevel()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            LoadLevelScene();
         }
 
         public void LoadNextLevel()
         {
-            Debug.Log("Loading next level...");
+            ++GameProgression.CurrentLevelIndex;
+            // TODO: Load "CONGRATIONS YOU DONE IT" screen when current level exceed level sequence
+            LoadLevelScene();
+        }
+
+        private static void LoadLevelScene()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }

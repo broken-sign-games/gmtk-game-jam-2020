@@ -1,9 +1,4 @@
-﻿using GMTK2020.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
-using Random = System.Random;
+﻿using System.Text;
 
 namespace GMTK2020.Data
 {
