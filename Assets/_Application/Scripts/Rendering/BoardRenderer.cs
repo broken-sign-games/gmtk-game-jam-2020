@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using GMTK2020.Data;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -39,48 +40,55 @@ namespace GMTK2020.Rendering
             await RenderSimulationAsync(simulation, correctPredictions);
         }
 
-        System.Collections.IEnumerator FoobarAsync(Tween tween)
-        {
-            yield return tween.WaitForCompletion();
-        }
-
         public async Task RenderSimulationAsync(Simulation simulation, int correctPredictions)
         {
             var rnd = new System.Random();
-            foreach (var step in simulation.Steps)
+            foreach (var (step, i) in simulation.Steps.Select((step, i) => (step, i)))
             {
                 List<Tween> tweens = new List<Tween>();
 
+                if (i < correctPredictions)
+                {
+                    // TODO: checkmark/cross
+                    Debug.Log($"Correct step {i}!");
+                }
+
                 foreach (var tile in step.MatchedTiles)
                 {
+                    // TODO: indicate incorrect guesses
                     var tileRenderer = tileDictionary[tile];
-                    tweens.Add(tileRenderer.transform.DOLocalMove(new Vector3Int(rnd.Next(30, 40), rnd.Next(-10, 12), 0), 1.0f));
+                    var spriteRenderer = tileRenderer.gameObject.GetComponent<SpriteRenderer>();
+                    var tweener = spriteRenderer.DOFade(0.0f, 0.25f);
+                    tweener.OnComplete(() => Destroy(tileRenderer.gameObject)); // I think that's illegal :-(
+                    tweens.Add(tweener);
+                }
+                foreach (var tween in tweens)
+                {
+                    // omg why can't I wait on all of them more easily?
+                    await CompletionOf(tween);
                 }
 
                 foreach (var (tile, newPosition) in step.MovingTiles)
                 {
                     var tileRenderer = tileDictionary[tile];
-                    tweens.Add(tileRenderer.transform.DOLocalMove(new Vector3Int(newPosition.x, newPosition.y, 0), 1.0f));
+                    tweens.Add(tileRenderer.transform.DOLocalMove(new Vector3Int(newPosition.x, newPosition.y, 0), 0.75f));
                 }
-
-                // omg why can't I wait on all of them more easily?
                 foreach (var tween in tweens)
                 {
-                    await FoobarAsync(tween);
+                    await CompletionOf(tween);
                 }
             }
 
-            // iterate over steps
-            //   Destroy(tileRenderer.gameObject);
-            //   animate disappearing tiles + checkmark/cross
-            //   TODO: indicate incorrect guesses
-            //   wait for completion
-            //   tween falling tiles
-            //   wait for completion
+            // TODO: progression
             // if correct solution:
             //   show "next level" button
             // else
             //   show "retry level" button
+        }
+
+        System.Collections.IEnumerator CompletionOf(Tween tween)
+        {
+            yield return tween.WaitForCompletion();
         }
 
         public Vector2Int? PixelSpaceToGridCoordinates(Vector3 mousePosition)
