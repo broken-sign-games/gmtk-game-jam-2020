@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using GMTK2020.Data;
 using GMTK2020.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,9 @@ namespace GMTK2020.Rendering
         [SerializeField] private StepRenderer[] stepRenderers = null;
         [SerializeField] private Button retryButton = null;
         [SerializeField] private Button nextButton = null;
+
+        [SerializeField] private float postMatchDelay = 0.25f;
+        [SerializeField] private float postFallDelay = 0.1f;
 
         private Dictionary<Tile, TileRenderer> tileDictionary = new Dictionary<Tile, TileRenderer>();
         private Tile[,] initialGrid;
@@ -49,6 +53,9 @@ namespace GMTK2020.Rendering
         {
             for (int i = 0; i < simulation.Steps.Count; ++i)
             {
+                if (i > 0)
+                    await new WaitForSeconds(postFallDelay);
+
                 SimulationStep step = simulation.Steps[i];
                 Sequence seq = DOTween.Sequence();
 
@@ -71,7 +78,9 @@ namespace GMTK2020.Rendering
                 }
 
                 await CompletionOf(seq);
-                
+
+                await new WaitForSeconds(postMatchDelay);
+
                 if (i >= correctPredictions)
                     break;
 
