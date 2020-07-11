@@ -22,6 +22,8 @@ namespace GMTK2020.Rendering
         [SerializeField] private float postMatchDelay = 0.25f;
         [SerializeField] private float postFallDelay = 0.1f;
 
+        public event Action SimulationRenderingCompleted;
+
         private Dictionary<Tile, TileRenderer> tileDictionary = new Dictionary<Tile, TileRenderer>();
         private Tile[,] initialGrid;
         int width;
@@ -41,6 +43,9 @@ namespace GMTK2020.Rendering
                 for (int y = 0; y < height; ++y)
                 {
                     Tile tile = grid[x, y];
+                    if (tile is null)
+                        continue;
+
                     TileRenderer tileRenderer = Instantiate(tileData.PrefabMap[tile.Color], transform);
 
                     tileRenderer.transform.localPosition = new Vector3(x, y, 0);
@@ -63,13 +68,16 @@ namespace GMTK2020.Rendering
                 SimulationStep step = simulation.Steps[i];
                 Sequence seq = DOTween.Sequence();
 
-                if (i < correctPredictions)
+                if (stepRenderers.Length > i)
                 {
-                    seq.Join(stepRenderers[i].ShowSuccess());
-                }
-                else
-                {
-                    seq.Join(stepRenderers[i].ShowFailure());
+                    if (i < correctPredictions)
+                    {
+                        seq.Join(stepRenderers[i].ShowSuccess());
+                    }
+                    else
+                    {
+                        seq.Join(stepRenderers[i].ShowFailure());
+                    }
                 }
 
                 foreach (Tile tile in step.MatchedTiles)
@@ -99,14 +107,19 @@ namespace GMTK2020.Rendering
                 await CompletionOf(seq);
             }
 
-            if (correctPredictions < Simulator.MAX_SIMULATION_STEPS)
+            if (retryButton && nextButton)
             {
-                retryButton.gameObject.SetActive(true);
+                if (correctPredictions < Simulator.MAX_SIMULATION_STEPS)
+                {
+                    retryButton.gameObject.SetActive(true);
+                }
+                else
+                {
+                    nextButton.gameObject.SetActive(true);
+                }
             }
-            else
-            {
-                nextButton.gameObject.SetActive(true);
-            }
+
+            SimulationRenderingCompleted?.Invoke();
         }
 
         System.Collections.IEnumerator CompletionOf(Tween tween)
