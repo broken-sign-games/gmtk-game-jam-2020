@@ -7,7 +7,7 @@ public class Splash : MonoBehaviour
 
     void Update()
     {
-        if (!playerIsReady && Input.anyKeyDown)
+        if (!playerIsReady && (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)))
         {
             playerIsReady = true;
             SceneManager.LoadScene("TutorialScene");

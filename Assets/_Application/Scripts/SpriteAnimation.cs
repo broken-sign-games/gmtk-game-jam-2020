@@ -1,21 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class SpriteAnimation : MonoBehaviour
 {
     [SerializeField] private Sprite[] frames = null;
-    [SerializeField] private int framesPerSecond = 10;
+    [SerializeField] private int framesPerSecond = 20;
 
-    void Update()
+    SpriteRenderer splashRenderer;
+
+    private void Start()
     {
-        SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+        splashRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    private void Update()
+    {
         var index = (int)(Time.time * framesPerSecond) % frames.Length;
-        var currentFrame = renderer.sprite;
+        var currentFrame = splashRenderer.sprite;
         if (currentFrame == frames[frames.Length - 1])
         {
             return;
         }
-        GetComponent<SpriteRenderer>().sprite = frames[index];
+        splashRenderer.sprite = frames[index];
     }
 }
