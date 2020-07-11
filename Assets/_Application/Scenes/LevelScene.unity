@@ -1139,8 +1139,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8206b36876eccc40ac5fd8412621890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelSceneID: 1
-  winSceneID: 2
+  levelSceneName: LevelScene
+  winSceneName: WinScene
+  tutorialSceneName: TutorialScene
   levelSequence: {fileID: 11400000, guid: a406af891823fa34eb72e48528b7ba49, type: 2}
 --- !u!4 &1050045836
 Transform:

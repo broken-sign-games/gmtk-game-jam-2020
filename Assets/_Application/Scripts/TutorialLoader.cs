@@ -47,8 +47,8 @@ namespace GMTK2020
         {
             int[,] intGrid = tutorialBoard.GetCells();
 
-            int width = tutorialBoard.GridSize.y;
-            int height = tutorialBoard.GridSize.x;
+            int width = tutorialBoard.GridSize.x;
+            int height = tutorialBoard.GridSize.y;
             var grid = new Tile[width, height];
 
             for (int x = 0; x < width; ++x)

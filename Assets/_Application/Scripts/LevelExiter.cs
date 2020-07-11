@@ -6,9 +6,10 @@ namespace GMTK2020
 {
     public class LevelExiter : MonoBehaviour
     {
-        [SerializeField] private int levelSceneID;
-        [SerializeField] private int winSceneID;
-        [SerializeField] private LevelSequence levelSequence;
+        [SerializeField] private string levelSceneName = null;
+        [SerializeField] private string winSceneName = null;
+        [SerializeField] private string tutorialSceneName = null;
+        [SerializeField] private LevelSequence levelSequence = null;
 
         public void RestartLevel()
         {
@@ -21,17 +22,27 @@ namespace GMTK2020
             if (GameProgression.CurrentLevelIndex >= levelSequence.Levels.Count)
                 LoadWinScene();
             else
-                LoadLevelScene();
+            {
+                if (levelSequence.Levels[GameProgression.CurrentLevelIndex].TutorialBoard != null)
+                    LoadTutorialScene();
+                else
+                    LoadLevelScene();
+            }
         }
 
         private void LoadLevelScene()
         {
-            SceneManager.LoadScene(levelSceneID);
+            SceneManager.LoadScene(levelSceneName);
         }
 
         private void LoadWinScene()
         {
-            SceneManager.LoadScene(winSceneID);
+            SceneManager.LoadScene(winSceneName);
+        }
+
+        private void LoadTutorialScene()
+        {
+            SceneManager.LoadScene(tutorialSceneName);
         }
     }
 }

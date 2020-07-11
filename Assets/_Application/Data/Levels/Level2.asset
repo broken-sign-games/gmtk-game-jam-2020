@@ -18,3 +18,5 @@ MonoBehaviour:
   - {x: 0, y: 0}
   - {x: 1, y: 0}
   GeneratorStrategy: 0
+  TutorialText: The matches can be both horizontal and vertical.
+  TutorialBoard: {fileID: 11400000, guid: 4fdf639e1f6fd604e989701b67b32fa8, type: 2}

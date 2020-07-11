@@ -29,8 +29,21 @@ namespace GMTK2020.Rendering
         int width;
         int height;
 
+        bool cancelAnimation = false;
+
         public void RenderInitial(Tile[,] grid)
         {
+            if (cancelAnimation)
+                return;
+
+            foreach (TileRenderer tileRenderer in tileDictionary.Values)
+            {
+                if (tileRenderer)
+                    Destroy(tileRenderer.gameObject);
+            }
+
+            tileDictionary.Clear();
+
             initialGrid = grid;
 
             width = grid.GetLength(0);
@@ -65,6 +78,9 @@ namespace GMTK2020.Rendering
                 if (i > 0)
                     await new WaitForSeconds(postFallDelay);
 
+                if (cancelAnimation)
+                    return;
+
                 SimulationStep step = simulation.Steps[i];
                 Sequence seq = DOTween.Sequence();
 
@@ -93,6 +109,9 @@ namespace GMTK2020.Rendering
 
                 await new WaitForSeconds(postMatchDelay);
 
+                if (cancelAnimation)
+                    return;
+
                 if (i >= correctPredictions)
                     break;
 
@@ -105,6 +124,9 @@ namespace GMTK2020.Rendering
                 }
                 
                 await CompletionOf(seq);
+
+                if (cancelAnimation)
+                    return;
             }
 
             if (retryButton && nextButton)
@@ -125,6 +147,11 @@ namespace GMTK2020.Rendering
         System.Collections.IEnumerator CompletionOf(Tween tween)
         {
             yield return tween.WaitForCompletion();
+        }
+
+        public void CancelAnimation()
+        {
+            cancelAnimation = true;
         }
 
         public Vector2Int? PixelSpaceToGridCoordinates(Vector3 mousePosition)
