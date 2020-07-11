@@ -8,6 +8,9 @@ TextureImporter:
   - first:
       213: 1763989116612304091
     second: button active
+  - first:
+      213: -5033884579438549468
+    second: button highlighted
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -129,7 +132,7 @@ TextureImporter:
       name: button active
       rect:
         serializedVersion: 2
-        x: 3
+        x: 6
         y: 0
         width: 3
         height: 3
@@ -142,6 +145,27 @@ TextureImporter:
       bones: []
       spriteID: bdcd45b61c2fa7810800000000000000
       internalID: 1763989116612304091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: button highlighted
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 0
+        width: 3
+        height: 3
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 1, y: 1, z: 1, w: 1}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 426af3a45ac042ab0800000000000000
+      internalID: -5033884579438549468
       vertices: []
       indices: 
       edges: []

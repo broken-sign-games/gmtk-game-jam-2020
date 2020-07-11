@@ -647,10 +647,10 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.010397553
-    y: 0.009803921
-    width: 0.97859323
-    height: 0.98039216
+    x: 0
+    y: 0
+    width: 1
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -899,11 +899,11 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 2530564911472380330, guid: 2538253ff6a0b5e43a69e72ee204df4b,
+    m_HighlightedSprite: {fileID: -5033884579438549468, guid: 2538253ff6a0b5e43a69e72ee204df4b,
       type: 3}
     m_PressedSprite: {fileID: 1763989116612304091, guid: 2538253ff6a0b5e43a69e72ee204df4b,
       type: 3}
-    m_SelectedSprite: {fileID: 1763989116612304091, guid: 2538253ff6a0b5e43a69e72ee204df4b,
+    m_SelectedSprite: {fileID: -5033884579438549468, guid: 2538253ff6a0b5e43a69e72ee204df4b,
       type: 3}
     m_DisabledSprite: {fileID: 2530564911472380330, guid: 2538253ff6a0b5e43a69e72ee204df4b,
       type: 3}
