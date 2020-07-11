@@ -82,7 +82,7 @@ namespace GMTK2020
                             if (pos.x < 0
                                 || pos.y < 0
                                 || pos.x >= width
-                                || pos.y >= width
+                                || pos.y >= height
                                 || workingGrid[pos.x, pos.y]?.Color != tile.Color)
                             {
                                 doesThisSymmetryMatch = false;

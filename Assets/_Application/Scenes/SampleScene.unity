@@ -2573,6 +2573,9 @@ MonoBehaviour:
   - {fileID: 208491243}
   retryButton: {fileID: 1144954186}
   nextButton: {fileID: 1489183043}
+  border: {fileID: 1389583660}
+  postMatchDelay: 0.25
+  postFallDelay: 0.1
 --- !u!1001 &2729287367561108022
 PrefabInstance:
   m_ObjectHideFlags: 0

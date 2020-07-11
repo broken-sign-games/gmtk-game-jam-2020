@@ -27,25 +27,26 @@ namespace GMTK2020
             {
                 new Vector2Int(0, 0),
                 new Vector2Int(1, 0),
-                new Vector2Int(0, 1),
             };
+            var level1Size = new Vector2Int(6, 4);
+            int level1ColorCount = 5;
             Simulator simulator = new Simulator(level1Pattern);
 
-            Level = GenerateValidLevel(simulator);
+            Level = GenerateValidLevel(simulator, level1Size, level1ColorCount);
 
             predictionEditor.Initialize(Level.Grid);
             boardRenderer.RenderInitial(Level.Grid);
             patternRenderer.RenderPattern(level1Pattern);
         }
 
-        private Level GenerateValidLevel(Simulator simulator)
+        private Level GenerateValidLevel(Simulator simulator, Vector2Int boardSize, int colorCount)
         {
             Tile[,] grid;
             Simulation simulation = null;
             bool isValid;
             do
             {
-                grid = GenerateLevel();
+                grid = GenerateLevel(boardSize, colorCount);
                 isValid = true;
                 try
                 {
@@ -61,23 +62,18 @@ namespace GMTK2020
             return new Level(grid, simulation);
         }
 
-        private Tile[,] GenerateLevel()
+        private Tile[,] GenerateLevel(Vector2Int boardSize, int colorCount)
         {
             var rand = new Random();
-            var tiles = new Tile[9, 9];
-            for (int x = 0; x < tiles.GetLength(0); ++x)
+            var tiles = new Tile[boardSize.x, boardSize.y];
+            for (int x = 0; x < boardSize.x; ++x)
             {
-                for (int y = 0; y < tiles.GetLength(1); ++y)
+                for (int y = 0; y < boardSize.y; ++y)
                 {
-                    tiles[x, y] = new Tile(rand.Next(0, 5));
+                    tiles[x, y] = new Tile(rand.Next(0, colorCount));
                 }
             }
             return tiles;
-        }
-
-        private Prediction GetPredictionsFromHumansBrain()
-        {
-            throw new NotImplementedException();
         }
     } 
 }

@@ -11,6 +11,7 @@ namespace GMTK2020
         private Tile[,] initialGrid;
         private int[,] rawPredictions;
         private bool initialized = false;
+        private bool predictionsFinalised = false;
         
         int width;
         int height;
@@ -28,6 +29,8 @@ namespace GMTK2020
 
         public Prediction GetPredictions()
         {
+            predictionsFinalised = true;
+
             var predictions = new Prediction();
 
             for (int x = 0; x < width; ++x)
@@ -38,12 +41,14 @@ namespace GMTK2020
                         predictions.MatchedTilesPerStep[step - 1].Add(initialGrid[x, y]);
                 }
 
+            gameObject.SetActive(false);
+
             return predictions;
         }
 
         private void Update()
         {
-            if (!initialized)
+            if (!initialized || predictionsFinalised)
                 return;
 
             Vector2Int? gridPosOrNull = boardRenderer.PixelSpaceToGridCoordinates(Input.mousePosition);
