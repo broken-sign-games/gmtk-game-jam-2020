@@ -8,6 +8,8 @@ namespace GMTK2020
 {
     public class LevelLoader : MonoBehaviour
     {
+        [SerializeField] private BoardRenderer renderer;
+
         private void Start()
         {
             RunIt();
@@ -21,11 +23,12 @@ namespace GMTK2020
                 new Vector2Int(1, 0)
             };
             Simulator simulator = new Simulator(level1Pattern);
-            Renderer renderer = new Renderer();
-
+            
             Level level = GenerateValidLevel(simulator);
 
             renderer.RenderInitial(level.Grid);
+
+            return;
 
             // It's the Human's turn.
             Validator validator = new Validator();
