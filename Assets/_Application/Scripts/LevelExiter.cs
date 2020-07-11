@@ -6,6 +6,10 @@ namespace GMTK2020
 {
     public class LevelExiter : MonoBehaviour
     {
+        [SerializeField] private int levelSceneID;
+        [SerializeField] private int winSceneID;
+        [SerializeField] private LevelSequence levelSequence;
+
         public void RestartLevel()
         {
             LoadLevelScene();
@@ -14,13 +18,20 @@ namespace GMTK2020
         public void LoadNextLevel()
         {
             ++GameProgression.CurrentLevelIndex;
-            // TODO: Load "CONGRATIONS YOU DONE IT" screen when current level exceed level sequence
-            LoadLevelScene();
+            if (GameProgression.CurrentLevelIndex >= levelSequence.Levels.Count)
+                LoadWinScene();
+            else
+                LoadLevelScene();
         }
 
-        private static void LoadLevelScene()
+        private void LoadLevelScene()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SceneManager.LoadScene(levelSceneID);
+        }
+
+        private void LoadWinScene()
+        {
+            SceneManager.LoadScene(winSceneID);
         }
     }
 }
