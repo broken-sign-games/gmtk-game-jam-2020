@@ -31,7 +31,7 @@ namespace GMTK2020
             }
         }
 
-        public Simulation Simulate(Tile[,] initialGrid)
+        public Simulation Simulate(Tile[,] initialGrid, bool allowShorterLevel = false)
         {
             var simulationSteps = new List<SimulationStep>();
 
@@ -42,7 +42,10 @@ namespace GMTK2020
                 HashSet<Tile> matchedTiles = RemoveMatchedTiles(workingGrid);
                 if (matchedTiles.Count == 0)
                 {
-                    throw new ArgumentException("Boring level.");
+                    if (allowShorterLevel)
+                        break;
+                    else
+                        throw new ArgumentException("Boring level.");
                 }
 
                 List<(Tile, Vector2Int)> movingTiles = MoveTilesDown(workingGrid);

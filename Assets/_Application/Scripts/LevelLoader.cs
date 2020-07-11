@@ -21,10 +21,10 @@ namespace GMTK2020
 
         private void Start()
         {
-            RunIt();
+            LoadLevel();
         }
 
-        public void RunIt()
+        public void LoadLevel()
         {
             int levelIndex = GameProgression.CurrentLevelIndex;
             LevelSpecification levelSpec = levelSequence.Levels[levelIndex];
