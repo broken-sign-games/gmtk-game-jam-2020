@@ -1,5 +1,6 @@
 ﻿using GMTK2020.Data;
 using GMTK2020.Rendering;
+using GMTK2020.UI;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace GMTK2020
     public class LevelLoader : MonoBehaviour
     {
         [SerializeField] private BoardRenderer boardRenderer = null;
+        [SerializeField] private PatternRenderer patternRenderer = null;
         [SerializeField] private PredictionEditor predictionEditor = null;
 
         public Level Level { get; private set; }
@@ -24,14 +26,16 @@ namespace GMTK2020
             var level1Pattern = new HashSet<Vector2Int>()
             {
                 new Vector2Int(0, 0),
-                new Vector2Int(1, 0)
+                new Vector2Int(1, 0),
+                new Vector2Int(0, 1),
             };
             Simulator simulator = new Simulator(level1Pattern);
-            
+
             Level = GenerateValidLevel(simulator);
 
             predictionEditor.Initialize(Level.Grid);
             boardRenderer.RenderInitial(Level.Grid);
+            patternRenderer.RenderPattern(level1Pattern);
         }
 
         private Level GenerateValidLevel(Simulator simulator)
