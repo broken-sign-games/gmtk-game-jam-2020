@@ -34,10 +34,10 @@ namespace GMTK2020
 
             Level = new LevelGenerator(levelSpec, simulator).GenerateValidLevel();
 
-            levelLabel.text = $"Level {levelIndex+1}";
+            levelLabel.text = $"Level {levelIndex + 1}";
             predictionEditor.Initialize(Level.Grid);
             boardRenderer.RenderInitial(Level.Grid);
             patternRenderer.RenderPattern(levelPattern);
         }
-    } 
+    }
 }
