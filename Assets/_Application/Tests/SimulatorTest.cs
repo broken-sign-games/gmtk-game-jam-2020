@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using GMTK2020;
+using GMTK2020.Data;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
