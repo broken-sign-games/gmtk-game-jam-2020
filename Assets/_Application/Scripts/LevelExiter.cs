@@ -26,12 +26,12 @@ namespace GMTK2020
 
         private void LoadLevelScene()
         {
-            SceneManager.LoadScene(levelSceneID);
+            SceneManager.LoadScene("LevelScene");
         }
 
         private void LoadWinScene()
         {
-            SceneManager.LoadScene(winSceneID);
+            SceneManager.LoadScene("WinScene");
         }
     }
 }
