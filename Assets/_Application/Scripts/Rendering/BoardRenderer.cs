@@ -42,41 +42,45 @@ namespace GMTK2020.Rendering
 
         public async Task RenderSimulationAsync(Simulation simulation, int correctPredictions)
         {
-            var rnd = new System.Random();
-            foreach (var (step, i) in simulation.Steps.Select((step, i) => (step, i)))
+            for (int i = 0; i < simulation.Steps.Count; ++i)
             {
-                List<Tween> tweens = new List<Tween>();
+                SimulationStep step = simulation.Steps[i];
+                Sequence seq = DOTween.Sequence();
 
                 if (i < correctPredictions)
                 {
-                    // TODO: checkmark/cross
+                    // TODO: checkmark
                     Debug.Log($"Correct step {i}!");
                 }
+                else
+                {
+                    // TODO: cross
+                    Debug.Log($"Incorrect step {i}!");
+                }
 
-                foreach (var tile in step.MatchedTiles)
+                foreach (Tile tile in step.MatchedTiles)
                 {
                     // TODO: indicate incorrect guesses
-                    var tileRenderer = tileDictionary[tile];
-                    var spriteRenderer = tileRenderer.gameObject.GetComponent<SpriteRenderer>();
-                    var tweener = spriteRenderer.DOFade(0.0f, 0.25f);
-                    tweener.OnComplete(() => Destroy(tileRenderer.gameObject)); // I think that's illegal :-(
-                    tweens.Add(tweener);
-                }
-                foreach (var tween in tweens)
-                {
-                    // omg why can't I wait on all of them more easily?
-                    await CompletionOf(tween);
+                    TileRenderer tileRenderer = tileDictionary[tile];
+                    var spriteRenderer = tileRenderer.GetComponent<SpriteRenderer>();
+                    seq.Insert(0, spriteRenderer.DOFade(0.0f, 0.25f));
+                    seq.AppendCallback(() => Destroy(tileRenderer.gameObject));
                 }
 
-                foreach (var (tile, newPosition) in step.MovingTiles)
+                await CompletionOf(seq);
+                
+                if (i >= correctPredictions)
+                    break;
+
+                seq = DOTween.Sequence();
+
+                foreach ((Tile tile, Vector2Int newPosition) in step.MovingTiles)
                 {
-                    var tileRenderer = tileDictionary[tile];
-                    tweens.Add(tileRenderer.transform.DOLocalMove(new Vector3Int(newPosition.x, newPosition.y, 0), 0.75f));
+                    TileRenderer tileRenderer = tileDictionary[tile];
+                    seq.Join(tileRenderer.transform.DOLocalMove(new Vector3Int(newPosition.x, newPosition.y, 0), 0.75f));
                 }
-                foreach (var tween in tweens)
-                {
-                    await CompletionOf(tween);
-                }
+                
+                await CompletionOf(seq);
             }
 
             // TODO: progression
