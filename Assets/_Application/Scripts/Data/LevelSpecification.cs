@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Array2DEditor;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GMTK2020.Data
@@ -10,5 +11,9 @@ namespace GMTK2020.Data
         public int ColorCount;
         public List<Vector2Int> MatchingPattern;
         public GeneratorStrategy GeneratorStrategy;
+
+        [TextArea]
+        public string TutorialText;
+        public Array2DInt TutorialBoard;
     }
 }
