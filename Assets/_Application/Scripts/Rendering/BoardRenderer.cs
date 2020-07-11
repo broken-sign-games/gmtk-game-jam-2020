@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using GMTK2020.Data;
+using GMTK2020.UI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace GMTK2020.Rendering
     {
         [SerializeField] private Camera mainCamera = null;
         [SerializeField] private TileData tileData = null;
+        [SerializeField] private StepRenderer[] stepRenderers = null;
 
         private Dictionary<Tile, TileRenderer> tileDictionary = new Dictionary<Tile, TileRenderer>();
         private Tile[,] initialGrid;
@@ -49,13 +51,11 @@ namespace GMTK2020.Rendering
 
                 if (i < correctPredictions)
                 {
-                    // TODO: checkmark
-                    Debug.Log($"Correct step {i}!");
+                    seq.Join(stepRenderers[i].ShowSuccess());
                 }
                 else
                 {
-                    // TODO: cross
-                    Debug.Log($"Incorrect step {i}!");
+                    seq.Join(stepRenderers[i].ShowFailure());
                 }
 
                 foreach (Tile tile in step.MatchedTiles)

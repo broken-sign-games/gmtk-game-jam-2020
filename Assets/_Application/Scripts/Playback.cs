@@ -17,8 +17,6 @@ namespace GMTK2020
             Level level = levelLoader.Level;
             int correctSteps = validator.ValidatePrediction(level.Simulation, prediction);
 
-            Debug.Log(correctSteps);
-
             boardRenderer.KickOffRenderSimulation(level.Simulation, correctSteps);
         }
     }
