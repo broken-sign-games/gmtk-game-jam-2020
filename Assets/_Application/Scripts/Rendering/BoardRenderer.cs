@@ -1,5 +1,5 @@
-﻿using GMTK2020.Data;
-using System;
+﻿using DG.Tweening;
+using GMTK2020.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -39,8 +39,37 @@ namespace GMTK2020.Rendering
             await RenderSimulationAsync(simulation, correctPredictions);
         }
 
+        System.Collections.IEnumerator FoobarAsync(Tween tween)
+        {
+            yield return tween.WaitForCompletion();
+        }
+
         public async Task RenderSimulationAsync(Simulation simulation, int correctPredictions)
         {
+            var rnd = new System.Random();
+            foreach (var step in simulation.Steps)
+            {
+                List<Tween> tweens = new List<Tween>();
+
+                foreach (var tile in step.MatchedTiles)
+                {
+                    var tileRenderer = tileDictionary[tile];
+                    tweens.Add(tileRenderer.transform.DOLocalMove(new Vector3Int(rnd.Next(30, 40), rnd.Next(-10, 12), 0), 1.0f));
+                }
+
+                foreach (var (tile, newPosition) in step.MovingTiles)
+                {
+                    var tileRenderer = tileDictionary[tile];
+                    tweens.Add(tileRenderer.transform.DOLocalMove(new Vector3Int(newPosition.x, newPosition.y, 0), 1.0f));
+                }
+
+                // omg why can't I wait on all of them more easily?
+                foreach (var tween in tweens)
+                {
+                    await FoobarAsync(tween);
+                }
+            }
+
             // iterate over steps
             //   Destroy(tileRenderer.gameObject);
             //   animate disappearing tiles + checkmark/cross
@@ -72,5 +101,5 @@ namespace GMTK2020.Rendering
             Tile tile = initialGrid[pos.x, pos.y];
             tileDictionary[tile].UpdatePrediction(value);
         }
-    } 
+    }
 }
