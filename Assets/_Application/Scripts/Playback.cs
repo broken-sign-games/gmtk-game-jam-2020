@@ -15,9 +15,9 @@ namespace GMTK2020
             Validator validator = new Validator();
             Prediction prediction = predictionEditor.GetPredictions();
             Level level = levelLoader.Level;
-            int correctSteps = validator.ValidatePrediction(level.Simulation, prediction);
+            LevelResult levelResult = validator.ValidatePrediction(level.Simulation, prediction);
 
-            boardRenderer.KickOffRenderSimulation(level.Simulation, correctSteps);
+            boardRenderer.KickOffRenderSimulation(level.Simulation, levelResult);
         }
     }
 }

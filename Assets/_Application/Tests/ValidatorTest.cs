@@ -14,12 +14,12 @@ namespace Tests
         [TestCaseSource(nameof(Cases))]
         public void TestAll(Case testCase)
         {
-            var steps = validator.ValidatePrediction(
+            LevelResult result = validator.ValidatePrediction(
                 new Simulation(testCase.Simulated.Select((tiles) => Step(tiles)).ToList()),
                 new Prediction(testCase.Predicted)
             );
 
-            Assert.That(steps, Is.EqualTo(testCase.ExpectedSteps));
+            Assert.That(result.CorrectPredictions, Is.EqualTo(testCase.ExpectedSteps));
         }
 
         static object[] Cases()

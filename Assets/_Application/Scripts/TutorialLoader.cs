@@ -90,7 +90,8 @@ namespace GMTK2020
 
             await new WaitForSeconds(delayAfterPredictions - delayBetweenPredictions);
 
-            boardRenderer.KickOffRenderSimulation(simulation, 5);
+            LevelResult fakeResult = new LevelResult(5, new HashSet<Tile>(), new HashSet<Tile>());
+            boardRenderer.KickOffRenderSimulation(simulation, fakeResult);
         }
 
         private async void OnSimulationRenderingCompleted()

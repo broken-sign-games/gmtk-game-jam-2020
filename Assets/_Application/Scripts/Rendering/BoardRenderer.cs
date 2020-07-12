@@ -66,12 +66,12 @@ namespace GMTK2020.Rendering
                 }
         }
 
-        public async void KickOffRenderSimulation(Simulation simulation, int correctPredictions)
+        public async void KickOffRenderSimulation(Simulation simulation, LevelResult result)
         {
-            await RenderSimulationAsync(simulation, correctPredictions);
+            await RenderSimulationAsync(simulation, result);
         }
 
-        public async Task RenderSimulationAsync(Simulation simulation, int correctPredictions)
+        public async Task RenderSimulationAsync(Simulation simulation, LevelResult levelResult)
         {
             for (int i = 0; i < simulation.Steps.Count; ++i)
             {
@@ -84,14 +84,17 @@ namespace GMTK2020.Rendering
                 SimulationStep step = simulation.Steps[i];
                 Sequence seq = DOTween.Sequence();
 
+                bool incorrectStep = false;
+
                 if (stepRenderers.Length > i)
                 {
-                    if (i < correctPredictions)
+                    if (i < levelResult.CorrectPredictions)
                     {
                         seq.Join(stepRenderers[i].ShowSuccess());
                     }
                     else
                     {
+                        incorrectStep = true;
                         seq.Join(stepRenderers[i].ShowFailure());
                     }
                 }
@@ -100,9 +103,22 @@ namespace GMTK2020.Rendering
                 {
                     // TODO: indicate incorrect guesses
                     TileRenderer tileRenderer = tileDictionary[tile];
+
+                    bool missedPrediction = incorrectStep && levelResult.MissingPredictions.Contains(tile);
+                    if (missedPrediction)
+                        tileRenderer.ShowMissingPrediction();
+
                     var spriteRenderer = tileRenderer.GetComponent<SpriteRenderer>();
                     seq.Insert(0, spriteRenderer.DOFade(0.0f, 0.25f));
-                    seq.AppendCallback(() => Destroy(tileRenderer.gameObject));
+
+                    if (!missedPrediction)
+                        seq.AppendCallback(() => Destroy(tileRenderer.gameObject));
+                }
+
+                if (incorrectStep)
+                {
+                    foreach (Tile tile in levelResult.ExtraneousPredictions)
+                        tileDictionary[tile].ShowIncorrectPrediction();
                 }
 
                 await CompletionOf(seq);
@@ -112,7 +128,7 @@ namespace GMTK2020.Rendering
                 if (cancelAnimation)
                     return;
 
-                if (i >= correctPredictions)
+                if (i >= levelResult.CorrectPredictions)
                     break;
 
                 seq = DOTween.Sequence();
@@ -131,7 +147,7 @@ namespace GMTK2020.Rendering
 
             if (retryButton && nextButton)
             {
-                if (correctPredictions < Simulator.MAX_SIMULATION_STEPS)
+                if (levelResult.CorrectPredictions < Simulator.MAX_SIMULATION_STEPS)
                 {
                     retryButton.gameObject.SetActive(true);
                 }

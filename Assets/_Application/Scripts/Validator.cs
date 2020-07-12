@@ -1,12 +1,13 @@
 ﻿using GMTK2020.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GMTK2020
 {
     public class Validator
     {
-        public int ValidatePrediction(Simulation simulation, Prediction prediction)
+        public LevelResult ValidatePrediction(Simulation simulation, Prediction prediction)
         {
             if (prediction.MatchedTilesPerStep.Count > simulation.Steps.Count)
                 throw new ArgumentException("More predictions than simulation steps. This shouldn't have happened.");
@@ -18,11 +19,16 @@ namespace GMTK2020
 
                 if (!predicted.SetEquals(simulated))
                 {
-                    return i;
+                    var missing = new HashSet<Tile>(simulated.Except(predicted));
+                    var extraneous = new HashSet<Tile>(predicted.Except(simulated));
+                    return new LevelResult(i, missing, extraneous);
                 }
             }
 
-            return prediction.MatchedTilesPerStep.Count;
+            return new LevelResult(
+                prediction.MatchedTilesPerStep.Count,
+                new HashSet<Tile>(),
+                new HashSet<Tile>());
         }
     }
 }
