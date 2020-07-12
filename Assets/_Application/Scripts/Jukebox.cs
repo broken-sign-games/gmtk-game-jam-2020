@@ -11,8 +11,8 @@ public class Jukebox : MonoBehaviour
 
     private AudioSource AudioSource = null;
     private List<int> Playlist = null;
-    private int CurrentTrackIndex = 0;
-    
+    private int CurrentPlaylistIndex = 0;
+
 
     void Awake()
     {
@@ -43,9 +43,9 @@ public class Jukebox : MonoBehaviour
 
     private void PlayNextTrack()
     {
-        CurrentTrackIndex = (CurrentTrackIndex + 1) % Soundtrack.Length;
+        CurrentPlaylistIndex = (CurrentPlaylistIndex + 1) % Playlist.Count;
 
-        AudioSource.clip = Soundtrack[CurrentTrackIndex];
+        AudioSource.clip = Soundtrack[Playlist[CurrentPlaylistIndex]];
         AudioSource.Play();
     }
 
