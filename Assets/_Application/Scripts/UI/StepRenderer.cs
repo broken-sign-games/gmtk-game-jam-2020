@@ -17,10 +17,10 @@ namespace GMTK2020.UI
             SoundManager = FindObjectOfType<SoundManager>();
         }
 
-        public Tween ShowSuccess()
+        public void ShowSuccess()
         {
             SoundManager?.PlayEffect(SoundManager.Effect.STEP_CORRECT);
-            return successIndicator.DOFade(1f, fadeDuration);
+            successIndicator.gameObject.SetActive(true);
         }
 
         public Tween ShowFailure()

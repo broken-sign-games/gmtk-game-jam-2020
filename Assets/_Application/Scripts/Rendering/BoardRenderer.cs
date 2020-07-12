@@ -101,7 +101,7 @@ namespace GMTK2020.Rendering
                 {
                     if (i < levelResult.CorrectPredictions)
                     {
-                        seq.Join(stepRenderers[i].ShowSuccess());
+                        stepRenderers[i].ShowSuccess();
                     }
                     else
                     {
