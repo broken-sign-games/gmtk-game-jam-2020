@@ -13,11 +13,16 @@ public class Exit : MonoBehaviour
     {
         if (Input.GetKey("escape"))
         {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
+            StopOrQuit();
         }
+    }
+
+    public void StopOrQuit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }
