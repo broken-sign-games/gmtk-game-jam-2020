@@ -200,7 +200,7 @@ namespace GMTK2020.Rendering
         {
             Tile tile = initialGrid[pos.x, pos.y];
             UpdatePrediction(tile, value);
-            SoundManager?.PlayEffect(SoundManager.Effect.PREDICT_STEP_1);
+            SoundManager?.PlayEffect(SoundManager.Effect.PREDICT, value);
         }
 
         public void UpdatePrediction(Tile tile, int value)
