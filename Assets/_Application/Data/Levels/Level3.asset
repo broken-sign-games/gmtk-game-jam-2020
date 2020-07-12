@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7d9ef4a76cbdd245993739125072e5b, type: 3}
+  m_Name: Level3
+  m_EditorClassIdentifier: 
+  Size: {x: 5, y: 5}
+  ColorCount: 5
+  MatchingPattern:
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  GeneratorStrategy: 3
+  TutorialText: Multiple matches may happen during the same step. Make sure to predict
+    all of them!
+  TutorialBoard: {fileID: 11400000, guid: 55a20374ac48946488c711718030abed, type: 2}

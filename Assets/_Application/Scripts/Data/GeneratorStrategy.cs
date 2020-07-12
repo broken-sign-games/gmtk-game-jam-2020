@@ -5,5 +5,6 @@
         Random,
         SingleHorizontalMatch,
         SingleMatch,
+        MultipleMatches,
     }
 }
