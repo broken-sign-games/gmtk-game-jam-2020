@@ -17,9 +17,9 @@ namespace GMTK2020.UI
             SoundManager = FindObjectOfType<SoundManager>();
         }
 
-        public void ShowSuccess()
+        public void ShowSuccess(int step)
         {
-            SoundManager?.PlayEffect(SoundManager.Effect.STEP_CORRECT);
+            SoundManager?.PlayEffect(SoundManager.Effect.STEP_CORRECT, step);
             successIndicator.gameObject.SetActive(true);
         }
 
