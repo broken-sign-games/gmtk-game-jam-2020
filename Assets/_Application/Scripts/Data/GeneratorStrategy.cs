@@ -6,5 +6,6 @@
         SingleHorizontalMatch,
         SingleMatch,
         MultipleMatches,
+        BiggerMatches,
     }
 }
