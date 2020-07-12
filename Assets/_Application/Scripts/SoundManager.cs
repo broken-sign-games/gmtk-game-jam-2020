@@ -14,7 +14,8 @@ public class SoundManager : MonoBehaviour
         PREDICT,
         STEP_CORRECT,
         STEP_WRONG,
-        WIN
+        WIN,
+        YOU_WIN
     }
 
     [SerializeField] private AudioClip[] Clips;
