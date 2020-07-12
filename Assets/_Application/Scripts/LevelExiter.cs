@@ -11,6 +11,13 @@ namespace GMTK2020
         [SerializeField] private string tutorialSceneName = null;
         [SerializeField] private LevelSequence levelSequence = null;
 
+        private SoundManager SoundManager = null;
+
+        private void Start()
+        {
+            SoundManager = FindObjectOfType<SoundManager>();
+        }
+
         public void RestartLevel()
         {
             LoadLevelScene();
@@ -32,6 +39,7 @@ namespace GMTK2020
 
         private void LoadLevelScene()
         {
+            SoundManager?.PlayEffect(SoundManager.Effect.CLICK);
             SceneManager.LoadScene(levelSceneName);
         }
 
