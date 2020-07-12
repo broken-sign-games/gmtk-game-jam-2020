@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7d9ef4a76cbdd245993739125072e5b, type: 3}
   m_Name: Level2
   m_EditorClassIdentifier: 
-  Size: {x: 7, y: 5}
+  Size: {x: 5, y: 5}
   ColorCount: 5
   MatchingPattern:
   - {x: 0, y: 0}
   - {x: 1, y: 0}
-  GeneratorStrategy: 0
+  GeneratorStrategy: 2
   TutorialText: The matches can be both horizontal and vertical.
   TutorialBoard: {fileID: 11400000, guid: 4fdf639e1f6fd604e989701b67b32fa8, type: 2}

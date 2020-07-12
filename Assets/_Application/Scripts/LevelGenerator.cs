@@ -20,19 +20,21 @@ namespace GMTK2020
 
         public Level GenerateValidLevel()
         {
-            Tile[,] grid;
+            Tile[,] grid = null;
             Simulation simulation = null;
             bool isValid;
             do
             {
-                grid = GenerateLevel();
                 isValid = true;
                 try
                 {
+                    grid = GenerateLevel();
                     simulation = simulator.Simulate(grid);
                     isValid = ValidateSimulation(simulation);
                 }
-                catch (ArgumentException)
+                catch (Exception e) when (
+                    e is ArgumentException ||
+                    e is InvalidOperationException)
                 {
                     isValid = false;
                 }
@@ -48,6 +50,7 @@ namespace GMTK2020
             {
             case GeneratorStrategy.Random: return GenerateRandomLevel();
             case GeneratorStrategy.SingleHorizontalMatch: return GenerateSingleHorizontalMatchLevel();
+            case GeneratorStrategy.SingleMatch: return GenerateSingleMatchLevel();
             default: throw new InvalidOperationException("Unknown level generation strategy.");
             }
         }
@@ -99,6 +102,64 @@ namespace GMTK2020
             return tiles;
         }
 
+        private Tile[,] GenerateSingleMatchLevel()
+        {
+            var rng = new Random();
+            int width = levelSpec.Size.x;
+            int height = levelSpec.Size.y;
+            var tiles = new Tile[width, height];
+
+            List<int> colors = Enumerable.Range(0, levelSpec.ColorCount).ToList().Shuffle(rng);
+            List<bool> verticalList = new List<bool> { true, true, false, false, false }.Shuffle(rng);
+
+            var anchors = new List<Vector2Int> { new Vector2Int(width / 2, 0) };
+
+            for (int i = 0; i < colors.Count; ++i)
+            {
+                int color = colors[i];
+                bool vertical = verticalList[i];
+
+                Vector2Int anchor = anchors[rng.Next(anchors.Count)];
+                var newTiles = new Vector2Int[2];
+                if (vertical)
+                {
+                    if (tiles[anchor.x, height - 1] != null || tiles[anchor.x, height - 2] != null)
+                        throw new InvalidOperationException("Can't fit vertical match");
+
+                    newTiles[0] = anchor;
+                    newTiles[1] = anchor + new Vector2Int(0, 1);
+
+                    anchors = new List<Vector2Int> { newTiles[1] };
+                }
+                else
+                {
+                    int leftEnd = anchor.x == 0 ? 0 :
+                                  anchor.x == width-1 ? width-2 :
+                                  anchor.x - rng.Next(2);
+                    if (tiles[leftEnd, height - 1] != null || tiles[leftEnd + 1, height - 1] != null)
+                        throw new InvalidOperationException("Can't fit horizontal match");
+
+                    newTiles[0] = new Vector2Int(leftEnd, anchor.y);
+                    newTiles[1] = new Vector2Int(leftEnd+1, anchor.y);
+
+                    anchors = newTiles.ToList();
+                }
+
+                foreach (Vector2Int tile in newTiles)
+                {
+                    for (int y = height - 1; y > tile.y; --y)
+                    {
+                        tiles[tile.x, y] = tiles[tile.x, y - 1];
+                    }
+                    tiles[tile.x, tile.y] = new Tile(color);
+                }
+            }
+
+            FillGridWithNonMatchingTiles(tiles, rng);
+
+            return tiles;
+        }
+
         private void FillGridWithNonMatchingTiles(Tile[,] tiles, Random rng)
         {
             for (int y = 0; y < tiles.GetLength(1); ++y)
@@ -146,6 +207,7 @@ namespace GMTK2020
             {
             case GeneratorStrategy.Random: return true;
             case GeneratorStrategy.SingleHorizontalMatch: return ValidateSingleHorizontalMatches(simulation);
+            case GeneratorStrategy.SingleMatch: return ValidateSingleMatches(simulation);
             default: return true;
             }
         }
@@ -162,6 +224,17 @@ namespace GMTK2020
                 Vector2Int delta = tiles[0].pos - tiles[1].pos;
 
                 if (delta.y != 0 || Math.Abs(delta.x) != 1)
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidateSingleMatches(Simulation simulation)
+        {
+            foreach (SimulationStep step in simulation.Steps)
+            {
+                if (step.MatchedTiles.Count != 2)
                     return false;
             }
 

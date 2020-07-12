@@ -4,5 +4,6 @@
     {
         Random,
         SingleHorizontalMatch,
+        SingleMatch,
     }
 }
