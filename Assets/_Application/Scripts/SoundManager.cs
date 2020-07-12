@@ -10,7 +10,13 @@ public class SoundManager : MonoBehaviour
 
     public enum Effect
     {
-        CLICK
+        CLICK,
+        PREDICT_STEP_0,
+        PREDICT_STEP_1,
+        PREDICT_STEP_2,
+        PREDICT_STEP_3,
+        PREDICT_STEP_4,
+        PREDICT_STEP_5,
     }
 
     [SerializeField] private AudioClip[] Clips;
@@ -23,7 +29,7 @@ public class SoundManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
         AudioSource = GetComponent<AudioSource>();
         ClipRepository = Clips.GroupBy(clip => clip.name)
-            .ToDictionary(it => (Effect)Enum.Parse(typeof(Effect), it.Key, true), it => it.Single());
+            .ToDictionary(it => (Effect)Enum.Parse(typeof(Effect), it.Key.Replace("-", "_"), true), it => it.Single());
     }
 
     public void PlayEffect(Effect effect)

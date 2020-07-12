@@ -12,7 +12,7 @@ namespace GMTK2020
         private int[,] rawPredictions;
         private bool initialized = false;
         private bool predictionsFinalised = false;
-        
+
         int width;
         int height;
 
@@ -63,7 +63,7 @@ namespace GMTK2020
             else if (Input.GetMouseButtonDown(1))
                 DecrementPrediction(gridPos);
             else if (Input.anyKey
-                && Input.inputString.Length == 1 
+                && Input.inputString.Length == 1
                 && int.TryParse(Input.inputString, out int digit))
             {
                 SetPrediction(gridPos, digit);
@@ -83,7 +83,7 @@ namespace GMTK2020
         private void IncrementPrediction(Vector2Int pos)
         {
             ++rawPredictions[pos.x, pos.y];
-            rawPredictions[pos.x, pos.y] %= Simulator.MAX_SIMULATION_STEPS+1;
+            rawPredictions[pos.x, pos.y] %= Simulator.MAX_SIMULATION_STEPS + 1;
 
             boardRenderer.UpdatePrediction(pos, rawPredictions[pos.x, pos.y]);
         }
@@ -91,7 +91,7 @@ namespace GMTK2020
         private void DecrementPrediction(Vector2Int pos)
         {
             rawPredictions[pos.x, pos.y] += Simulator.MAX_SIMULATION_STEPS;
-            rawPredictions[pos.x, pos.y] %= Simulator.MAX_SIMULATION_STEPS+1;
+            rawPredictions[pos.x, pos.y] %= Simulator.MAX_SIMULATION_STEPS + 1;
 
             boardRenderer.UpdatePrediction(pos, rawPredictions[pos.x, pos.y]);
         }

@@ -19,7 +19,7 @@ namespace GMTK2020
 
         public void Run()
         {
-            SoundManager.PlayEffect(SoundManager.Effect.CLICK);
+            SoundManager?.PlayEffect(SoundManager.Effect.CLICK);
 
             Validator validator = new Validator();
             Prediction prediction = predictionEditor.GetPredictions();
