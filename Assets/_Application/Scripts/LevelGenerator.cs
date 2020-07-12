@@ -287,7 +287,10 @@ namespace GMTK2020
                 for (int color = 0; color < levelSpec.ColorCount; ++color)
                 {
                     int tileCount = step.MatchedTiles.Count<(Tile tile, Vector2Int)>(t => t.tile.Color == color);
-                    if (!(tileCount == 0 || tileCount == 2))
+                    if (tileCount == 0)
+                        continue;
+
+                    if (tileCount != 2)
                         return false;
 
                     ++matches;
