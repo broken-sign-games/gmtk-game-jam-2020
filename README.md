@@ -10,6 +10,13 @@ Procedurally generated levels make the game quite replayable.
 
 Use left and right click on blocks to set up your predictions. Alternatively, you can use number keys while hovering over the block (0 removes the prediction).
 
+Some things we would like to add:
+
+- More levels.
+- Additional mechanics during the chain reaction to keep things interesting and give us more axes to tweak difficulty on (changing gravity, bombs, swaps, stone blocks that never match, etc.).
+- More juice.
+- Endless or custom mode.
+
 ## Credits
 
 - Design and Programming — Martin Ender and Lukas Niemeier
