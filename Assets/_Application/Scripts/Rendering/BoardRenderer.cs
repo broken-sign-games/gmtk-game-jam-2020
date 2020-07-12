@@ -119,8 +119,7 @@ namespace GMTK2020.Rendering
                     if (missedPrediction)
                         tileRenderer.ShowMissingPrediction();
 
-                    var spriteRenderer = tileRenderer.GetComponent<SpriteRenderer>();
-                    seq.Insert(0, spriteRenderer.DOFade(0.0f, 0.25f));
+                    seq.Insert(0, tileRenderer.ShowCorrectPrediction());
 
                     if (!missedPrediction)
                         seq.AppendCallback(() => Destroy(tileRenderer.gameObject));
