@@ -280,6 +280,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 4ed7311abc24229408e52be9c66bd709, type: 3}
   - {fileID: 21300000, guid: bd92127ee9c5d63418835d1e841073ec, type: 3}
   - {fileID: 21300000, guid: 097d81a14e9b4ae45874720323489fd5, type: 3}
+  finalFrame: {fileID: 21300000, guid: eace12bddfe407941aea8be3557436ee, type: 3}
   framesPerSecond: 30
 --- !u!212 &766671098
 SpriteRenderer:
