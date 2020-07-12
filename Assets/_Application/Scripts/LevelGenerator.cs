@@ -52,6 +52,7 @@ namespace GMTK2020
             case GeneratorStrategy.SingleHorizontalMatch: return GenerateSingleHorizontalMatchLevel();
             case GeneratorStrategy.SingleMatch: return GenerateSingleMatchLevel();
             case GeneratorStrategy.MultipleMatches: return GenerateSingleMatchLevel();
+            case GeneratorStrategy.BiggerMatches: return GenerateSingleMatchLevel();
             default: throw new InvalidOperationException("Unknown level generation strategy.");
             }
         }
@@ -242,6 +243,7 @@ namespace GMTK2020
             case GeneratorStrategy.SingleHorizontalMatch: return ValidateSingleHorizontalMatches(simulation);
             case GeneratorStrategy.SingleMatch: return ValidateSingleMatches(simulation);
             case GeneratorStrategy.MultipleMatches: return ValidateMultipleMatches(simulation);
+            case GeneratorStrategy.BiggerMatches: return ValidateBiggerMatches(simulation);
             default: return true;
             }
         }
@@ -299,6 +301,22 @@ namespace GMTK2020
             }
 
             return foundMultiMatch;
+        }
+
+        private bool ValidateBiggerMatches(Simulation simulation)
+        {
+            int matchPatternSize = levelSpec.MatchingPattern.Count;
+            foreach (SimulationStep step in simulation.Steps)
+            {
+                for (int color = 0; color < levelSpec.ColorCount; ++color)
+                {
+                    int tileCount = step.MatchedTiles.Count<(Tile tile, Vector2Int)>(t => t.tile.Color == color);
+                    if (tileCount % matchPatternSize != 0)
+                        return true;
+                }
+            }
+
+            return false;
         }
     }
 }
