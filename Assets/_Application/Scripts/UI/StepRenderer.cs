@@ -10,13 +10,22 @@ namespace GMTK2020.UI
         [SerializeField] private Image failureIndicator = null;
         [SerializeField] private float fadeDuration = 0.5f;
 
+        private SoundManager SoundManager = null;
+
+        private void Start()
+        {
+            SoundManager = FindObjectOfType<SoundManager>();
+        }
+
         public Tween ShowSuccess()
         {
+            SoundManager?.PlayEffect(SoundManager.Effect.STEP_CORRECT);
             return successIndicator.DOFade(1f, fadeDuration);
         }
 
         public Tween ShowFailure()
         {
+            SoundManager?.PlayEffect(SoundManager.Effect.STEP_WRONG);
             return failureIndicator.DOFade(1f, fadeDuration);
         }
     }

@@ -82,6 +82,8 @@ namespace GMTK2020.Rendering
 
         public async Task RenderSimulationAsync(Simulation simulation, LevelResult levelResult)
         {
+            await Task.Delay(750);
+
             for (int i = 0; i < simulation.Steps.Count; ++i)
             {
                 if (i > 0)
@@ -160,12 +162,15 @@ namespace GMTK2020.Rendering
 
             if (retryButton && nextButton)
             {
+                await Task.Delay(750);
+
                 if (levelResult.CorrectPredictions < Simulator.MAX_SIMULATION_STEPS)
                 {
                     retryButton.gameObject.SetActive(true);
                 }
                 else
                 {
+                    SoundManager?.PlayEffect(SoundManager.Effect.WIN);
                     nextButton.gameObject.SetActive(true);
                 }
             }
