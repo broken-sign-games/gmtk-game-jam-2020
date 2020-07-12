@@ -11,12 +11,7 @@ public class SoundManager : MonoBehaviour
     public enum Effect
     {
         CLICK,
-        PREDICT_STEP_0,
-        PREDICT_STEP_1,
-        PREDICT_STEP_2,
-        PREDICT_STEP_3,
-        PREDICT_STEP_4,
-        PREDICT_STEP_5,
+        PREDICT,
     }
 
     [SerializeField] private AudioClip[] Clips;
@@ -32,8 +27,14 @@ public class SoundManager : MonoBehaviour
             .ToDictionary(it => (Effect)Enum.Parse(typeof(Effect), it.Key.Replace("-", "_"), true), it => it.Single());
     }
 
+    public void PlayEffect(Effect effect, float pitchModifier)
+    {
+        AudioSource.pitch = 1.0f + (pitchModifier * 0.1f);
+        AudioSource.PlayOneShot(ClipRepository[effect]);
+    }
+
     public void PlayEffect(Effect effect)
     {
-        AudioSource.PlayOneShot(ClipRepository[effect]);
+        PlayEffect(effect, 1.0f);
     }
 }
