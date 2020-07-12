@@ -1,6 +1,7 @@
 ﻿using Array2DEditor;
 using GMTK2020.Data;
 using GMTK2020.Rendering;
+using GMTK2020.UI;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -12,6 +13,7 @@ namespace GMTK2020
     {
         [SerializeField] private TextMeshProUGUI tutorialText = null;
         [SerializeField] private BoardRenderer boardRenderer = null;
+        [SerializeField] private PatternRenderer patternRenderer = null;
         [SerializeField] private LevelSequence levelSequence = null;
         [SerializeField] private float delayAfterRenderingInitialBoard = 1f;
         [SerializeField] private float delayBetweenSimulations = 2f;
@@ -40,6 +42,7 @@ namespace GMTK2020
 
             tutorialText.text = levelSpec.TutorialText;
 
+            patternRenderer.RenderPattern(levelPattern);
             initialGrid = LoadTileGrid(levelSpec.TutorialBoard);
 
             RenderSimulatedTutorial(false);

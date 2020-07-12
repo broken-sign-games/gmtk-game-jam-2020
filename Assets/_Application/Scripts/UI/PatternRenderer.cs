@@ -11,6 +11,9 @@ namespace GMTK2020.UI
 
         public void RenderPattern(HashSet<Vector2Int> pattern)
         {
+            if (pattern.Count == 2)
+                transform.parent.gameObject.SetActive(false);
+
             int minX = int.MaxValue;
             int minY = int.MaxValue;
             int maxX = int.MinValue;
