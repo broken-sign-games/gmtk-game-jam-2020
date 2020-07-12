@@ -119,10 +119,10 @@ namespace GMTK2020
                 int color = colors[i];
                 bool vertical = verticalList[i];
 
-                Vector2Int anchor = anchors[rng.Next(anchors.Count)];
                 var newTiles = new Vector2Int[2];
                 if (vertical)
                 {
+                    Vector2Int anchor = anchors[rng.Next(anchors.Count)];
                     if (tiles[anchor.x, height - 1] != null || tiles[anchor.x, height - 2] != null)
                         throw new InvalidOperationException("Can't fit vertical match");
 
@@ -133,14 +133,25 @@ namespace GMTK2020
                 }
                 else
                 {
-                    int leftEnd = anchor.x == 0 ? 0 :
-                                  anchor.x == width-1 ? width-2 :
-                                  anchor.x - rng.Next(2);
+                    int leftEnd;
+                    if (anchors.Count == 1)
+                    {
+                        leftEnd = anchors[0].x == 0 ? 0 :
+                                  anchors[0].x == width - 1 ? width - 2 :
+                                  anchors[0].x - rng.Next(2);
+                    }
+                    else
+                    {
+                        leftEnd = anchors[0].x == 0 ? 1 :
+                                  anchors[1].x == width - 1 ? width - 3 :
+                                  anchors[1].x - 2 * rng.Next(2);
+                    }
+
                     if (tiles[leftEnd, height - 1] != null || tiles[leftEnd + 1, height - 1] != null)
                         throw new InvalidOperationException("Can't fit horizontal match");
 
-                    newTiles[0] = new Vector2Int(leftEnd, anchor.y);
-                    newTiles[1] = new Vector2Int(leftEnd+1, anchor.y);
+                    newTiles[0] = new Vector2Int(leftEnd, anchors[0].y);
+                    newTiles[1] = new Vector2Int(leftEnd+1, anchors[0].y);
 
                     anchors = newTiles.ToList();
                 }
