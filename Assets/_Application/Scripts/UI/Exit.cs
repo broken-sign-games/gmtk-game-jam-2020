@@ -1,15 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Exit : MonoBehaviour
 {
-    void Awake()
-    {
-        DontDestroyOnLoad(this.gameObject);
-    }
-
-    void Update()
+    private void Update()
     {
         if (Input.GetKey("escape"))
         {
