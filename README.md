@@ -14,8 +14,11 @@ Use left and right click on blocks to set up your predictions. Alternatively, yo
 
 - Design and Programming — Martin Ender and Lukas Niemeier
 - Art — Martin Ender
+- Music - Jimmy Harrington
+- Basement Leak Emergency Response - Mender Berri
 
-Made with Unity. ​Custom pixel art font inspired by [Aseprite​​](https://github.com/aseprite/aseprite/tree/master/data/fonts). Sounds by [Kenney​​​](http://www.kenney.nl/). Music by [Scott ARC​](https://www.youtube.com/c/ScottArcMusic).
+Made with Unity. ​Custom pixel art font inspired by [Aseprite​​](https://github.com/aseprite/aseprite/tree/master/data/fonts). Sounds by [Kenney​​​](http://www.kenney.nl/).
+
 You can find the source code on [GitHub​](https://github.com/m-ender/gmtk-game-jam-2020).
 
 ### Unity Assets used
