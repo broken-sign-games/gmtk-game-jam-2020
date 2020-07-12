@@ -75,29 +75,50 @@ namespace GMTK2020
             int width = levelSpec.Size.x;
             int height = levelSpec.Size.y;
             var tiles = new Tile[width, height];
-            
+
             List<int> colors = Enumerable.Range(0, levelSpec.ColorCount).ToList().Shuffle(rng);
 
-            foreach (int color in colors)
-            {
-                int leftEnd;
-                do
-                {
-                    leftEnd = rng.Next(width - 1);
-                }
-                while (tiles[leftEnd, height - 1] != null 
-                    || tiles[leftEnd + 1, height - 1] != null);
+            var anchors = new List<Vector2Int> { new Vector2Int(width / 2, 0) };
 
-                for (int x = leftEnd; x < leftEnd + 2; ++x)
-                    for (int y = 0; y < height; ++y)
+            for (int i = 0; i < colors.Count; ++i)
+            {
+                int color = colors[i];
+                int leftEnd;
+                if (anchors.Count == 1)
+                {
+                    leftEnd = anchors[0].x == 0 ? 0 :
+                                anchors[0].x == width - 1 ? width - 2 :
+                                anchors[0].x - rng.Next(2);
+                }
+                else
+                {
+                    leftEnd = anchors[0].x == 0 ? 1 :
+                                anchors[1].x == width - 1 ? width - 3 :
+                                anchors[1].x - 2 * rng.Next(2);
+                }
+
+                if (tiles[leftEnd, height - 1] != null || tiles[leftEnd + 1, height - 1] != null)
+                    throw new InvalidOperationException("Can't fit horizontal match");
+
+                var newTiles = new Vector2Int[2]
+                {
+                    new Vector2Int(leftEnd, anchors[0].y),
+                    new Vector2Int(leftEnd + 1, anchors[0].y)
+                };
+
+                anchors = newTiles.ToList();
+
+                foreach (Vector2Int tile in newTiles)
+                {
+                    for (int y = height - 1; y > tile.y; --y)
                     {
-                        if (tiles[x, y] is null)
-                        {
-                            tiles[x, y] = new Tile(color);
-                            break;
-                        }
+                        tiles[tile.x, y] = tiles[tile.x, y - 1];
                     }
+                    tiles[tile.x, tile.y] = new Tile(color);
+                }
             }
+
+            FillGridWithNonMatchingTiles(tiles, rng);
 
             return tiles;
         }
