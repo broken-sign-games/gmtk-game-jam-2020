@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [RequireComponent(typeof(AudioSource))]
 public class Jukebox : MonoBehaviour
@@ -9,6 +10,9 @@ public class Jukebox : MonoBehaviour
     [SerializeField] private AudioClip[] Soundtrack;
 
     private AudioSource AudioSource = null;
+    private List<int> Playlist = null;
+    private int CurrentTrackIndex = 0;
+    
 
     void Awake()
     {
@@ -17,12 +21,15 @@ public class Jukebox : MonoBehaviour
 
     void Start()
     {
-        this.AudioSource = GetComponent<AudioSource>();
+        AudioSource = GetComponent<AudioSource>();
+        Playlist = Soundtrack.Select((track, index) => (track, index))
+            .OrderBy(it => System.Guid.NewGuid())
+            .Select(track => track.index)
+            .ToList();
 
         if (!AudioSource.playOnAwake)
         {
-            AudioSource.clip = Soundtrack[Random.Range(0, Soundtrack.Length)];
-            AudioSource.Play();
+            PlayNextTrack();
         }
     }
 
@@ -30,9 +37,16 @@ public class Jukebox : MonoBehaviour
     {
         if (!AudioSource.isPlaying)
         {
-            AudioSource.clip = Soundtrack[Random.Range(0, Soundtrack.Length)];
-            AudioSource.Play();
+            PlayNextTrack();
         }
+    }
+
+    private void PlayNextTrack()
+    {
+        CurrentTrackIndex = (CurrentTrackIndex + 1) % Soundtrack.Length;
+
+        AudioSource.clip = Soundtrack[CurrentTrackIndex];
+        AudioSource.Play();
     }
 
 }
