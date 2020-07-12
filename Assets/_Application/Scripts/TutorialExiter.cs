@@ -9,8 +9,13 @@ namespace GMTK2020
         [SerializeField] private string levelSceneName = null;
         [SerializeField] private BoardRenderer boardRenderer = null;
 
+        private void Start()
+        {
+        }
+
         public void LoadLevel()
         {
+            FindObjectOfType<SoundManager>()?.PlayEffect(SoundManager.Effect.CLICK);
             boardRenderer.CancelAnimation();
             SceneManager.LoadScene(levelSceneName);
         }
