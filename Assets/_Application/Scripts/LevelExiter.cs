@@ -20,12 +20,12 @@ namespace GMTK2020
 
         public void RestartLevel()
         {
+            SoundManager?.PlayEffect(SoundManager.Effect.CLICK);
             LoadLevelScene();
         }
 
         public void LoadNextLevel()
         {
-            Debug.Log($"Click {SoundManager}");
             SoundManager?.PlayEffect(SoundManager.Effect.CLICK);
 
             ++GameProgression.CurrentLevelIndex;
