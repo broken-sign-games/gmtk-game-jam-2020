@@ -21,6 +21,8 @@ namespace GMTK2020.Rendering
 
         [SerializeField] private float postMatchDelay = 0.25f;
         [SerializeField] private float postFallDelay = 0.1f;
+        [SerializeField] private float fallingSpeed = 1f;
+        [SerializeField] private Ease fallingEase = Ease.InCubic;
 
         public event Action SimulationRenderingCompleted;
 
@@ -136,7 +138,11 @@ namespace GMTK2020.Rendering
                 foreach ((Tile tile, Vector2Int newPosition) in step.MovingTiles)
                 {
                     TileRenderer tileRenderer = tileDictionary[tile];
-                    seq.Join(tileRenderer.transform.DOLocalMove(new Vector3Int(newPosition.x, newPosition.y, 0), 0.75f));
+                    Tween tween = tileRenderer.transform
+                        .DOLocalMove(new Vector3Int(newPosition.x, newPosition.y, 0), 0.75f)
+                        .SetSpeedBased()
+                        .SetEase(fallingEase);
+                    seq.Join(tween);
                 }
                 
                 await CompletionOf(seq);

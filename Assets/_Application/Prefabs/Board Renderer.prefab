@@ -55,8 +55,10 @@ MonoBehaviour:
   retryButton: {fileID: 0}
   nextButton: {fileID: 0}
   border: {fileID: 269216730889641830}
-  postMatchDelay: 0.25
+  postMatchDelay: 0.15
   postFallDelay: 0.1
+  fallingSpeed: 1.5
+  fallingEase: 30
 --- !u!1 &269216730889641824
 GameObject:
   m_ObjectHideFlags: 0
