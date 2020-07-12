@@ -3,5 +3,7 @@
     public enum GeneratorStrategy
     {
         Random,
+        SingleHorizontalMatch,
+        SingleMatch,
     }
 }

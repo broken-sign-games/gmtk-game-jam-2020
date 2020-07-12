@@ -82,7 +82,7 @@ namespace Tests
             };
             var simulator = new Simulator(pattern);
 
-            HashSet<Tile> removedTiles = simulator.RemoveMatchedTiles(grid);
+            HashSet<(Tile, Vector2Int)> removedTiles = simulator.RemoveMatchedTiles(grid);
 
             var expected = IntToTileGrid(new int[,]
             {
@@ -131,7 +131,7 @@ namespace Tests
             };
             var simulator = new Simulator(pattern);
 
-            HashSet<Tile> removedTiles = simulator.RemoveMatchedTiles(grid);
+            HashSet<(Tile, Vector2Int)> removedTiles = simulator.RemoveMatchedTiles(grid);
 
             var expected = IntToTileGrid(new int[,]
             {
