@@ -15,6 +15,8 @@ namespace GMTK2020
         [SerializeField] private LevelSequence levelSequence = null;
         [SerializeField] private float delayAfterRenderingInitialBoard = 1f;
         [SerializeField] private float delayBetweenSimulations = 2f;
+        [SerializeField] private float delayBetweenPredictions = 0.2f;
+        [SerializeField] private float delayAfterPredictions = 1f;
 
         private HashSet<Vector2Int> levelPattern;
         private Tile[,] initialGrid;
@@ -40,7 +42,7 @@ namespace GMTK2020
 
             initialGrid = LoadTileGrid(levelSpec.TutorialBoard);
 
-            RenderSimulatedTutorial();
+            RenderSimulatedTutorial(false);
         }
 
         private Tile[,] LoadTileGrid(Array2DInt tutorialBoard)
@@ -62,7 +64,7 @@ namespace GMTK2020
             return grid;
         }
 
-        private async void RenderSimulatedTutorial()
+        private async void RenderSimulatedTutorial(bool renderPredictions)
         {
             boardRenderer.RenderInitial(initialGrid);
 
@@ -70,6 +72,24 @@ namespace GMTK2020
 
             Simulator simulator = new Simulator(levelPattern);
             Simulation simulation = simulator.Simulate(initialGrid, true);
+
+            if (renderPredictions)
+            {
+                int i = 1;
+                foreach (SimulationStep step in simulation.Steps)
+                {
+                    foreach (Tile tile in step.MatchedTiles)
+                    {
+                        boardRenderer.UpdatePrediction(tile, i);
+                        await new WaitForSeconds(delayBetweenPredictions);
+                    }
+
+                    ++i;
+                }
+            }
+
+            await new WaitForSeconds(delayAfterPredictions - delayBetweenPredictions);
+
             boardRenderer.KickOffRenderSimulation(simulation, 5);
         }
 
@@ -77,7 +97,7 @@ namespace GMTK2020
         {
             await new WaitForSeconds(delayBetweenSimulations);
 
-            RenderSimulatedTutorial();
+            RenderSimulatedTutorial(true);
         }
     }
 }

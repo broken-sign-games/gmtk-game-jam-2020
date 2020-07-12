@@ -372,7 +372,9 @@ MonoBehaviour:
   boardRenderer: {fileID: 472132834}
   levelSequence: {fileID: 11400000, guid: a406af891823fa34eb72e48528b7ba49, type: 2}
   delayAfterRenderingInitialBoard: 1
-  delayBetweenSimulations: 2
+  delayBetweenSimulations: 1
+  delayBetweenPredictions: 0.2
+  delayAfterPredictions: 1
 --- !u!4 &504073991
 Transform:
   m_ObjectHideFlags: 0

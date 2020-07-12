@@ -170,6 +170,11 @@ namespace GMTK2020.Rendering
         public void UpdatePrediction(Vector2Int pos, int value)
         {
             Tile tile = initialGrid[pos.x, pos.y];
+            UpdatePrediction(tile, value);
+        }
+
+        public void UpdatePrediction(Tile tile, int value)
+        {
             tileDictionary[tile].UpdatePrediction(value);
         }
     }
