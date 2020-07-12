@@ -12,6 +12,9 @@ public class SoundManager : MonoBehaviour
     {
         CLICK,
         PREDICT,
+        STEP_CORRECT,
+        STEP_WRONG,
+        WIN
     }
 
     [SerializeField] private AudioClip[] Clips;

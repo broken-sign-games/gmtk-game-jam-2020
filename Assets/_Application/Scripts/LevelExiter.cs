@@ -25,6 +25,9 @@ namespace GMTK2020
 
         public void LoadNextLevel()
         {
+            Debug.Log($"Click {SoundManager}");
+            SoundManager?.PlayEffect(SoundManager.Effect.CLICK);
+
             ++GameProgression.CurrentLevelIndex;
             if (GameProgression.CurrentLevelIndex >= levelSequence.Levels.Count)
                 LoadWinScene();
@@ -39,7 +42,6 @@ namespace GMTK2020
 
         private void LoadLevelScene()
         {
-            SoundManager?.PlayEffect(SoundManager.Effect.CLICK);
             SceneManager.LoadScene(levelSceneName);
         }
 
