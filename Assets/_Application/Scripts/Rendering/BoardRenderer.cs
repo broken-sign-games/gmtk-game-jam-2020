@@ -82,7 +82,7 @@ namespace GMTK2020.Rendering
 
         public async Task RenderSimulationAsync(Simulation simulation, LevelResult levelResult)
         {
-            await Task.Delay(750);
+            await new WaitForSeconds(postMatchDelay * 2);
 
             for (int i = 0; i < simulation.Steps.Count; ++i)
             {
@@ -101,7 +101,7 @@ namespace GMTK2020.Rendering
                 {
                     if (i < levelResult.CorrectPredictions)
                     {
-                        seq.Join(stepRenderers[i].ShowSuccess());
+                        seq.Join(stepRenderers[i].ShowSuccess(i));
                     }
                     else
                     {
@@ -162,7 +162,7 @@ namespace GMTK2020.Rendering
 
             if (retryButton && nextButton)
             {
-                await Task.Delay(750);
+                await new WaitForSeconds(postMatchDelay);
 
                 if (levelResult.CorrectPredictions < Simulator.MAX_SIMULATION_STEPS)
                 {
