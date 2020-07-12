@@ -1199,8 +1199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Soundtrack:
-  - {fileID: 8300000, guid: 575dd71c5de3acc4f834760136ff0b3a, type: 3}
-  - {fileID: 8300000, guid: 8b750f0c5abb35f44841c6dabcf97177, type: 3}
+  - {fileID: 8300000, guid: 339c393179a88f84b9ec72d71a510bd2, type: 3}
 --- !u!82 &1965083914
 AudioSource:
   m_ObjectHideFlags: 0
