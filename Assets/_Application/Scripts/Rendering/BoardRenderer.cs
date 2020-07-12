@@ -106,7 +106,7 @@ namespace GMTK2020.Rendering
                     else
                     {
                         incorrectStep = true;
-                        seq.Join(stepRenderers[i].ShowFailure());
+                        stepRenderers[i].ShowFailure();
                     }
                 }
 

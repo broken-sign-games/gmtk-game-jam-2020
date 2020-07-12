@@ -23,10 +23,10 @@ namespace GMTK2020.UI
             successIndicator.gameObject.SetActive(true);
         }
 
-        public Tween ShowFailure()
+        public void ShowFailure()
         {
             SoundManager?.PlayEffect(SoundManager.Effect.STEP_WRONG);
-            return failureIndicator.DOFade(1f, fadeDuration);
+            failureIndicator.gameObject.SetActive(true);
         }
     }
 }
