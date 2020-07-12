@@ -78,7 +78,7 @@ namespace GMTK2020
                 int i = 1;
                 foreach (SimulationStep step in simulation.Steps)
                 {
-                    foreach (Tile tile in step.MatchedTiles)
+                    foreach ((Tile tile, _) in step.MatchedTiles)
                     {
                         boardRenderer.UpdatePrediction(tile, i);
                         await new WaitForSeconds(delayBetweenPredictions);

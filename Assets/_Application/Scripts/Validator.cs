@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 
 namespace GMTK2020
 {
@@ -15,7 +16,10 @@ namespace GMTK2020
             for (int i = 0; i < prediction.MatchedTilesPerStep.Count; ++i)
             {
                 HashSet<Tile> predicted = prediction.MatchedTilesPerStep[i];
-                HashSet<Tile> simulated = simulation.Steps[i].MatchedTiles;
+                HashSet<Tile> simulated = new HashSet<Tile>(simulation.Steps[i].MatchedTiles.Select((tuple) => {
+                    (Tile tile, _) = tuple;
+                    return tile;
+                }));
 
                 if (!predicted.SetEquals(simulated))
                 {

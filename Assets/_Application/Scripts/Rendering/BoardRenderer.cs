@@ -101,7 +101,7 @@ namespace GMTK2020.Rendering
                     }
                 }
 
-                foreach (Tile tile in step.MatchedTiles)
+                foreach ((Tile tile, _) in step.MatchedTiles)
                 {
                     // TODO: indicate incorrect guesses
                     TileRenderer tileRenderer = tileDictionary[tile];

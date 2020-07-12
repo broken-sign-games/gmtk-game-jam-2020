@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7d9ef4a76cbdd245993739125072e5b, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: 
-  Size: {x: 6, y: 4}
+  Size: {x: 5, y: 5}
   ColorCount: 5
   MatchingPattern:
   - {x: 0, y: 0}
   - {x: 1, y: 0}
-  GeneratorStrategy: 0
+  GeneratorStrategy: 1
   TutorialText: 'Adjacent pairs of matching tiles are cleared from the board. Remaining
     tiles will fall down.
 

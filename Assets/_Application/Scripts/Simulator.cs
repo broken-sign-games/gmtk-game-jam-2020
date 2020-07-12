@@ -39,7 +39,7 @@ namespace GMTK2020
 
             for (int i = 0; i < MAX_SIMULATION_STEPS; ++i)
             {
-                HashSet<Tile> matchedTiles = RemoveMatchedTiles(workingGrid);
+                HashSet<(Tile, Vector2Int)> matchedTiles = RemoveMatchedTiles(workingGrid);
                 if (matchedTiles.Count == 0)
                 {
                     if (allowShorterLevel)
@@ -56,9 +56,9 @@ namespace GMTK2020
             return new Simulation(simulationSteps);
         }
 
-        public HashSet<Tile> RemoveMatchedTiles(Tile[,] workingGrid)
+        public HashSet<(Tile, Vector2Int)> RemoveMatchedTiles(Tile[,] workingGrid)
         {
-            HashSet<Tile> matchedTiles = new HashSet<Tile>();
+            var matchedTiles = new HashSet<(Tile, Vector2Int)>();
 
             int width = workingGrid.GetLength(0);
             int height = workingGrid.GetLength(1);
@@ -107,7 +107,7 @@ namespace GMTK2020
 
                     foreach (Vector2Int pos in matchedPositions)
                     {
-                        matchedTiles.Add(workingGrid[pos.x, pos.y]);
+                        matchedTiles.Add((workingGrid[pos.x, pos.y], pos));
                         workingGrid[pos.x, pos.y] = null;
                     }
                 }
