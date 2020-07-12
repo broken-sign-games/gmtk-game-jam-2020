@@ -1,4 +1,4 @@
-# gmtk-game-jam-2020
+![5 Steps Ahead](logo-cover.png)
 
 > An entry to the GMTK Game Jam 2020
 
