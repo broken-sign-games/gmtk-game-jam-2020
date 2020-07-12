@@ -18,5 +18,10 @@ MonoBehaviour:
   - {x: 0, y: 0}
   - {x: 1, y: 0}
   GeneratorStrategy: 2
-  TutorialText: The matches can be both horizontal and vertical.
+  TutorialText: 'The matches can be both horizontal and vertical.
+
+
+    Sometimes,
+    there maybe be more than five steps to the chain reaction, but you only need
+    to predict the first five.'
   TutorialBoard: {fileID: 11400000, guid: 4fdf639e1f6fd604e989701b67b32fa8, type: 2}
