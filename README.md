@@ -1,6 +1,6 @@
 ![5 Steps Ahead](logo-cover.png)
 
-> An entry to the GMTK Game Jam 2020
+> An entry to the [GMTK Game Jam 2020](https://itch.io/jam/gmtk-2020/). [**Play the game on itch.io!**](https://menderbug.itch.io/5-steps-ahead)
 
 The block-matching game you don't get to play! Instead, your task is to predict the chain reactions unfolding in front you.
 
