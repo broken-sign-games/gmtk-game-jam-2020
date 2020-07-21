@@ -25,9 +25,9 @@ namespace GMTK2020.Rendering
         }
 
 
-        public void UpdatePrediction(int value)
+        public void UpdatePrediction(bool isPredicted)
         {
-            text.text = value == 0 ? "" : value.ToString();
+            text.text = isPredicted ? "+" : "";
         }
 
         public Tween ShowCorrectPrediction()

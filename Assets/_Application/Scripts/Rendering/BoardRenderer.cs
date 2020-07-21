@@ -200,16 +200,16 @@ namespace GMTK2020.Rendering
             return gridPos;
         }
 
-        public void UpdatePrediction(Vector2Int pos, int value)
+        public void UpdatePrediction(Vector2Int pos, bool isPredicted)
         {
             Tile tile = initialGrid[pos.x, pos.y];
-            UpdatePrediction(tile, value);
-            SoundManager?.PlayEffect(SoundManager.Effect.PREDICT, value);
+            UpdatePrediction(tile, isPredicted);
+            SoundManager?.PlayEffect(SoundManager.Effect.PREDICT, 1);
         }
 
-        public void UpdatePrediction(Tile tile, int value)
+        public void UpdatePrediction(Tile tile, bool isPredicted)
         {
-            tileDictionary[tile].UpdatePrediction(value);
+            tileDictionary[tile].UpdatePrediction(isPredicted);
         }
     }
 }

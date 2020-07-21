@@ -10,12 +10,12 @@ namespace GMTK2020
     {
         public LevelResult ValidatePrediction(Simulation simulation, Prediction prediction)
         {
-            if (prediction.MatchedTilesPerStep.Count > simulation.Steps.Count)
+            if (prediction.PredictedTiles.Count > simulation.Steps.Count)
                 throw new ArgumentException("More predictions than simulation steps. This shouldn't have happened.");
 
-            for (int i = 0; i < prediction.MatchedTilesPerStep.Count; ++i)
+            for (int i = 0; i < prediction.PredictedTiles.Count; ++i)
             {
-                HashSet<Tile> predicted = prediction.MatchedTilesPerStep[i];
+                HashSet<Tile> predicted = prediction.PredictedTiles;
                 HashSet<Tile> simulated = new HashSet<Tile>(simulation.Steps[i].MatchedTiles.Select((tuple) => {
                     (Tile tile, _) = tuple;
                     return tile;
@@ -30,7 +30,7 @@ namespace GMTK2020
             }
 
             return new LevelResult(
-                prediction.MatchedTilesPerStep.Count,
+                prediction.PredictedTiles.Count,
                 new HashSet<Tile>(),
                 new HashSet<Tile>());
         }

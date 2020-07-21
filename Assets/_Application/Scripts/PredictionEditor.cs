@@ -9,7 +9,7 @@ namespace GMTK2020
         [SerializeField] private BoardRenderer boardRenderer = null;
 
         private Tile[,] initialGrid;
-        private int[,] rawPredictions;
+        private bool[,] rawPredictions;
         private bool initialized = false;
         private bool predictionsFinalised = false;
 
@@ -23,7 +23,7 @@ namespace GMTK2020
             width = initialGrid.GetLength(0);
             height = initialGrid.GetLength(1);
 
-            rawPredictions = new int[width, height];
+            rawPredictions = new bool[width, height];
             initialized = true;
         }
 
@@ -36,9 +36,8 @@ namespace GMTK2020
             for (int x = 0; x < width; ++x)
                 for (int y = 0; y < height; ++y)
                 {
-                    int step = rawPredictions[x, y];
-                    if (step > 0)
-                        predictions.MatchedTilesPerStep[step - 1].Add(initialGrid[x, y]);
+                    if (rawPredictions[x, y])
+                        predictions.PredictedTiles.Add(initialGrid[x, y]);
                 }
 
             gameObject.SetActive(false);
@@ -58,40 +57,13 @@ namespace GMTK2020
 
             var gridPos = (Vector2Int)gridPosOrNull;
 
-            if (Input.GetMouseButtonDown(0))
-                IncrementPrediction(gridPos);
-            else if (Input.GetMouseButtonDown(1))
-                DecrementPrediction(gridPos);
-            else if (Input.anyKey
-                && Input.inputString.Length == 1
-                && int.TryParse(Input.inputString, out int digit))
-            {
-                SetPrediction(gridPos, digit);
-            }
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+                TogglePrediction(gridPos);
         }
 
-        private void SetPrediction(Vector2Int pos, int value)
+        private void TogglePrediction(Vector2Int pos)
         {
-            if (value > Simulator.MAX_SIMULATION_STEPS)
-                return;
-
-            rawPredictions[pos.x, pos.y] = value;
-
-            boardRenderer.UpdatePrediction(pos, value);
-        }
-
-        private void IncrementPrediction(Vector2Int pos)
-        {
-            ++rawPredictions[pos.x, pos.y];
-            rawPredictions[pos.x, pos.y] %= Simulator.MAX_SIMULATION_STEPS + 1;
-
-            boardRenderer.UpdatePrediction(pos, rawPredictions[pos.x, pos.y]);
-        }
-
-        private void DecrementPrediction(Vector2Int pos)
-        {
-            rawPredictions[pos.x, pos.y] += Simulator.MAX_SIMULATION_STEPS;
-            rawPredictions[pos.x, pos.y] %= Simulator.MAX_SIMULATION_STEPS + 1;
+            rawPredictions[pos.x, pos.y] = !rawPredictions[pos.x, pos.y];
 
             boardRenderer.UpdatePrediction(pos, rawPredictions[pos.x, pos.y]);
         }

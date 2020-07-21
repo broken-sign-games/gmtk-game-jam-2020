@@ -83,7 +83,7 @@ namespace GMTK2020
                 {
                     foreach ((Tile tile, _) in step.MatchedTiles)
                     {
-                        boardRenderer.UpdatePrediction(tile, i);
+                        boardRenderer.UpdatePrediction(tile, true);
                         await new WaitForSeconds(delayBetweenPredictions);
                     }
 
