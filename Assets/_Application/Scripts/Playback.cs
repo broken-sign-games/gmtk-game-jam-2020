@@ -21,12 +21,12 @@ namespace GMTK2020
         {
             SoundManager?.PlayEffect(SoundManager.Effect.CLICK);
 
-            Validator validator = new Validator();
             Prediction prediction = predictionEditor.GetPredictions();
             Level level = levelLoader.Level;
-            LevelResult levelResult = validator.ValidatePrediction(level.Simulation, prediction);
 
-            boardRenderer.KickOffRenderSimulation(level.Simulation, levelResult);
+            // Need to be simulate here instead of in level loader, and simulation depends on predictions
+
+            boardRenderer.KickOffRenderSimulation(level.Simulation, new LevelResult());
         }
     }
 }

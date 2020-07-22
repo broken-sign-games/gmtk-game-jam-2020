@@ -17,6 +17,9 @@ TextureImporter:
   - first:
       213: 2157240733274199957
     second: tiles_4
+  - first:
+      213: 4798128000316562087
+    second: tile_stone
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -214,6 +217,27 @@ TextureImporter:
       bones: []
       spriteID: 597dfc1740f00fd10800000000000000
       internalID: 2157240733274199957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tile_stone
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 0
+        width: 16
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7aa59b5aeff569240800000000000000
+      internalID: 4798128000316562087
       vertices: []
       indices: 
       edges: []
