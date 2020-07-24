@@ -27,7 +27,9 @@ namespace GMTK2020
         {
             HashSet<Vector2Int> levelPattern = new HashSet<Vector2Int>(levelSpec.MatchingPattern);
 
-            Simulator simulator = new Simulator(levelPattern);
+            // TODO: Use RNG with same seed during level generation and playback.
+            var rng = new Random();
+            Simulator simulator = new Simulator(levelPattern, rng);
 
             Level = new LevelGenerator(levelSpec, simulator).GenerateValidLevel();
 

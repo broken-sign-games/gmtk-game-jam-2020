@@ -41,7 +41,7 @@ namespace GMTK2020
             }
             while (!isValid);
 
-            return new Level(grid, simulation);
+            return new Level(grid, levelSpec.MatchingPattern);
         }
 
         private Tile[,] GenerateLevel()

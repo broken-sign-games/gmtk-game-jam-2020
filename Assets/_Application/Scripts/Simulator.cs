@@ -3,16 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = System.Random;
 
 namespace GMTK2020
 {
     public class Simulator
     {
-        public const int MAX_SIMULATION_STEPS = 5;
         private readonly List<HashSet<Vector2Int>> matchingPatterns;
+        private Random rng;
 
-        public Simulator(HashSet<Vector2Int> matchingPattern)
+        public Simulator(HashSet<Vector2Int> matchingPattern, Random rng)
         {
+            this.rng = rng;
             matchingPatterns = new List<HashSet<Vector2Int>>() { matchingPattern };
 
             for (int i = 0; i < 3; ++i)
@@ -31,32 +33,39 @@ namespace GMTK2020
             }
         }
 
-        public Simulation Simulate(Tile[,] initialGrid, bool allowShorterLevel = false)
+        public Simulation Simulate(Tile[,] initialGrid, Prediction prediction = null)
         {
             var simulationSteps = new List<SimulationStep>();
 
             Tile[,] workingGrid = initialGrid.Clone() as Tile[,];
+            var remainingPredictions = new HashSet<Tile>(prediction.PredictedTiles);
 
-            for (int i = 0; i < MAX_SIMULATION_STEPS; ++i)
+            while (true)
             {
-                HashSet<(Tile, Vector2Int)> matchedTiles = RemoveMatchedTiles(workingGrid);
+                HashSet<(Tile, Vector2Int)> matchedTiles = RemoveMatchedTiles(workingGrid, remainingPredictions);
                 if (matchedTiles.Count == 0)
                 {
-                    if (allowShorterLevel)
-                        break;
-                    else
-                        throw new ArgumentException("Boring level.");
+                    break;
                 }
 
                 List<(Tile, Vector2Int)> movingTiles = MoveTilesDown(workingGrid);
 
-                simulationSteps.Add(new SimulationStep(matchedTiles, movingTiles));
+                List<(Tile, Vector2Int)> newTiles = FillWithNewTiles(workingGrid);
+
+                simulationSteps.Add(new SimulationStep(matchedTiles, movingTiles, newTiles));
             }
 
-            return new Simulation(simulationSteps);
+            int clearedRows = Math.Min(simulationSteps.Count - 1, 0);
+
+            foreach (Tile tile in remainingPredictions)
+                tile.Petrify();
+
+            return new Simulation(simulationSteps, remainingPredictions.ToList(), clearedRows);
         }
 
-        public HashSet<(Tile, Vector2Int)> RemoveMatchedTiles(Tile[,] workingGrid)
+        // TODO: Stop expanding matches, but allow overlapping matches.
+        // TODO: Only match predicted tiles is predictions aren't null.
+        public HashSet<(Tile, Vector2Int)> RemoveMatchedTiles(Tile[,] workingGrid, HashSet<Tile> remainingPredictions)
         {
             var matchedTiles = new HashSet<(Tile, Vector2Int)>();
 
@@ -187,6 +196,31 @@ namespace GMTK2020
             }
 
             return movedTiles;
+        }
+
+        private List<(Tile, Vector2Int)> FillWithNewTiles(Tile[,] workingGrid)
+        {
+            int width = workingGrid.GetLength(0);
+            int height = workingGrid.GetLength(1);
+
+            var newTiles = new List<(Tile, Vector2Int)>();
+
+            for (int x = 0; x < width; ++x)
+            {
+                for (int y = 0; y < height; ++y)
+                {
+                    Tile tile = workingGrid[x, y];
+                    if (tile != null)
+                        continue;
+
+                    // TODO: Should this be the responsibility of the level generator?
+                    tile = workingGrid[x, y] = new Tile(rng.Next(5));
+
+                    newTiles.Add((tile, new Vector2Int(x, y)));
+                }
+            }
+
+            return newTiles;
         }
 
         private HashSet<Vector2Int> MirrorPattern(HashSet<Vector2Int> pattern)

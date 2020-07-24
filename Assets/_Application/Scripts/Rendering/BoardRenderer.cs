@@ -159,21 +159,6 @@ namespace GMTK2020.Rendering
                     return;
             }
 
-            if (retryButton && nextButton)
-            {
-                await new WaitForSeconds(postMatchDelay);
-
-                if (levelResult.CorrectPredictions < Simulator.MAX_SIMULATION_STEPS)
-                {
-                    retryButton.gameObject.SetActive(true);
-                }
-                else
-                {
-                    SoundManager?.PlayEffect(SoundManager.Effect.WIN);
-                    nextButton.gameObject.SetActive(true);
-                }
-            }
-
             SimulationRenderingCompleted?.Invoke();
         }
 

@@ -1,6 +1,8 @@
 ﻿using GMTK2020.Data;
 using GMTK2020.Rendering;
+using System.Collections.Generic;
 using UnityEngine;
+using Random = System.Random;
 
 namespace GMTK2020
 {
@@ -24,9 +26,11 @@ namespace GMTK2020
             Prediction prediction = predictionEditor.GetPredictions();
             Level level = levelLoader.Level;
 
-            // Need to be simulate here instead of in level loader, and simulation depends on predictions
+            var rng = new Random();
+            var simulator = new Simulator(new HashSet<Vector2Int>(level.MatchingPattern), rng);
+            Simulation simulation = simulator.Simulate(level.Grid, prediction);
 
-            boardRenderer.KickOffRenderSimulation(level.Simulation, new LevelResult());
+            boardRenderer.KickOffRenderSimulation(simulation, new LevelResult());
         }
     }
 }

@@ -1,15 +1,19 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
+using UnityEngine;
 
 namespace GMTK2020.Data
 {
     public class Level
     {
         public Tile[,] Grid { get; }
-        public Simulation Simulation { get; }
-        public Level(Tile[,] grid, Simulation simulation)
+
+        public List<Vector2Int> MatchingPattern { get; }
+
+        public Level(Tile[,] grid, List<Vector2Int> pattern)
         {
             Grid = grid;
-            Simulation = simulation;
+            MatchingPattern = pattern;
         }
 
         public override string ToString()
