@@ -14,7 +14,6 @@ namespace GMTK2020.Rendering
     {
         [SerializeField] private Camera mainCamera = null;
         [SerializeField] private TileData tileData = null;
-        [SerializeField] private StepRenderer[] stepRenderers = null;
         [SerializeField] private Button retryButton = null;
         [SerializeField] private Button nextButton = null;
         [SerializeField] private SpriteRenderer border = null;
@@ -97,22 +96,8 @@ namespace GMTK2020.Rendering
 
                 bool incorrectStep = false;
 
-                if (stepRenderers.Length > i)
-                {
-                    if (i < levelResult.CorrectPredictions)
-                    {
-                        stepRenderers[i].ShowSuccess(i);
-                    }
-                    else
-                    {
-                        incorrectStep = true;
-                        stepRenderers[i].ShowFailure();
-                    }
-                }
-
                 foreach ((Tile tile, _) in step.MatchedTiles)
                 {
-                    // TODO: indicate incorrect guesses
                     TileRenderer tileRenderer = tileDictionary[tile];
 
                     bool missedPrediction = incorrectStep && levelResult.MissingPredictions.Contains(tile);

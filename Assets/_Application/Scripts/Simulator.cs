@@ -10,7 +10,7 @@ namespace GMTK2020
     public class Simulator
     {
         private readonly List<HashSet<Vector2Int>> matchingPatterns;
-        private Random rng;
+        private readonly Random rng;
 
         public Simulator(HashSet<Vector2Int> matchingPattern, Random rng)
         {
@@ -38,7 +38,7 @@ namespace GMTK2020
             var simulationSteps = new List<SimulationStep>();
 
             Tile[,] workingGrid = initialGrid.Clone() as Tile[,];
-            var remainingPredictions = new HashSet<Tile>(prediction.PredictedTiles);
+            var remainingPredictions = prediction is null ? null : new HashSet<Tile>(prediction.PredictedTiles);
 
             while (true)
             {
@@ -57,14 +57,13 @@ namespace GMTK2020
 
             int clearedRows = Math.Min(simulationSteps.Count - 1, 0);
 
-            foreach (Tile tile in remainingPredictions)
-                tile.Petrify();
+            if (remainingPredictions != null)
+                foreach (Tile tile in remainingPredictions)
+                    tile.Petrify();
 
-            return new Simulation(simulationSteps, remainingPredictions.ToList(), clearedRows);
+            return new Simulation(simulationSteps, remainingPredictions?.ToList() ?? new List<Tile>(), clearedRows);
         }
 
-        // TODO: Stop expanding matches, but allow overlapping matches.
-        // TODO: Only match predicted tiles is predictions aren't null.
         public HashSet<(Tile, Vector2Int)> RemoveMatchedTiles(Tile[,] workingGrid, HashSet<Tile> remainingPredictions)
         {
             var matchedTiles = new HashSet<(Tile, Vector2Int)>();
@@ -76,7 +75,7 @@ namespace GMTK2020
                 for (int y = 0; y < height; ++y)
                 {
                     Tile tile = workingGrid[x, y];
-                    if (tile is null)
+                    if (tile is null || remainingPredictions != null && !remainingPredictions.Contains(tile))
                         continue;
 
                     Vector2Int origin = new Vector2Int(x, y);
@@ -95,6 +94,7 @@ namespace GMTK2020
                                 || pos.y < 0
                                 || pos.x >= width
                                 || pos.y >= height
+                                || remainingPredictions != null && !remainingPredictions.Contains(workingGrid[pos.x, pos.y])
                                 || workingGrid[pos.x, pos.y]?.Color != tile.Color)
                             {
                                 doesThisSymmetryMatch = false;
@@ -105,67 +105,26 @@ namespace GMTK2020
                         if (doesThisSymmetryMatch)
                         {
                             isMatch = true;
+                            foreach (Vector2Int offset in pattern)
+                            {
+                                Vector2Int pos = origin + offset;
+                                matchedTiles.Add((workingGrid[pos.x, pos.y], pos));
+                            }
                             break;
                         }
                     }
 
                     if (!isMatch)
                         continue;
-
-                    HashSet<Vector2Int> matchedPositions = ExpandMatch(workingGrid, origin);
-
-                    foreach (Vector2Int pos in matchedPositions)
-                    {
-                        matchedTiles.Add((workingGrid[pos.x, pos.y], pos));
-                        workingGrid[pos.x, pos.y] = null;
-                    }
                 }
 
-            return matchedTiles;
-        }
-
-        private HashSet<Vector2Int> ExpandMatch(Tile[,] workingGrid, Vector2Int origin)
-        {
-            int width = workingGrid.GetLength(0);
-            int height = workingGrid.GetLength(1);
-            int color = workingGrid[origin.x, origin.y].Color;
-
-            var fullMatch = new HashSet<Vector2Int>() { origin };
-
-            var positionsToProcess = new Queue<Vector2Int>();
-            positionsToProcess.Enqueue(origin);
-
-            var neighborhood = new HashSet<Vector2Int>()
+            foreach ((Tile tile, Vector2Int pos) in matchedTiles)
             {
-                new Vector2Int(1, 0),
-                new Vector2Int(-1, 0),
-                new Vector2Int(0, 1),
-                new Vector2Int(0, -1)
-            };
-
-            while (positionsToProcess.Count > 0)
-            {
-                Vector2Int pos = positionsToProcess.Dequeue();
-
-                foreach (Vector2Int offset in neighborhood)
-                {
-                    Vector2Int candidate = pos + offset;
-                    if (fullMatch.Contains(candidate))
-                        continue;
-
-                    if (candidate.x >= 0
-                        && candidate.y >= 0
-                        && candidate.x < width
-                        && candidate.y < height
-                        && workingGrid[candidate.x, candidate.y]?.Color == color)
-                    {
-                        positionsToProcess.Enqueue(candidate);
-                        fullMatch.Add(candidate);
-                    }
-                }
+                workingGrid[pos.x, pos.y] = null;
+                remainingPredictions?.Remove(tile);
             }
 
-            return fullMatch;
+            return matchedTiles;
         }
 
         public List<(Tile, Vector2Int)> MoveTilesDown(Tile[,] workingGrid)
