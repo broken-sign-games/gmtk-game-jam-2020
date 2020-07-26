@@ -38,7 +38,7 @@ namespace GMTK2020
             var simulationSteps = new List<SimulationStep>();
 
             Tile[,] workingGrid = initialGrid.Clone() as Tile[,];
-            var remainingPredictions = prediction is null ? null : new HashSet<Tile>(prediction.PredictedTiles);
+            HashSet<Tile> remainingPredictions = prediction is null ? null : new HashSet<Tile>(prediction.PredictedTiles);
 
             while (true)
             {
