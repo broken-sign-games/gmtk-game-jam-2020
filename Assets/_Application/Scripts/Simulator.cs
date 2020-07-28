@@ -40,6 +40,8 @@ namespace GMTK2020
             Tile[,] workingGrid = initialGrid.Clone() as Tile[,];
             HashSet<Tile> remainingPredictions = prediction is null ? null : new HashSet<Tile>(prediction.PredictedTiles);
 
+            List<(Tile, Vector2Int)> movingTiles;
+            List<(Tile, Vector2Int)> newTiles;
             while (true)
             {
                 HashSet<(Tile, Vector2Int)> matchedTiles = RemoveMatchedTiles(workingGrid, remainingPredictions);
@@ -48,20 +50,26 @@ namespace GMTK2020
                     break;
                 }
 
-                List<(Tile, Vector2Int)> movingTiles = MoveTilesDown(workingGrid);
+                movingTiles = MoveTilesDown(workingGrid);
 
-                List<(Tile, Vector2Int)> newTiles = FillWithNewTiles(workingGrid);
+                newTiles = FillWithNewTiles(workingGrid);
 
                 simulationSteps.Add(new SimulationStep(matchedTiles, movingTiles, newTiles));
             }
 
-            int clearedRows = Math.Min(simulationSteps.Count - 1, 0);
+            int clearedRows = Mathf.Clamp(simulationSteps.Count - 1, 0, workingGrid.GetLength(1));
 
             if (remainingPredictions != null)
                 foreach (Tile tile in remainingPredictions)
                     tile.Petrify();
 
-            return new Simulation(simulationSteps, remainingPredictions?.ToList() ?? new List<Tile>(), clearedRows);
+            List<(Tile, Vector2Int)> clearedTiles = ClearBottomRows(workingGrid, clearedRows);
+            movingTiles = MoveTilesDown(workingGrid);
+            newTiles = FillWithNewTiles(workingGrid);
+
+            var clearBoardStep = new ClearBoardStep(clearedRows, clearedTiles, movingTiles, newTiles);
+
+            return new Simulation(simulationSteps, remainingPredictions?.ToList() ?? new List<Tile>(), clearBoardStep);
         }
 
         public HashSet<(Tile, Vector2Int)> RemoveMatchedTiles(Tile[,] workingGrid, HashSet<Tile> remainingPredictions)
@@ -75,7 +83,7 @@ namespace GMTK2020
                 for (int y = 0; y < height; ++y)
                 {
                     Tile tile = workingGrid[x, y];
-                    if (tile is null || remainingPredictions != null && !remainingPredictions.Contains(tile))
+                    if (tile is null || tile.IsStone || remainingPredictions != null && !remainingPredictions.Contains(tile))
                         continue;
 
                     Vector2Int origin = new Vector2Int(x, y);
@@ -180,6 +188,26 @@ namespace GMTK2020
             }
 
             return newTiles;
+        }
+
+        private List<(Tile, Vector2Int)> ClearBottomRows(Tile[,] workingGrid, int clearedRows)
+        {
+            int width = workingGrid.GetLength(0);
+
+            var clearedTiles = new List<(Tile, Vector2Int)>();
+
+            for (int x = 0; x < width; ++x)
+            {
+                for (int y = 0; y < clearedRows; ++y)
+                {
+                    Tile tile = workingGrid[x, y];
+
+                    clearedTiles.Add((tile, new Vector2Int(x, y)));
+                    workingGrid[x, y] = null;
+                }
+            }
+
+            return clearedTiles;
         }
 
         private HashSet<Vector2Int> MirrorPattern(HashSet<Vector2Int> pattern)

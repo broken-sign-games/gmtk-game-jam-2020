@@ -6,13 +6,13 @@ namespace GMTK2020.Data
     {
         public List<SimulationStep> Steps { get; }
         public List<Tile> ExtraneousPredictions { get; }
-        public int ClearedRows { get; }
+        public ClearBoardStep ClearBoardStep { get; }
 
-        public Simulation(List<SimulationStep> steps, List<Tile> extraneousPredictions, int clearedRows)
+        public Simulation(List<SimulationStep> steps, List<Tile> extraneousPredictions, ClearBoardStep clearBoardStep)
         {
             Steps = steps;
             ExtraneousPredictions = extraneousPredictions;
-            ClearedRows = clearedRows;
+            ClearBoardStep = clearBoardStep;
         }
     } 
 }

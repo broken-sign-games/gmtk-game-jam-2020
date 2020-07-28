@@ -3,6 +3,7 @@
     public sealed class Tile
     {
         public int Color { get; private set; }
+        public bool IsStone => Color < 0;
 
         public Tile(int color)
         {
