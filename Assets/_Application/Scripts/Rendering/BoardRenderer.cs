@@ -94,26 +94,18 @@ namespace GMTK2020.Rendering
                 SimulationStep step = simulation.Steps[i];
                 Sequence seq = DOTween.Sequence();
 
-                bool incorrectStep = false;
-
                 foreach ((Tile tile, _) in step.MatchedTiles)
                 {
                     TileRenderer tileRenderer = tileDictionary[tile];
 
-                    bool missedPrediction = incorrectStep && levelResult.MissingPredictions.Contains(tile);
-                    if (missedPrediction)
-                        tileRenderer.ShowMissingPrediction();
-
                     seq.Insert(0, tileRenderer.ShowCorrectPrediction());
 
-                    if (!missedPrediction)
-                        seq.AppendCallback(() => Destroy(tileRenderer.gameObject));
-                }
+                    Tile capturedTile = tile;
 
-                if (incorrectStep)
-                {
-                    foreach (Tile tile in levelResult.ExtraneousPredictions)
-                        tileDictionary[tile].ShowIncorrectPrediction();
+                    seq.AppendCallback(() => {
+                        tileDictionary.Remove(capturedTile);
+                        Destroy(tileRenderer.gameObject);
+                    });
                 }
 
                 await CompletionOf(seq);
@@ -123,8 +115,13 @@ namespace GMTK2020.Rendering
                 if (cancelAnimation)
                     return;
 
-                if (i >= levelResult.CorrectPredictions)
-                    break;
+                foreach ((Tile tile, Vector2Int newPosition) in step.NewTiles)
+                {
+                    TileRenderer tileRenderer = Instantiate(tileData.PrefabMap[tile.Color], transform);
+
+                    tileRenderer.transform.localPosition = new Vector3(newPosition.x, newPosition.y, 0);
+                    tileDictionary[tile] = tileRenderer;
+                }
 
                 seq = DOTween.Sequence();
 

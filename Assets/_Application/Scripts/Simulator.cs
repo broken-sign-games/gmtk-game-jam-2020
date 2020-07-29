@@ -52,7 +52,7 @@ namespace GMTK2020
 
                 movingTiles = MoveTilesDown(workingGrid);
 
-                newTiles = FillWithNewTiles(workingGrid);
+                newTiles = FillWithNewTiles(workingGrid, movingTiles);
 
                 simulationSteps.Add(new SimulationStep(matchedTiles, movingTiles, newTiles));
             }
@@ -65,7 +65,7 @@ namespace GMTK2020
 
             List<(Tile, Vector2Int)> clearedTiles = ClearBottomRows(workingGrid, clearedRows);
             movingTiles = MoveTilesDown(workingGrid);
-            newTiles = FillWithNewTiles(workingGrid);
+            newTiles = FillWithNewTiles(workingGrid, movingTiles);
 
             var clearBoardStep = new ClearBoardStep(clearedRows, clearedTiles, movingTiles, newTiles);
 
@@ -165,7 +165,7 @@ namespace GMTK2020
             return movedTiles;
         }
 
-        private List<(Tile, Vector2Int)> FillWithNewTiles(Tile[,] workingGrid)
+        private List<(Tile, Vector2Int)> FillWithNewTiles(Tile[,] workingGrid, List<(Tile, Vector2Int)> movedTiles)
         {
             int width = workingGrid.GetLength(0);
             int height = workingGrid.GetLength(1);
@@ -174,16 +174,21 @@ namespace GMTK2020
 
             for (int x = 0; x < width; ++x)
             {
+                int nNewTiles = 0;
                 for (int y = 0; y < height; ++y)
                 {
                     Tile tile = workingGrid[x, y];
-                    if (tile != null)
-                        continue;
+                    if (tile == null)
+                        ++nNewTiles;
+                }
 
+                for (int y = height; y < height + nNewTiles; ++y)
+                {
                     // TODO: Should this be the responsibility of the level generator?
-                    tile = workingGrid[x, y] = new Tile(rng.Next(5));
+                    Tile tile = workingGrid[x, y - nNewTiles] = new Tile(rng.Next(5));
 
                     newTiles.Add((tile, new Vector2Int(x, y)));
+                    movedTiles.Add((tile, new Vector2Int(x, y - nNewTiles)));
                 }
             }
 

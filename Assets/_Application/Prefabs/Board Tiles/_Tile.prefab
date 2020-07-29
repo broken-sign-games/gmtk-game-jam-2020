@@ -84,7 +84,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 1
   m_SpriteSortPoint: 0
 --- !u!114 &3085825000685519523
 MonoBehaviour:
@@ -102,6 +102,11 @@ MonoBehaviour:
   incorrectBackground: {fileID: 4645700776652071065}
   missingPredictionIndicator: {fileID: 637144989252294456}
   incorrectColor: {r: 1, g: 0, b: 0, a: 1}
+  correctColor: {r: 0, g: 1, b: 0, a: 1}
+  tileFadeDuration: 0.25
+  textFadeDuration: 0.25
+  textRiseDuration: 0.25
+  textRiseDistance: 0.25
 --- !u!1 &4516562552905295543
 GameObject:
   m_ObjectHideFlags: 0
