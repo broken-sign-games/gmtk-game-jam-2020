@@ -17,6 +17,8 @@ namespace GMTK2020.Rendering
         [SerializeField] private Button retryButton = null;
         [SerializeField] private Button nextButton = null;
         [SerializeField] private SpriteRenderer border = null;
+        [SerializeField] private Transform clearedRowRoot = null;
+        [SerializeField] private ClearedRowRenderer clearedRowPrefab = null;
 
         [SerializeField] private float postMatchDelay = 0.25f;
         [SerializeField] private float postFallDelay = 0.1f;
@@ -28,6 +30,7 @@ namespace GMTK2020.Rendering
         public event Action SimulationRenderingCompleted;
 
         private Dictionary<Tile, TileRenderer> tileDictionary = new Dictionary<Tile, TileRenderer>();
+        private List<ClearedRowRenderer> clearedRowRenderers = new List<ClearedRowRenderer>();
         private Tile[,] initialGrid;
         int width;
         int height;
@@ -96,6 +99,16 @@ namespace GMTK2020.Rendering
                 SimulationStep step = simulation.Steps[i];
                 seq = DOTween.Sequence();
 
+                if (i > 0)
+                {
+                    ClearedRowRenderer rowRenderer = Instantiate(clearedRowPrefab, clearedRowRoot);
+                    rowRenderer.transform.localPosition = new Vector3(0, i - 1, 0);
+
+                    clearedRowRenderers.Add(rowRenderer);
+
+                    seq.Append(rowRenderer.ShowIndicator());
+                }
+
                 foreach ((Tile tile, _) in step.MatchedTiles)
                 {
                     TileRenderer tileRenderer = tileDictionary[tile];
@@ -155,6 +168,16 @@ namespace GMTK2020.Rendering
             await CompletionOf(seq);
 
             seq = DOTween.Sequence();
+
+            foreach (ClearedRowRenderer rowRenderer in clearedRowRenderers)
+            {
+                ClearedRowRenderer capturedRenderer = rowRenderer;
+
+                seq.Insert(0, rowRenderer.ClearRow());
+                seq.AppendCallback(() => Destroy(rowRenderer.gameObject));
+            }
+
+            clearedRowRenderers.Clear();
 
             foreach ((Tile tile, _) in simulation.ClearBoardStep.ClearedTiles)
             {
