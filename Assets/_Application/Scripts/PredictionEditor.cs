@@ -63,6 +63,7 @@ namespace GMTK2020
 
         private void TogglePrediction(Vector2Int pos)
         {
+            // TODO: Prevent prediction on stone tiles
             rawPredictions[pos.x, pos.y] = !rawPredictions[pos.x, pos.y];
 
             boardRenderer.UpdatePrediction(pos, rawPredictions[pos.x, pos.y]);

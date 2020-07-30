@@ -29,7 +29,7 @@ namespace GMTK2020
 
             // TODO: Use RNG with same seed during level generation and playback.
             var rng = new Random();
-            Simulator simulator = new Simulator(levelPattern, rng);
+            Simulator simulator = new Simulator(levelPattern, rng, false);
 
             Level = new LevelGenerator(levelSpec, simulator).GenerateValidLevel();
 

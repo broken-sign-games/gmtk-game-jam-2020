@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Random = System.Random;
 
@@ -31,6 +32,8 @@ namespace GMTK2020
                     grid = GenerateLevel();
                     simulation = simulator.Simulate(grid);
                     isValid = ValidateSimulation(simulation);
+                    if (simulation.Steps.Count < 5)
+                        isValid = false;
                 }
                 catch (Exception e) when (
                     e is ArgumentException ||

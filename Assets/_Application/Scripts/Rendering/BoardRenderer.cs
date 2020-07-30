@@ -83,6 +83,8 @@ namespace GMTK2020.Rendering
         {
             await new WaitForSeconds(postMatchDelay * 2);
 
+            Sequence seq;
+
             for (int i = 0; i < simulation.Steps.Count; ++i)
             {
                 if (i > 0)
@@ -92,7 +94,7 @@ namespace GMTK2020.Rendering
                     return;
 
                 SimulationStep step = simulation.Steps[i];
-                Sequence seq = DOTween.Sequence();
+                seq = DOTween.Sequence();
 
                 foreach ((Tile tile, _) in step.MatchedTiles)
                 {
@@ -140,6 +142,57 @@ namespace GMTK2020.Rendering
                 if (cancelAnimation)
                     return;
             }
+
+            seq = DOTween.Sequence();
+
+            foreach (Tile tile in simulation.ClearBoardStep.ExtraneousPredictions)
+            {
+                TileRenderer tileRenderer = tileDictionary[tile];
+
+                seq.Insert(0, tileRenderer.Petrify());
+            }
+
+            await CompletionOf(seq);
+
+            seq = DOTween.Sequence();
+
+            foreach ((Tile tile, _) in simulation.ClearBoardStep.ClearedTiles)
+            {
+                TileRenderer tileRenderer = tileDictionary[tile];
+
+                seq.Insert(0, tileRenderer.Explode());
+
+                Tile capturedTile = tile;
+
+                seq.AppendCallback(() => {
+                    tileDictionary.Remove(capturedTile);
+                    Destroy(tileRenderer.gameObject);
+                });
+            }
+
+            await CompletionOf(seq);
+
+            foreach ((Tile tile, Vector2Int newPosition) in simulation.ClearBoardStep.NewTiles)
+            {
+                TileRenderer tileRenderer = Instantiate(tileData.PrefabMap[tile.Color], transform);
+
+                tileRenderer.transform.localPosition = new Vector3(newPosition.x, newPosition.y, 0);
+                tileDictionary[tile] = tileRenderer;
+            }
+
+            seq = DOTween.Sequence();
+
+            foreach ((Tile tile, Vector2Int newPosition) in simulation.ClearBoardStep.MovingTiles)
+            {
+                TileRenderer tileRenderer = tileDictionary[tile];
+                Tween tween = tileRenderer.transform
+                    .DOLocalMove(new Vector3Int(newPosition.x, newPosition.y, 0), 0.75f)
+                    .SetSpeedBased()
+                    .SetEase(fallingEase);
+                seq.Join(tween);
+            }
+
+            await CompletionOf(seq);
 
             SimulationRenderingCompleted?.Invoke();
         }

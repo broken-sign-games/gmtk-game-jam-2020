@@ -12,8 +12,11 @@ namespace GMTK2020
         private readonly List<HashSet<Vector2Int>> matchingPatterns;
         private readonly Random rng;
 
-        public Simulator(HashSet<Vector2Int> matchingPattern, Random rng)
+        private bool dropNewTiles;
+
+        public Simulator(HashSet<Vector2Int> matchingPattern, Random rng, bool dropNewTiles = true)
         {
+            this.dropNewTiles = dropNewTiles;
             this.rng = rng;
             matchingPatterns = new List<HashSet<Vector2Int>>() { matchingPattern };
 
@@ -67,9 +70,9 @@ namespace GMTK2020
             movingTiles = MoveTilesDown(workingGrid);
             newTiles = FillWithNewTiles(workingGrid, movingTiles);
 
-            var clearBoardStep = new ClearBoardStep(clearedRows, clearedTiles, movingTiles, newTiles);
+            var clearBoardStep = new ClearBoardStep(remainingPredictions?.ToList() ?? new List<Tile>(), clearedRows, clearedTiles, movingTiles, newTiles);
 
-            return new Simulation(simulationSteps, remainingPredictions?.ToList() ?? new List<Tile>(), clearBoardStep);
+            return new Simulation(simulationSteps, clearBoardStep);
         }
 
         public HashSet<(Tile, Vector2Int)> RemoveMatchedTiles(Tile[,] workingGrid, HashSet<Tile> remainingPredictions)
@@ -167,6 +170,9 @@ namespace GMTK2020
 
         private List<(Tile, Vector2Int)> FillWithNewTiles(Tile[,] workingGrid, List<(Tile, Vector2Int)> movedTiles)
         {
+            if (!dropNewTiles)
+                return new List<(Tile, Vector2Int)>();
+
             int width = workingGrid.GetLength(0);
             int height = workingGrid.GetLength(1);
 

@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private TextMeshPro text = null;
         [SerializeField] private SpriteRenderer incorrectBackground = null;
         [SerializeField] private SpriteRenderer missingPredictionIndicator = null;
+        [SerializeField] private SpriteRenderer stoneTile = null;
         [SerializeField] private Color incorrectColor = Color.red;
         [SerializeField] private Color correctColor = Color.green;
         [SerializeField] private float tileFadeDuration = 0.25f;
@@ -52,6 +54,25 @@ namespace GMTK2020.Rendering
         public void ShowMissingPrediction()
         {
             missingPredictionIndicator.gameObject.SetActive(true);
+        }
+
+        public Tween Petrify()
+        {
+            Sequence seq = DOTween.Sequence();
+            seq.Join(sprite.DOFade(0f, tileFadeDuration));
+            seq.Join(stoneTile.DOFade(1f, tileFadeDuration));
+            seq.Join(text.DOFade(0f, tileFadeDuration));
+
+            return seq;
+        }
+
+        public Tween Explode()
+        {
+            Sequence seq = DOTween.Sequence();
+            seq.Join(sprite.DOFade(0.0f, tileFadeDuration));
+            seq.Join(stoneTile.DOFade(0.0f, tileFadeDuration));
+
+            return seq;
         }
     }
 }

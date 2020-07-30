@@ -1985,7 +1985,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Use left/right click or number keys to mark tiles with predictions.
+  m_text: Click tiles to mark them with predictions.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 54e033c759b8ade4fbdcc97cbd9133f5, type: 2}
   m_sharedMaterial: {fileID: 918097607649750003, guid: 54e033c759b8ade4fbdcc97cbd9133f5,
@@ -2055,12 +2055,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1593614291}
-    characterCount: 67
+    characterCount: 42
     spriteCount: 0
-    spaceCount: 10
-    wordCount: 12
+    spaceCount: 6
+    wordCount: 7
     linkCount: 0
-    lineCount: 4
+    lineCount: 3
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
