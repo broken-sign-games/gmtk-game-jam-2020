@@ -11,7 +11,7 @@ namespace GMTK2020
         private Tile[,] initialGrid;
         private bool[,] rawPredictions;
         private bool initialized = false;
-        private bool predictionsFinalised = false;
+        private bool predictionsFinalized = false;
 
         int width;
         int height;
@@ -25,11 +25,12 @@ namespace GMTK2020
 
             rawPredictions = new bool[width, height];
             initialized = true;
+            predictionsFinalized = false;
         }
 
         public Prediction GetPredictions()
         {
-            predictionsFinalised = true;
+            predictionsFinalized = true;
 
             var predictions = new Prediction();
 
@@ -47,7 +48,7 @@ namespace GMTK2020
 
         private void Update()
         {
-            if (!initialized || predictionsFinalised)
+            if (!initialized || predictionsFinalized)
                 return;
 
             Vector2Int? gridPosOrNull = boardRenderer.PixelSpaceToGridCoordinates(Input.mousePosition);
@@ -63,10 +64,14 @@ namespace GMTK2020
 
         private void TogglePrediction(Vector2Int pos)
         {
-            // TODO: Prevent prediction on stone tiles
+            Tile tile = initialGrid[pos.x, pos.y];
+
+            if (tile.IsStone)
+                return;
+
             rawPredictions[pos.x, pos.y] = !rawPredictions[pos.x, pos.y];
 
-            boardRenderer.UpdatePrediction(pos, rawPredictions[pos.x, pos.y]);
+            boardRenderer.UpdatePrediction(tile, rawPredictions[pos.x, pos.y]);
         }
     }
 }

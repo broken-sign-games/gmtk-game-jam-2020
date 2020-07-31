@@ -14,7 +14,6 @@ namespace GMTK2020.Rendering
     {
         [SerializeField] private Camera mainCamera = null;
         [SerializeField] private TileData tileData = null;
-        [SerializeField] private Button retryButton = null;
         [SerializeField] private Button nextButton = null;
         [SerializeField] private SpriteRenderer border = null;
         [SerializeField] private Transform clearedRowRoot = null;
@@ -25,13 +24,12 @@ namespace GMTK2020.Rendering
         [SerializeField] private float fallingSpeed = 1f;
         [SerializeField] private Ease fallingEase = Ease.InCubic;
 
-        private SoundManager SoundManager = null;
+        private SoundManager soundManager = null;
 
-        public event Action SimulationRenderingCompleted;
+        public event Action<bool> SimulationRenderingCompleted;
 
         private Dictionary<Tile, TileRenderer> tileDictionary = new Dictionary<Tile, TileRenderer>();
         private List<ClearedRowRenderer> clearedRowRenderers = new List<ClearedRowRenderer>();
-        private Tile[,] initialGrid;
         int width;
         int height;
 
@@ -39,7 +37,7 @@ namespace GMTK2020.Rendering
 
         private void Start()
         {
-            SoundManager = FindObjectOfType<SoundManager>();
+            soundManager = FindObjectOfType<SoundManager>();
         }
 
         public void RenderInitial(Tile[,] grid)
@@ -54,8 +52,6 @@ namespace GMTK2020.Rendering
             }
 
             tileDictionary.Clear();
-
-            initialGrid = grid;
 
             width = grid.GetLength(0);
             height = grid.GetLength(1);
@@ -77,12 +73,12 @@ namespace GMTK2020.Rendering
                 }
         }
 
-        public async void KickOffRenderSimulation(Simulation simulation, LevelResult result)
+        public async void KickOffRenderSimulation(Simulation simulation)
         {
-            await RenderSimulationAsync(simulation, result);
+            await RenderSimulationAsync(simulation);
         }
 
-        public async Task RenderSimulationAsync(Simulation simulation, LevelResult levelResult)
+        public async Task RenderSimulationAsync(Simulation simulation)
         {
             await new WaitForSeconds(postMatchDelay * 2);
 
@@ -217,7 +213,7 @@ namespace GMTK2020.Rendering
 
             await CompletionOf(seq);
 
-            SimulationRenderingCompleted?.Invoke();
+            SimulationRenderingCompleted?.Invoke(simulation.FurtherMatchesPossible);
         }
 
         System.Collections.IEnumerator CompletionOf(Tween tween)
@@ -243,16 +239,11 @@ namespace GMTK2020.Rendering
             return gridPos;
         }
 
-        public void UpdatePrediction(Vector2Int pos, bool isPredicted)
-        {
-            Tile tile = initialGrid[pos.x, pos.y];
-            UpdatePrediction(tile, isPredicted);
-            SoundManager?.PlayEffect(SoundManager.Effect.PREDICT, 1);
-        }
-
         public void UpdatePrediction(Tile tile, bool isPredicted)
         {
             tileDictionary[tile].UpdatePrediction(isPredicted);
+            if (soundManager != null)
+                soundManager.PlayEffect(SoundManager.Effect.PREDICT, 1);
         }
     }
 }

@@ -635,6 +635,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 618373458}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &786914241 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2729287368967238374, guid: b3b2ee8bcf9ee524dba4480f82f75629,
+    type: 3}
+  m_PrefabInstance: {fileID: 2729287367561108022}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &892247976
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1105,13 +1117,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1050045834}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8206b36876eccc40ac5fd8412621890, type: 3}
+  m_Script: {fileID: 11500000, guid: c9b936db544e8b44b90a8b207c49dae9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelSceneName: LevelScene
-  winSceneName: WinScene
-  tutorialSceneName: TutorialScene
-  levelSequence: {fileID: 11400000, guid: a406af891823fa34eb72e48528b7ba49, type: 2}
+  match3SceneName: Match3Scene
 --- !u!4 &1050045836
 Transform:
   m_ObjectHideFlags: 0
@@ -1542,6 +1551,8 @@ MonoBehaviour:
   boardRenderer: {fileID: 2077407154}
   predictionEditor: {fileID: 1689814306}
   levelLoader: {fileID: 1784404315}
+  retryButton: {fileID: 1144954186}
+  playButton: {fileID: 786914241}
 --- !u!4 &1284230306
 Transform:
   m_ObjectHideFlags: 0
@@ -1773,7 +1784,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 1050045835}
+      objectReference: {fileID: 0}
     - target: {fileID: 2729287368967238374, guid: b3b2ee8bcf9ee524dba4480f82f75629,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
@@ -2519,6 +2530,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 2729287368967238374, guid: b3b2ee8bcf9ee524dba4480f82f75629,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2729287368967238374, guid: b3b2ee8bcf9ee524dba4480f82f75629,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2729287368967238392, guid: b3b2ee8bcf9ee524dba4480f82f75629,
         type: 3}

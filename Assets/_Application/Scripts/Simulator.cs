@@ -72,7 +72,9 @@ namespace GMTK2020
 
             var clearBoardStep = new ClearBoardStep(remainingPredictions?.ToList() ?? new List<Tile>(), clearedRows, clearedTiles, movingTiles, newTiles);
 
-            return new Simulation(simulationSteps, clearBoardStep);
+            bool furtherMatchesPossible = CheckIfFurtherMatchesPossible(workingGrid);
+
+            return new Simulation(simulationSteps, clearBoardStep, furtherMatchesPossible, workingGrid.Clone() as Tile[,]);
         }
 
         public HashSet<(Tile, Vector2Int)> RemoveMatchedTiles(Tile[,] workingGrid, HashSet<Tile> remainingPredictions)
@@ -219,6 +221,64 @@ namespace GMTK2020
             }
 
             return clearedTiles;
+        }
+
+        private bool CheckIfFurtherMatchesPossible(Tile[,] workingGrid)
+        {
+            int width = workingGrid.GetLength(0);
+            int height = workingGrid.GetLength(1);
+
+            for (int x = 0; x < width; ++x)
+            {
+                int matchStartY = -1;
+                int matchColor = -1;
+                for (int y = 0; y < height; ++y)
+                {
+                    Tile tile = workingGrid[x, y];
+                    if (tile is null || tile.IsStone)
+                    {
+                        matchColor = -1;
+                        continue;
+                    }
+
+                    if (tile.Color != matchColor)
+                    {
+                        matchStartY = y;
+                        matchColor = tile.Color;
+                        continue;
+                    }
+
+                    if (y - matchStartY == 2)
+                        return true;
+                }
+            }
+
+            for (int y = 0; y < height; ++y)
+            {
+                int matchStartX = -1;
+                int matchColor = -1;
+                for (int x = 0; x < width; ++x)
+                {
+                    Tile tile = workingGrid[x, y];
+                    if (tile is null || tile.IsStone)
+                    {
+                        matchColor = -1;
+                        continue;
+                    }
+
+                    if (tile.Color != matchColor)
+                    {
+                        matchStartX = x;
+                        matchColor = tile.Color;
+                        continue;
+                    }
+
+                    if (x - matchStartX == 2)
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         private HashSet<Vector2Int> MirrorPattern(HashSet<Vector2Int> pattern)
