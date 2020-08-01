@@ -18,8 +18,11 @@ namespace GMTK2020
 
         public Level Level { get; private set; }
 
+        public ScoreKeeper ScoreKeeper { get; private set; }
+
         private void Start()
         {
+            ScoreKeeper = new ScoreKeeper();
             LoadLevel();
         }
 
@@ -34,7 +37,7 @@ namespace GMTK2020
             Level = new LevelGenerator(levelSpec, simulator).GenerateValidLevel();
 
             predictionEditor.Initialize(Level.Grid);
-            boardRenderer.RenderInitial(Level.Grid);
+            boardRenderer.RenderInitial(Level.Grid, ScoreKeeper);
             patternRenderer.RenderPattern(levelPattern);
         }
     }

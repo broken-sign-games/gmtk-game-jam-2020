@@ -14,9 +14,12 @@ namespace GMTK2020
 
         private bool dropNewTiles;
 
-        public Simulator(HashSet<Vector2Int> matchingPattern, Random rng, bool dropNewTiles = true)
+        private ScoreKeeper scoreKeeper;
+
+        public Simulator(HashSet<Vector2Int> matchingPattern, Random rng, bool dropNewTiles = true, ScoreKeeper scoreKeeper = null)
         {
             this.dropNewTiles = dropNewTiles;
+            this.scoreKeeper = scoreKeeper;
             this.rng = rng;
             matchingPatterns = new List<HashSet<Vector2Int>>() { matchingPattern };
 
@@ -57,7 +60,10 @@ namespace GMTK2020
 
                 newTiles = FillWithNewTiles(workingGrid, movingTiles);
 
-                simulationSteps.Add(new SimulationStep(matchedTiles, movingTiles, newTiles));
+                SimulationStep step = new SimulationStep(matchedTiles, movingTiles, newTiles);
+                if (scoreKeeper != null)
+                    step.Score = scoreKeeper.ScoreStep(step, simulationSteps.Count);
+                simulationSteps.Add(step);
             }
 
             int clearedRows = Mathf.Clamp(simulationSteps.Count - 1, 0, workingGrid.GetLength(1));

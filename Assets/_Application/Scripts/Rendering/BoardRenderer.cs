@@ -14,10 +14,10 @@ namespace GMTK2020.Rendering
     {
         [SerializeField] private Camera mainCamera = null;
         [SerializeField] private TileData tileData = null;
-        [SerializeField] private Button nextButton = null;
         [SerializeField] private SpriteRenderer border = null;
         [SerializeField] private Transform clearedRowRoot = null;
         [SerializeField] private ClearedRowRenderer clearedRowPrefab = null;
+        [SerializeField] private ScoreDisplay scoreDisplay = null;
 
         [SerializeField] private float postMatchDelay = 0.25f;
         [SerializeField] private float postFallDelay = 0.1f;
@@ -35,12 +35,14 @@ namespace GMTK2020.Rendering
 
         bool cancelAnimation = false;
 
+        private ScoreKeeper scoreKeeper;
+
         private void Start()
         {
             soundManager = FindObjectOfType<SoundManager>();
         }
 
-        public void RenderInitial(Tile[,] grid)
+        public void RenderInitial(Tile[,] grid, ScoreKeeper scoreKeeper)
         {
             if (cancelAnimation)
                 return;
@@ -71,6 +73,11 @@ namespace GMTK2020.Rendering
                     tileRenderer.transform.localPosition = new Vector3(x, y, 0);
                     tileDictionary[tile] = tileRenderer;
                 }
+
+            this.scoreKeeper = scoreKeeper;
+
+            scoreDisplay.SetScore(0);
+            scoreDisplay.SetHighscore(scoreKeeper.Highscore);
         }
 
         public async void KickOffRenderSimulation(Simulation simulation)
@@ -120,6 +127,8 @@ namespace GMTK2020.Rendering
                 }
 
                 await CompletionOf(seq);
+
+                scoreDisplay.SetScore(step.Score);
 
                 await new WaitForSeconds(postMatchDelay);
 
@@ -212,6 +221,9 @@ namespace GMTK2020.Rendering
             }
 
             await CompletionOf(seq);
+
+            if (!simulation.FurtherMatchesPossible && scoreKeeper.Score > scoreKeeper.Highscore)
+                scoreDisplay.SetHighscore(scoreKeeper.Score);
 
             SimulationRenderingCompleted?.Invoke(simulation.FurtherMatchesPossible);
         }

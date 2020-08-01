@@ -16,13 +16,13 @@ namespace GMTK2020
         [SerializeField] private Button retryButton = null;
         [SerializeField] private Button playButton = null;
 
-        private SoundManager SoundManager = null;
+        private SoundManager soundManager = null;
 
         private Tile[,] nextGrid;
 
         private void Start()
         {
-            SoundManager = FindObjectOfType<SoundManager>();
+            soundManager = FindObjectOfType<SoundManager>();
 
             boardRenderer.SimulationRenderingCompleted += OnSimulationRenderingCompleted;
         }
@@ -34,13 +34,13 @@ namespace GMTK2020
 
         public void Run()
         {
-            SoundManager?.PlayEffect(SoundManager.Effect.CLICK);
+            soundManager?.PlayEffect(SoundManager.Effect.CLICK);
 
             Prediction prediction = predictionEditor.GetPredictions();
             Level level = levelLoader.Level;
 
             var rng = new Random();
-            var simulator = new Simulator(new HashSet<Vector2Int>(level.MatchingPattern), rng);
+            var simulator = new Simulator(new HashSet<Vector2Int>(level.MatchingPattern), rng, true, levelLoader.ScoreKeeper);
             Simulation simulation = nextGrid is null 
                 ? simulator.Simulate(level.Grid, prediction)
                 : simulator.Simulate(nextGrid, prediction);
@@ -59,6 +59,7 @@ namespace GMTK2020
             }
             else
             {
+                levelLoader.ScoreKeeper.UpdateHighscore();
                 retryButton.gameObject.SetActive(true);
             }
         }
