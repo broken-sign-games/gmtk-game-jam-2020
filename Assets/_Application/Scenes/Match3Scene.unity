@@ -655,6 +655,7 @@ MonoBehaviour:
   swapDisplay: {fileID: 1667746002}
   boardRenderer: {fileID: 2077407154}
   mouseEventSource: {fileID: 138701941}
+  playback: {fileID: 1284230305}
 --- !u!4 &1131627033
 Transform:
   m_ObjectHideFlags: 0

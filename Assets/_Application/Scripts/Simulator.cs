@@ -229,7 +229,7 @@ namespace GMTK2020
             return clearedTiles;
         }
 
-        private bool CheckIfFurtherMatchesPossible(Tile[,] workingGrid)
+        public bool CheckIfFurtherMatchesPossible(Tile[,] workingGrid)
         {
             int width = workingGrid.GetLength(0);
             int height = workingGrid.GetLength(1);

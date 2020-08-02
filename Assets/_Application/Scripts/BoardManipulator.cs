@@ -11,12 +11,13 @@ namespace GMTK2020
 		[SerializeField] private SwapDisplay swapDisplay = null;
 		[SerializeField] private BoardRenderer boardRenderer = null;
 		[SerializeField] private MouseEventSource mouseEventSource = null;
+		[SerializeField] private Playback playback = null;
 
 		private int _remainingSwaps = 0;
-		private int RemainingSwaps
+		public int RemainingSwaps
 		{
 			get => _remainingSwaps;
-			set
+			private set
 			{
 				_remainingSwaps = value;
 				swapDisplay.SetSwaps(RemainingSwaps);
@@ -75,6 +76,9 @@ namespace GMTK2020
 		private void UseUpSwap()
 		{
 			--RemainingSwaps;
+
+			if (RemainingSwaps == 0)
+				playback.CheckForGameOver();
 		}
 
 		private void OnDragStarted(Vector2 fromPos)

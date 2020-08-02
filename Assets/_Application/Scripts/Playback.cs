@@ -63,9 +63,25 @@ namespace GMTK2020
             }
             else
             {
-                levelLoader.ScoreKeeper.UpdateHighscore();
-                retryButton.gameObject.SetActive(true);
+                GameOver();
             }
+        }
+
+        public void CheckForGameOver()
+        {
+            var rng = new Random();
+            var simulator = new Simulator(new HashSet<Vector2Int>(levelLoader.Level.MatchingPattern), rng, true, levelLoader.ScoreKeeper);
+
+            if (!simulator.CheckIfFurtherMatchesPossible(nextGrid))
+                GameOver();
+        }
+
+        private void GameOver()
+        {
+            playButton.interactable = false;
+            boardManipulator.LockBoard();
+            levelLoader.ScoreKeeper.UpdateHighscore();
+            retryButton.gameObject.SetActive(true);
         }
     }
 }

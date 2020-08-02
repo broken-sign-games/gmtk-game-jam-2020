@@ -229,7 +229,7 @@ namespace GMTK2020.Rendering
             if (!simulation.FurtherMatchesPossible && scoreKeeper.Score > scoreKeeper.Highscore)
                 scoreDisplay.SetHighscore(scoreKeeper.Score);
 
-            SimulationRenderingCompleted?.Invoke(simulation.FurtherMatchesPossible);
+            SimulationRenderingCompleted?.Invoke(simulation.FurtherMatchesPossible || boardManipulator.RemainingSwaps > 0);
         }
 
         System.Collections.IEnumerator CompletionOf(Tween tween)
