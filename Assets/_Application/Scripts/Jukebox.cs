@@ -7,7 +7,7 @@ using System.Linq;
 public class Jukebox : MonoBehaviour
 {
 
-    [SerializeField] private AudioClip[] Soundtrack;
+    [SerializeField] private AudioClip[] Soundtrack = new AudioClip[0];
 
     private AudioSource AudioSource = null;
     private List<int> Playlist = null;

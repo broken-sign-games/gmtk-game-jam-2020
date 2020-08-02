@@ -1,5 +1,7 @@
 ﻿using GMTK2020.Data;
 using GMTK2020.Rendering;
+using GMTK2020.UI;
+using System;
 using UnityEngine;
 
 namespace GMTK2020
@@ -7,23 +9,32 @@ namespace GMTK2020
     public class PredictionEditor : MonoBehaviour
     {
         [SerializeField] private BoardRenderer boardRenderer = null;
+        [SerializeField] private MouseEventSource mouseEventSource = null;
 
-        private Tile[,] initialGrid;
-        private bool[,] rawPredictions;
+        private Tile[,] grid;
         private bool initialized = false;
         private bool predictionsFinalized = false;
 
         int width;
         int height;
 
+        private void Awake()
+        {
+            mouseEventSource.ClickedAt += OnBoardClicked;
+        }
+
+        private void OnDestroy()
+        {
+            mouseEventSource.ClickedAt -= OnBoardClicked;
+        }
+
         public void Initialize(Tile[,] initialGrid)
         {
-            this.initialGrid = initialGrid.Clone() as Tile[,];
+            grid = initialGrid;
 
             width = initialGrid.GetLength(0);
             height = initialGrid.GetLength(1);
 
-            rawPredictions = new bool[width, height];
             initialized = true;
             predictionsFinalized = false;
         }
@@ -37,8 +48,8 @@ namespace GMTK2020
             for (int x = 0; x < width; ++x)
                 for (int y = 0; y < height; ++y)
                 {
-                    if (rawPredictions[x, y])
-                        predictions.PredictedTiles.Add(initialGrid[x, y]);
+                    if (grid[x, y].Marked)
+                        predictions.PredictedTiles.Add(grid[x, y]);
                 }
 
             gameObject.SetActive(false);
@@ -46,32 +57,31 @@ namespace GMTK2020
             return predictions;
         }
 
-        private void Update()
+        private void OnBoardClicked(Vector2 clickPos)
         {
             if (!initialized || predictionsFinalized)
                 return;
 
-            Vector2Int? gridPosOrNull = boardRenderer.PixelSpaceToGridCoordinates(Input.mousePosition);
+            Vector2Int? gridPosOrNull = boardRenderer.PixelSpaceToGridCoordinates(clickPos);
 
             if (gridPosOrNull is null)
                 return;
 
             var gridPos = (Vector2Int)gridPosOrNull;
 
-            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
-                TogglePrediction(gridPos);
+            TogglePrediction(gridPos);
         }
 
         private void TogglePrediction(Vector2Int pos)
         {
-            Tile tile = initialGrid[pos.x, pos.y];
+            Tile tile = grid[pos.x, pos.y];
 
             if (tile.IsStone)
                 return;
 
-            rawPredictions[pos.x, pos.y] = !rawPredictions[pos.x, pos.y];
+            tile.Marked = !tile.Marked;
 
-            boardRenderer.UpdatePrediction(tile, rawPredictions[pos.x, pos.y]);
+            boardRenderer.UpdatePrediction(tile);
         }
     }
 }

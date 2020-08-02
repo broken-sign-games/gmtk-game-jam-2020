@@ -127,9 +127,9 @@ namespace GMTK2020
                             foreach (Vector2Int offset in pattern)
                             {
                                 Vector2Int pos = origin + offset;
-                                matchedTiles.Add((workingGrid[pos.x, pos.y], pos));
+                                if (!matchedTiles.Any(pair => pair.Item2 == pos))
+                                    matchedTiles.Add((workingGrid[pos.x, pos.y], pos));
                             }
-                            break;
                         }
                     }
 

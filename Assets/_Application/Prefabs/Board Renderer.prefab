@@ -48,12 +48,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
   tileData: {fileID: 11400000, guid: f963dc801adc7b84fa1b10998885ace9, type: 2}
-  retryButton: {fileID: 0}
-  nextButton: {fileID: 0}
   border: {fileID: 269216730889641830}
   clearedRowRoot: {fileID: 5003759415528254985}
   clearedRowPrefab: {fileID: 6760317329851024179, guid: 3d6d5e8335ab13f4994eab7db9cbcb9f,
     type: 3}
+  scoreDisplay: {fileID: 0}
+  boardManipulator: {fileID: 0}
   postMatchDelay: 0.15
   postFallDelay: 0.1
   fallingSpeed: 1.5
@@ -68,6 +68,8 @@ GameObject:
   m_Component:
   - component: {fileID: 269216730889641825}
   - component: {fileID: 269216730889641830}
+  - component: {fileID: 1510319193356597748}
+  - component: {fileID: 7482533806456758840}
   m_Layer: 0
   m_Name: Border
   m_TagString: Untagged
@@ -139,6 +141,44 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1510319193356597748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269216730889641824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf67521626a367e4aa34c79fe00eb70b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!61 &7482533806456758840
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269216730889641824}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 4.6875, y: 4.6875}
+  m_SpriteTilingProperty:
+    border: {x: 0.1875, y: 0.1875, z: 0.1875, w: 0.1875}
+    pivot: {x: -0, y: -0}
+    oldSize: {x: 0.4375, y: 0.4375}
+    newSize: {x: 9.375, y: 9.375}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 1
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 9, y: 9}
+  m_EdgeRadius: 0
 --- !u!1 &412223587885257008
 GameObject:
   m_ObjectHideFlags: 0

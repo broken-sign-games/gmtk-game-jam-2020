@@ -4,6 +4,7 @@
     {
         public int Color { get; private set; }
         public bool IsStone => Color < 0;
+        public bool Marked { get; set; }
 
         public Tile(int color)
         {

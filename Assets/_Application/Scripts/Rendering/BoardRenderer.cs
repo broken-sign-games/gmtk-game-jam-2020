@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace GMTK2020.Rendering
 {
@@ -18,11 +17,13 @@ namespace GMTK2020.Rendering
         [SerializeField] private Transform clearedRowRoot = null;
         [SerializeField] private ClearedRowRenderer clearedRowPrefab = null;
         [SerializeField] private ScoreDisplay scoreDisplay = null;
+        [SerializeField] private BoardManipulator boardManipulator = null;
 
         [SerializeField] private float postMatchDelay = 0.25f;
         [SerializeField] private float postFallDelay = 0.1f;
-        [SerializeField] private float fallingSpeed = 1f;
+        [SerializeField] private float fallingSpeed = 0.75f;
         [SerializeField] private Ease fallingEase = Ease.InCubic;
+        [SerializeField] private float swapSpeed = 2f;
 
         private SoundManager soundManager = null;
 
@@ -104,6 +105,9 @@ namespace GMTK2020.Rendering
 
                 if (i > 0)
                 {
+                    // This is genuinely the worst possible place to put this logic.
+                    boardManipulator.GrantSwap();
+
                     ClearedRowRenderer rowRenderer = Instantiate(clearedRowPrefab, clearedRowRoot);
                     rowRenderer.transform.localPosition = new Vector3(0, i - 1, 0);
 
@@ -149,7 +153,7 @@ namespace GMTK2020.Rendering
                 {
                     TileRenderer tileRenderer = tileDictionary[tile];
                     Tween tween = tileRenderer.transform
-                        .DOLocalMove(new Vector3Int(newPosition.x, newPosition.y, 0), 0.75f)
+                        .DOLocalMove(new Vector3Int(newPosition.x, newPosition.y, 0), fallingSpeed)
                         .SetSpeedBased()
                         .SetEase(fallingEase);
                     seq.Join(tween);
@@ -214,7 +218,7 @@ namespace GMTK2020.Rendering
             {
                 TileRenderer tileRenderer = tileDictionary[tile];
                 Tween tween = tileRenderer.transform
-                    .DOLocalMove(new Vector3Int(newPosition.x, newPosition.y, 0), 0.75f)
+                    .DOLocalMove(new Vector3Int(newPosition.x, newPosition.y, 0), fallingSpeed)
                     .SetSpeedBased()
                     .SetEase(fallingEase);
                 seq.Join(tween);
@@ -251,11 +255,36 @@ namespace GMTK2020.Rendering
             return gridPos;
         }
 
-        public void UpdatePrediction(Tile tile, bool isPredicted)
+        public Vector2 PixelSpaceToLocalCoordinates(Vector3 mousePosition)
         {
-            tileDictionary[tile].UpdatePrediction(isPredicted);
-            if (soundManager != null)
+            Vector3 worldPos = mainCamera.ScreenToWorldPoint(mousePosition);
+            Vector3 localPos = worldPos - transform.position;
+
+            return localPos;
+        }
+
+        public void UpdatePrediction(Tile tile)
+        {
+            tileDictionary[tile].UpdatePrediction(tile.Marked);
+            if (soundManager)
                 soundManager.PlayEffect(SoundManager.Effect.PREDICT, 1);
+        }
+
+        public void ResetPosition(Tile tile, Vector2Int pos)
+        {
+            tileDictionary[tile].transform.localPosition = (Vector2)pos;
+        }
+
+        public void RenderPartialSwap(Tile fromTile, Vector2Int fromPos, Tile toTile, Vector2Int toPos, float swapDistance)
+        {
+            tileDictionary[fromTile].transform.localPosition = Vector2.Lerp(fromPos, toPos, swapDistance);
+            tileDictionary[toTile].transform.localPosition = Vector2.Lerp(toPos, fromPos, swapDistance);
+        }
+
+        public void RenderCompletedSwap(Tile fromTile, Vector2Int fromPos, Tile toTile, Vector2Int toPos)
+        {
+            tileDictionary[fromTile].transform.DOLocalMove((Vector2)toPos, swapSpeed).SetSpeedBased();
+            tileDictionary[toTile].transform.DOLocalMove((Vector2)fromPos, swapSpeed).SetSpeedBased();
         }
     }
 }

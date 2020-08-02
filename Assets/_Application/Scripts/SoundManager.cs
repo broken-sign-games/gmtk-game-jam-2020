@@ -18,7 +18,7 @@ public class SoundManager : MonoBehaviour
         YOU_WIN
     }
 
-    [SerializeField] private AudioClip[] Clips;
+    [SerializeField] private AudioClip[] Clips = new AudioClip[0];
 
     private Dictionary<Effect, AudioClip> ClipRepository = null;
     private AudioSource AudioSource = null;

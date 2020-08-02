@@ -15,6 +15,7 @@ namespace GMTK2020
         [SerializeField] private LevelLoader levelLoader = null;
         [SerializeField] private Button retryButton = null;
         [SerializeField] private Button playButton = null;
+        [SerializeField] private BoardManipulator boardManipulator = null;
 
         private SoundManager soundManager = null;
 
@@ -36,6 +37,7 @@ namespace GMTK2020
         {
             soundManager?.PlayEffect(SoundManager.Effect.CLICK);
 
+            boardManipulator.LockBoard();
             Prediction prediction = predictionEditor.GetPredictions();
             Level level = levelLoader.Level;
 
@@ -54,8 +56,10 @@ namespace GMTK2020
             if (furtherMatchesPossible)
             {
                 predictionEditor.Initialize(nextGrid);
+                boardManipulator.Initialize(nextGrid);
                 predictionEditor.gameObject.SetActive(true);
                 playButton.interactable = true;
+                boardManipulator.UnlockBoard();
             }
             else
             {
