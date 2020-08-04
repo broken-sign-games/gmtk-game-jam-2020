@@ -10,6 +10,12 @@ namespace GMTK2020.UI
 
         public event Action Dismissed;
 
+        public void ShowMessage(string message)
+        {
+            tutorialText.text = message;
+            gameObject.SetActive(true);
+        }
+
         public void Dismiss()
         {
             gameObject.SetActive(false);

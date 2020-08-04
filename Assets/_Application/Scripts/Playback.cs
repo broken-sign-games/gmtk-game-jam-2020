@@ -1,6 +1,5 @@
 ﻿using GMTK2020.Data;
 using GMTK2020.Rendering;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,20 +11,29 @@ namespace GMTK2020
     {
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private PredictionEditor predictionEditor = null;
-        [SerializeField] private LevelLoader levelLoader = null;
+        [SerializeField] private LevelSpecification levelSpec = null;
         [SerializeField] private Button retryButton = null;
         [SerializeField] private Button playButton = null;
         [SerializeField] private BoardManipulator boardManipulator = null;
+        [SerializeField] private TutorialSystem tutorial = null;
 
-        private SoundManager soundManager = null;
+        private Level level;
+        private ScoreKeeper scoreKeeper;
+
+        private SoundManager soundManager;
 
         private Tile[,] nextGrid;
+
+        private TutorialSystem.TutorialMessage queuedTutorialMessage;
 
         private void Start()
         {
             soundManager = FindObjectOfType<SoundManager>();
 
             boardRenderer.SimulationRenderingCompleted += OnSimulationRenderingCompleted;
+
+            scoreKeeper = new ScoreKeeper();
+            LoadLevel();
         }
 
         private void OnDestroy()
@@ -33,20 +41,45 @@ namespace GMTK2020
             boardRenderer.SimulationRenderingCompleted -= OnSimulationRenderingCompleted;
         }
 
+        public void LoadLevel()
+        {
+            HashSet<Vector2Int> levelPattern = new HashSet<Vector2Int>(levelSpec.MatchingPattern);
+
+            // TODO: Use RNG with same seed during level generation and playback.
+            var rng = new Random();
+            Simulator simulator = new Simulator(levelPattern, rng, false);
+
+            level = new LevelGenerator(levelSpec, simulator).GenerateValidLevel();
+
+            boardManipulator.Initialize(level.Grid);
+            predictionEditor.Initialize(level.Grid);
+            boardRenderer.RenderInitial(level.Grid, scoreKeeper);
+
+            nextGrid = level.Grid;
+
+            tutorial.ShowTutorialIfNew(TutorialSystem.TutorialMessage.FirstMatch);
+        }
+
         public void Run()
         {
-            soundManager?.PlayEffect(SoundManager.Effect.CLICK);
+            if (soundManager)
+                soundManager.PlayEffect(SoundManager.Effect.CLICK);
 
             boardManipulator.LockBoard();
             Prediction prediction = predictionEditor.GetPredictions();
-            Level level = levelLoader.Level;
-
+            
             var rng = new Random();
-            var simulator = new Simulator(new HashSet<Vector2Int>(level.MatchingPattern), rng, true, levelLoader.ScoreKeeper);
-            Simulation simulation = nextGrid is null 
-                ? simulator.Simulate(level.Grid, prediction)
-                : simulator.Simulate(nextGrid, prediction);
+            var simulator = new Simulator(new HashSet<Vector2Int>(level.MatchingPattern), rng, true, scoreKeeper);
+            Simulation simulation = simulator.Simulate(nextGrid, prediction);
             nextGrid = simulation.FinalGrid;
+
+            if (simulation.ClearBoardStep.ExtraneousPredictions.Count > 0)
+                queuedTutorialMessage = TutorialSystem.TutorialMessage.StoneBlocks;
+            else if (simulation.Steps.Count > 1)
+                queuedTutorialMessage = TutorialSystem.TutorialMessage.ChainRewards;
+            else
+                queuedTutorialMessage = TutorialSystem.TutorialMessage.SubsequentMatch;
+
 
             boardRenderer.KickOffRenderSimulation(simulation);
         }
@@ -60,6 +93,8 @@ namespace GMTK2020
                 predictionEditor.gameObject.SetActive(true);
                 playButton.interactable = true;
                 boardManipulator.UnlockBoard();
+
+                tutorial.ShowTutorialIfNew(queuedTutorialMessage);
             }
             else
             {
@@ -70,7 +105,7 @@ namespace GMTK2020
         public void CheckForGameOver()
         {
             var rng = new Random();
-            var simulator = new Simulator(new HashSet<Vector2Int>(levelLoader.Level.MatchingPattern), rng, true, levelLoader.ScoreKeeper);
+            var simulator = new Simulator(new HashSet<Vector2Int>(level.MatchingPattern), rng, true, scoreKeeper);
 
             if (!simulator.CheckIfFurtherMatchesPossible(nextGrid))
                 GameOver();
@@ -80,7 +115,7 @@ namespace GMTK2020
         {
             playButton.interactable = false;
             boardManipulator.LockBoard();
-            levelLoader.ScoreKeeper.UpdateHighscore();
+            scoreKeeper.UpdateHighscore();
             retryButton.gameObject.SetActive(true);
         }
     }
