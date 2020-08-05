@@ -18,7 +18,7 @@ public class Splash : MonoBehaviour
         {
             playerIsReady = true;
             SoundManager?.PlayEffect(SoundManager.Effect.CLICK);
-            SceneManager.LoadScene("TutorialScene");
+            SceneManager.LoadScene("Match3Scene");
         }
     }
 }
