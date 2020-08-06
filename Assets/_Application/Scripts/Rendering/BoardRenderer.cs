@@ -18,6 +18,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private ClearedRowRenderer clearedRowPrefab = null;
         [SerializeField] private ScoreDisplay scoreDisplay = null;
         [SerializeField] private BoardManipulator boardManipulator = null;
+        [SerializeField] private SpriteMask boardTileMask = null;
 
         [SerializeField] private float postMatchDelay = 0.25f;
         [SerializeField] private float postFallDelay = 0.1f;
@@ -61,6 +62,11 @@ namespace GMTK2020.Rendering
 
             border.size = new Vector2(width + 0.375f, height + 0.375f);
             transform.localPosition = new Vector2(-(width - 1) / 2f, -(height - 1) / 2f);
+
+            boardTileMask.transform.localScale = new Vector3(width, height, 1);
+            boardTileMask.transform.localPosition = new Vector2((width - 1) / 2f, (height - 1) / 2f);
+
+            clearedRowRoot.localPosition = new Vector2(width, 0);
 
             for (int x = 0; x < width; ++x)
                 for (int y = 0; y < height; ++y)
@@ -109,6 +115,7 @@ namespace GMTK2020.Rendering
                     boardManipulator.GrantSwap();
 
                     ClearedRowRenderer rowRenderer = Instantiate(clearedRowPrefab, clearedRowRoot);
+                    rowRenderer.SetWidth(width);
                     rowRenderer.transform.localPosition = new Vector3(0, i - 1, 0);
 
                     clearedRowRenderers.Add(rowRenderer);

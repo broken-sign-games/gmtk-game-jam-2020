@@ -11,6 +11,7 @@ namespace GMTK2020.Data
         public int ColorCount;
         public List<Vector2Int> MatchingPattern;
         public GeneratorStrategy GeneratorStrategy;
+        public Array2DInt FixedBoard;
 
         [TextArea]
         public string TutorialText;

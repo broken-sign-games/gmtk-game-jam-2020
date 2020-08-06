@@ -1575,6 +1575,11 @@ PrefabInstance:
       propertyPath: swapSpeed
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 269216730235352568, guid: bc878964d2e9bec47a62a49a07b5109a,
+        type: 3}
+      propertyPath: boardTileMask
+      value: 
+      objectReference: {fileID: 269216731733918283}
     - target: {fileID: 269216730235352570, guid: bc878964d2e9bec47a62a49a07b5109a,
         type: 3}
       propertyPath: m_Name
@@ -1657,6 +1662,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc878964d2e9bec47a62a49a07b5109a, type: 3}
+--- !u!331 &269216731733918283 stripped
+SpriteMask:
+  m_CorrespondingSourceObject: {fileID: 1361334309162244357, guid: bc878964d2e9bec47a62a49a07b5109a,
+    type: 3}
+  m_PrefabInstance: {fileID: 269216731733918282}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2264342925528589758
 PrefabInstance:
   m_ObjectHideFlags: 0

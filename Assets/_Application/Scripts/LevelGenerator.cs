@@ -21,6 +21,9 @@ namespace GMTK2020
 
         public Level GenerateValidLevel()
         {
+            if (levelSpec.FixedBoard != null)
+                return GenerateFixedLevel();
+
             Tile[,] grid = null;
             Simulation simulation = null;
             bool isValid;
@@ -43,6 +46,22 @@ namespace GMTK2020
                 }
             }
             while (!isValid);
+
+            return new Level(grid, levelSpec.MatchingPattern);
+        }
+
+        private Level GenerateFixedLevel()
+        {
+            int width = levelSpec.FixedBoard.GridSize.x;
+            int height = levelSpec.FixedBoard.GridSize.y;
+            Tile[,] grid = new Tile[width, height];
+            int[,] rawGrid = levelSpec.FixedBoard.GetCells();
+
+            for (int x = 0; x < width; ++x)
+                for (int y = 0; y < height; ++y)
+                {
+                    grid[x, y] = new Tile(rawGrid[height - y - 1, x]);
+                }
 
             return new Level(grid, levelSpec.MatchingPattern);
         }
