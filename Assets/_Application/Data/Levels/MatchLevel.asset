@@ -19,6 +19,6 @@ MonoBehaviour:
   - {x: 1, y: 0}
   - {x: -1, y: 0}
   GeneratorStrategy: 0
-  FixedBoard: {fileID: 11400000, guid: 0f35771ae09460540afd5ff90de3ca78, type: 2}
+  FixedBoard: {fileID: 11400000, guid: a43f1927036f5304e961e06b7569793f, type: 2}
   TutorialText: 
   TutorialBoard: {fileID: 0}
