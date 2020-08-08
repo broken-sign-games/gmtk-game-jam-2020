@@ -9,20 +9,23 @@ public class TutorialClip : MonoBehaviour
     
     public Sprite[] Frames;
 
-    private Image splashRenderer;
+    private Image clipRenderer;
 
     private float startTime;
     private float endTime;
 
     private void Start()
-    {
-        splashRenderer = GetComponent<Image>();
-        
+    {   
         StartAnimation();
     }
 
     public void StartAnimation()
     {
+        if (!clipRenderer)
+            clipRenderer = GetComponent<Image>();
+
+        clipRenderer.rectTransform.sizeDelta = Frames[0].rect.size;
+
         startTime = Time.time;
         endTime = -1;
     }
@@ -48,6 +51,6 @@ public class TutorialClip : MonoBehaviour
             }
         }
 
-        splashRenderer.sprite = Frames[index];
+        clipRenderer.sprite = Frames[index];
     }
 }

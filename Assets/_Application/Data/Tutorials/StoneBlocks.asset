@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f6a60be28b403e4588931f8c661e5ce, type: 3}
   m_Name: StoneBlocks
   m_EditorClassIdentifier: 
-  Message: You can also mark matches that will form as a result of earlier matches
-    disappearing.
+  Message: If any marked tiles remain when the chain reaction stops, they will be
+    turned to stone and can no longer match.
   ClipFrames: []
