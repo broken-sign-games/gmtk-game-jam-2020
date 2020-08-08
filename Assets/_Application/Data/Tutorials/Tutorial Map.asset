@@ -40,5 +40,5 @@ MonoBehaviour:
     _values:
     - {fileID: 11400000, guid: 64fecb90de18dea4da6225f9b1cd5e9c, type: 2}
     - {fileID: 11400000, guid: 658c2f988b866264e8ad3d570ad96147, type: 2}
-    - {fileID: 0}
-    - {fileID: 0}
+    - {fileID: 11400000, guid: ab9b8ac698f0e26488de062a7d3ddbe3, type: 2}
+    - {fileID: 11400000, guid: 5c02bc7e16a68d74f8cd85aead52f1ba, type: 2}
