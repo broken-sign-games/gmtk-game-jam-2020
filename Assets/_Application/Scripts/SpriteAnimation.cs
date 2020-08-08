@@ -1,5 +1,4 @@
 ﻿using DG.Tweening;
-using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]

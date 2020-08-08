@@ -1,0 +1,17 @@
+{
+    "name": "RotaryHeart",
+    "references": [
+        "GUID:e32e062414989b147ab10cefd992409e"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

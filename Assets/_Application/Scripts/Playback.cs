@@ -24,7 +24,7 @@ namespace GMTK2020
 
         private Tile[,] nextGrid;
 
-        private TutorialSystem.TutorialMessage queuedTutorialMessage;
+        private TutorialID queuedTutorialMessage;
 
         private void Start()
         {
@@ -57,7 +57,7 @@ namespace GMTK2020
 
             nextGrid = level.Grid;
 
-            tutorial.ShowTutorialIfNew(TutorialSystem.TutorialMessage.FirstMatch);
+            tutorial.ShowTutorialIfNew(TutorialID.FirstMatch);
         }
 
         public void Run()
@@ -74,11 +74,11 @@ namespace GMTK2020
             nextGrid = simulation.FinalGrid;
 
             if (simulation.ClearBoardStep.ExtraneousPredictions.Count > 0)
-                queuedTutorialMessage = TutorialSystem.TutorialMessage.StoneBlocks;
+                queuedTutorialMessage = TutorialID.StoneBlocks;
             else if (simulation.Steps.Count > 1)
-                queuedTutorialMessage = TutorialSystem.TutorialMessage.ChainRewards;
+                queuedTutorialMessage = TutorialID.ChainRewards;
             else
-                queuedTutorialMessage = TutorialSystem.TutorialMessage.SubsequentMatch;
+                queuedTutorialMessage = TutorialID.SubsequentMatch;
 
 
             boardRenderer.KickOffRenderSimulation(simulation);
