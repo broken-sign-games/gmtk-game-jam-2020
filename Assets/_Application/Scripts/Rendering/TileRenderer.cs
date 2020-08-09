@@ -62,6 +62,7 @@ namespace GMTK2020.Rendering
             seq.Join(sprite.DOFade(0f, tileFadeDuration));
             seq.Join(stoneTile.DOFade(1f, tileFadeDuration));
             seq.Join(text.DOFade(0f, tileFadeDuration));
+            seq.Join(transform.DOShakePosition(tileFadeDuration, 0.125f, 50, 90));
 
             return seq;
         }

@@ -34,8 +34,12 @@ namespace GMTK2020
 		private Tile swappedTile = null;
 		private Vector2Int swapDir;
 
+		private SoundManager soundManager;
+
 		private void Awake()
 		{
+			soundManager = FindObjectOfType<SoundManager>();
+
 			mouseEventSource.DragStartedAt += OnDragStarted;
 			mouseEventSource.DraggedTo += OnDraggedTo;
 			mouseEventSource.DragStoppedAt += OnDragStopped;
@@ -75,6 +79,9 @@ namespace GMTK2020
 
 		private void UseUpSwap()
 		{
+			if (soundManager)
+				soundManager.PlayEffect(SoundManager.Effect.SWAP);
+
 			--RemainingSwaps;
 
 			if (RemainingSwaps == 0)

@@ -112,6 +112,8 @@ namespace GMTK2020
 
         private void GameOver()
         {
+            if (soundManager)
+                soundManager.PlayEffect(SoundManager.Effect.STEP_WRONG);
             playButton.interactable = false;
             boardManipulator.LockBoard();
             scoreKeeper.UpdateHighscore();

@@ -123,6 +123,9 @@ namespace GMTK2020.Rendering
                     seq.Append(rowRenderer.ShowIndicator());
                 }
 
+                if (soundManager)
+                    soundManager.PlayEffect(SoundManager.Effect.STEP_CORRECT, i);
+
                 foreach ((Tile tile, _) in step.MatchedTiles)
                 {
                     TileRenderer tileRenderer = tileDictionary[tile];
@@ -174,6 +177,9 @@ namespace GMTK2020.Rendering
 
             seq = DOTween.Sequence();
 
+            if (simulation.ClearBoardStep.ExtraneousPredictions.Count > 0 && soundManager)
+                soundManager.PlayEffect(SoundManager.Effect.PETRIFY);
+
             foreach (Tile tile in simulation.ClearBoardStep.ExtraneousPredictions)
             {
                 TileRenderer tileRenderer = tileDictionary[tile];
@@ -184,6 +190,9 @@ namespace GMTK2020.Rendering
             await CompletionOf(seq);
 
             seq = DOTween.Sequence();
+
+            if (simulation.ClearBoardStep.ClearedRows > 0 && soundManager)
+                soundManager.PlayEffect(SoundManager.Effect.LASER);
 
             foreach (ClearedRowRenderer rowRenderer in clearedRowRenderers)
             {

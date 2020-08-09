@@ -12,8 +12,18 @@ namespace GMTK2020.UI
 
         public event Action Dismissed;
 
+        private SoundManager soundManager;
+
+        private void Awake()
+        {
+            soundManager = FindObjectOfType<SoundManager>();
+        }
+
         public void ShowTutorial(Tutorial tutorial)
         {
+            if (soundManager)
+                soundManager.PlayEffect(SoundManager.Effect.WIN);
+
             tutorialText.text = tutorial.Message;
             if (tutorial.ClipFrames.Length > 0)
             {
@@ -31,6 +41,9 @@ namespace GMTK2020.UI
 
         public void Dismiss()
         {
+            if (soundManager)
+                soundManager.PlayEffect(SoundManager.Effect.CLICK);
+
             gameObject.SetActive(false);
             Dismissed?.Invoke();
         }

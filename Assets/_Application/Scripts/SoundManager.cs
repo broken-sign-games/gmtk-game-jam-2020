@@ -12,23 +12,29 @@ public class SoundManager : MonoBehaviour
     {
         CLICK,
         PREDICT,
+        SWAP,
         STEP_CORRECT,
         STEP_WRONG,
+        PETRIFY,
+        LASER,
         WIN,
-        YOU_WIN
+        YOU_WIN,
     }
 
     [SerializeField] private AudioClip[] Clips = new AudioClip[0];
 
-    private Dictionary<Effect, AudioClip> ClipRepository = null;
-    private AudioSource AudioSource = null;
+    private Dictionary<Effect, AudioClip> ClipRepository;
+    private AudioSource AudioSource;
 
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
         AudioSource = GetComponent<AudioSource>();
-        ClipRepository = Clips.GroupBy(clip => clip.name)
-            .ToDictionary(it => (Effect)Enum.Parse(typeof(Effect), it.Key.Replace("-", "_"), true), it => it.Single());
+        ClipRepository = Clips
+            .GroupBy(clip => clip.name)
+            .ToDictionary(
+                it => (Effect)Enum.Parse(typeof(Effect), it.Key.Replace("-", "_"), true), 
+                it => it.Single());
     }
 
     public void PlayEffect(Effect effect, float pitchModifier)

@@ -12,6 +12,9 @@
         }
 
         public void Petrify()
-            => Color = -1;
+        {
+            Color = -1;
+            Marked = false;
+        }
     }
 }
