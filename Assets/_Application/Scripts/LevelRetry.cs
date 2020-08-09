@@ -1,4 +1,5 @@
 ﻿using GMTK2020.Data;
+using GMTK2020.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,6 +7,7 @@ namespace GMTK2020
 {
     public class LevelRetry : MonoBehaviour
     {
+        [SerializeField] private LoadingPopup loadingPopup = null;
         [SerializeField] private string match3SceneName = null;
 
         private SoundManager soundManager = null;
@@ -17,6 +19,7 @@ namespace GMTK2020
 
         public void RestartLevel()
         {
+            loadingPopup.Show();
             soundManager?.PlayEffect(SoundManager.Effect.CLICK);
             LoadMatch3Scene();
         }
