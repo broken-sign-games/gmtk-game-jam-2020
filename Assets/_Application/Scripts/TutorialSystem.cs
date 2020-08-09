@@ -30,11 +30,16 @@ namespace GMTK2020
 
         public void ShowTutorialIfNew(TutorialID msg)
         {
-            string msgName = Enum.GetName(typeof(TutorialID), msg);
-            if (PlayerPrefs.GetInt(msgName, -1) >= 0)
+            if (TutorialWasShownAlready(msg))
                 return;
 
             ShowTutorial(msg);
+        }
+
+        public  bool TutorialWasShownAlready(TutorialID msg)
+        {
+            string msgName = Enum.GetName(typeof(TutorialID), msg);
+            return PlayerPrefs.GetInt(msgName, -1) >= 0;
         }
 
         public void ShowTutorial(TutorialID msg)

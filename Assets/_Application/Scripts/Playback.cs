@@ -73,9 +73,9 @@ namespace GMTK2020
             Simulation simulation = simulator.Simulate(nextGrid, prediction);
             nextGrid = simulation.FinalGrid;
 
-            if (simulation.Steps.Count > 1)
+            if (!tutorial.TutorialWasShownAlready(TutorialID.ChainRewards) && simulation.Steps.Count > 1)
                 queuedTutorialMessage = TutorialID.ChainRewards;
-            else if (simulation.ClearBoardStep.ExtraneousPredictions.Count > 0)
+            else if (!tutorial.TutorialWasShownAlready(TutorialID.StoneBlocks) && simulation.ClearBoardStep.ExtraneousPredictions.Count > 0)
                 queuedTutorialMessage = TutorialID.StoneBlocks;
             else
                 queuedTutorialMessage = TutorialID.SubsequentMatch;
