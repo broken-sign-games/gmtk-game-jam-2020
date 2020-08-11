@@ -1,4 +1,5 @@
-﻿using GMTK2020.UI;
+﻿using GMTK2020;
+using GMTK2020.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,6 +14,7 @@ public class Splash : MonoBehaviour
     private void Start()
     {
         SoundManager = FindObjectOfType<SoundManager>();
+        TutorialSystem.ResetTutorial();
     }
 
     private void Update()

@@ -20,7 +20,7 @@ namespace GMTK2020
                 ResetTutorial();
         }
 
-        private void ResetTutorial()
+        public static void ResetTutorial()
         {
             foreach (TutorialID msg in allMessages)
             {
