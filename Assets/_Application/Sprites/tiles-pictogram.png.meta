@@ -19,19 +19,19 @@ TextureImporter:
     second: tiles_4
   - first:
       213: 4853899676459655579
-    second: tiles-molecules_0
+    second: tiles-pictogram_0
   - first:
       213: 2799922376215100413
-    second: tiles-molecules_1
+    second: tiles-pictogram_1
   - first:
       213: 2923055690270560197
-    second: tiles-molecules_2
+    second: tiles-pictogram_2
   - first:
       213: -6426753079828566970
-    second: tiles-molecules_3
+    second: tiles-pictogram_3
   - first:
       213: -5878862013133563968
-    second: tiles-molecules_4
+    second: tiles-pictogram_4
   - first:
       213: 5231211071138748115
     second: tiles-molecules_5
@@ -77,6 +77,9 @@ TextureImporter:
   - first:
       213: 7808224080784424400
     second: tiles-molecules_19
+  - first:
+      213: 40549541907763960
+    second: tiles-pictogram_5
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -174,7 +177,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: tiles-molecules_0
+      name: tiles-pictogram_0
       rect:
         serializedVersion: 2
         x: 0
@@ -182,7 +185,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -195,7 +198,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles-molecules_1
+      name: tiles-pictogram_1
       rect:
         serializedVersion: 2
         x: 128
@@ -203,7 +206,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -216,7 +219,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles-molecules_2
+      name: tiles-pictogram_2
       rect:
         serializedVersion: 2
         x: 256
@@ -224,7 +227,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -237,7 +240,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles-molecules_3
+      name: tiles-pictogram_3
       rect:
         serializedVersion: 2
         x: 384
@@ -245,7 +248,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -258,7 +261,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles-molecules_4
+      name: tiles-pictogram_4
       rect:
         serializedVersion: 2
         x: 512
@@ -266,7 +269,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -274,6 +277,27 @@ TextureImporter:
       bones: []
       spriteID: 0c7d2a785261a6ea0800000000000000
       internalID: -5878862013133563968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tiles-pictogram_5
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f29731f79f009000800000000000000
+      internalID: 40549541907763960
       vertices: []
       indices: 
       edges: []

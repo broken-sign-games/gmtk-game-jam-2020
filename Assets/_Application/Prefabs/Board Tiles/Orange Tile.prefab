@@ -7,10 +7,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3573266944748384800, guid: 506e82c7fda498c4c9837b64dfdcbf0d,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 2799922376215100413, guid: 9f66402fb253e473a88cc329f2b72c9e,
+        type: 3}
     - target: {fileID: 3573266944748384802, guid: 506e82c7fda498c4c9837b64dfdcbf0d,
         type: 3}
       propertyPath: m_Name
-      value: _Tile
+      value: Orange Tile
       objectReference: {fileID: 0}
     - target: {fileID: 3573266944748384803, guid: 506e82c7fda498c4c9837b64dfdcbf0d,
         type: 3}
