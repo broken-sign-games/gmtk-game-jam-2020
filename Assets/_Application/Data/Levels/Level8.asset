@@ -19,5 +19,10 @@ MonoBehaviour:
   - {x: 1, y: 0}
   - {x: 0, y: 1}
   GeneratorStrategy: 0
-  TutorialText: 
-  TutorialBoard: {fileID: 0}
+  TutorialText: 'Adjacent pairs of matching tiles are cleared from the board. Remaining
+    tiles will fall down.
+
+
+    Predict which tiles disappear at each step of the
+    chain reaction.'
+  TutorialBoard: {fileID: 11400000, guid: 7f3f664eb724bb140842bd22dabfc4fe, type: 2}
