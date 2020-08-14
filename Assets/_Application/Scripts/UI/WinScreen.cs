@@ -1,14 +1,17 @@
 ﻿using GMTK2020.Audio;
 using UnityEngine;
 
-public class WinScreen : MonoBehaviour
+namespace GMTK2020
 {
-    private SoundManager soundManager;
-
-    void Start()
+    public class WinScreen : MonoBehaviour
     {
-        soundManager = FindObjectOfType<SoundManager>();
-        if (soundManager)
-            soundManager.PlayEffect(SoundManager.Effect.YOU_WIN);
-    }
+        private SoundManager soundManager;
+
+        private void Start()
+        {
+            soundManager = FindObjectOfType<SoundManager>();
+            if (soundManager)
+                soundManager.PlayEffect(SoundManager.Effect.YOU_WIN);
+        }
+    } 
 }

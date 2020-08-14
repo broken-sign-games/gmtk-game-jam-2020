@@ -56,7 +56,7 @@ namespace GMTK2020
             if (gridPosOrNull is null)
                 return;
 
-            var gridPos = (Vector2Int)gridPosOrNull;
+            Vector2Int gridPos = gridPosOrNull.Value;
 
             if (Input.GetMouseButtonDown(0))
                 IncrementPrediction(gridPos);

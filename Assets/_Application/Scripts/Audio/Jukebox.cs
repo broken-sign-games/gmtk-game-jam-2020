@@ -44,7 +44,8 @@ namespace GMTK2020.Audio
 
         private void PlayNextTrack()
         {
-            currentPlaylistIndex = (currentPlaylistIndex + 1) % playlist.Count;
+            ++currentPlaylistIndex;
+            currentPlaylistIndex %= playlist.Count;
 
             audioSource.clip = soundtrack[playlist[currentPlaylistIndex]];
             audioSource.Play();

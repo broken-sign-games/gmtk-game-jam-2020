@@ -43,19 +43,8 @@ namespace GMTK2020
             }
         }
 
-        private void LoadLevelScene()
-        {
-            SceneManager.LoadScene(levelSceneName);
-        }
-
-        private void LoadWinScene()
-        {
-            SceneManager.LoadScene(winSceneName);
-        }
-
-        private void LoadTutorialScene()
-        {
-            SceneManager.LoadScene(tutorialSceneName);
-        }
+        private void LoadLevelScene() => SceneManager.LoadScene(levelSceneName);
+        private void LoadWinScene() => SceneManager.LoadScene(winSceneName);
+        private void LoadTutorialScene() => SceneManager.LoadScene(tutorialSceneName);
     }
 }
