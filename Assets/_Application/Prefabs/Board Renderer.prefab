@@ -57,7 +57,7 @@ MonoBehaviour:
   border: {fileID: 269216730889641830}
   postMatchDelay: 0.15
   postFallDelay: 0.1
-  fallingSpeed: 1.5
+  fallingSpeed: 0.75
   fallingEase: 30
 --- !u!1 &269216730889641824
 GameObject:
@@ -105,6 +105,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

@@ -1,4 +1,5 @@
-﻿using GMTK2020.Data;
+﻿using GMTK2020.Audio;
+using GMTK2020.Data;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,22 +12,24 @@ namespace GMTK2020
         [SerializeField] private string tutorialSceneName = null;
         [SerializeField] private LevelSequence levelSequence = null;
 
-        private SoundManager SoundManager = null;
+        private SoundManager soundManager;
 
         private void Start()
         {
-            SoundManager = FindObjectOfType<SoundManager>();
+            soundManager = FindObjectOfType<SoundManager>();
         }
 
         public void RestartLevel()
         {
-            SoundManager?.PlayEffect(SoundManager.Effect.CLICK);
+            if (soundManager)
+                soundManager.PlayEffect(SoundManager.Effect.CLICK);
             LoadLevelScene();
         }
 
         public void LoadNextLevel()
         {
-            SoundManager?.PlayEffect(SoundManager.Effect.CLICK);
+            if (soundManager)
+                soundManager.PlayEffect(SoundManager.Effect.CLICK);
 
             ++GameProgression.CurrentLevelIndex;
             if (GameProgression.CurrentLevelIndex >= levelSequence.Levels.Count)

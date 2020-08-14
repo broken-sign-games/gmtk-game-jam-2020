@@ -1,15 +1,16 @@
-﻿using UnityEngine;
+﻿using GMTK2020.Audio;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Splash : MonoBehaviour
 {
     private bool playerIsReady = false;
 
-    private SoundManager SoundManager = null;
+    private SoundManager soundManager;
 
     private void Start()
     {
-        SoundManager = FindObjectOfType<SoundManager>();
+        soundManager = FindObjectOfType<SoundManager>();
     }
 
     void Update()
@@ -17,7 +18,8 @@ public class Splash : MonoBehaviour
         if (!playerIsReady && (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)))
         {
             playerIsReady = true;
-            SoundManager?.PlayEffect(SoundManager.Effect.CLICK);
+            if (soundManager)
+                soundManager.PlayEffect(SoundManager.Effect.CLICK);
             SceneManager.LoadScene("TutorialScene");
         }
     }

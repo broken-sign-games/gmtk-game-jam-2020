@@ -1,14 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using GMTK2020.Audio;
 using UnityEngine;
 
 public class WinScreen : MonoBehaviour
 {
-    private SoundManager SoundManager = null;
+    private SoundManager soundManager;
 
     void Start()
     {
-        SoundManager = FindObjectOfType<SoundManager>();
-        SoundManager?.PlayEffect(SoundManager.Effect.YOU_WIN);
+        soundManager = FindObjectOfType<SoundManager>();
+        if (soundManager)
+            soundManager.PlayEffect(SoundManager.Effect.YOU_WIN);
     }
 }
