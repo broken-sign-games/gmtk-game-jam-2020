@@ -8,6 +8,7 @@ namespace GMTK2020
         private void Start()
         {
             DOTween.Init();
+            Destroy(gameObject);
         }
     }
 }
