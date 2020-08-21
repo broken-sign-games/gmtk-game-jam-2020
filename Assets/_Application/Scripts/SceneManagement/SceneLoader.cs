@@ -9,17 +9,12 @@ namespace GMTK2020
         private static Scene? activeScene;
         private static bool loading = false;
 
-        public async void LoadScene(int sceneBuildIndex, GameObject parameterObject)
+        public async Task LoadSceneAsync(string sceneName, GameObject parameterObject = null)
         {
-            await LoadSceneAsync(sceneBuildIndex, parameterObject);
+            await LoadSceneAsync(SceneUtility.GetBuildIndexByScenePath(sceneName), parameterObject);
         }
 
-        public async void LoadScene(string sceneName, GameObject parameterObject)
-        {
-            LoadScene(SceneUtility.GetBuildIndexByScenePath(sceneName), parameterObject);
-        }
-
-        public async Task LoadSceneAsync(int sceneBuildIndex, GameObject parameterObject)
+        public async Task LoadSceneAsync(int sceneBuildIndex, GameObject parameterObject = null)
         {
             if (loading)
             {
@@ -53,6 +48,7 @@ namespace GMTK2020
             await SceneManager.LoadSceneAsync(sceneBuildIndex, LoadSceneMode.Additive);
 
             activeScene = SceneManager.GetSceneByBuildIndex(sceneBuildIndex);
+            SceneManager.SetActiveScene(activeScene.Value);
         }
     }
 }

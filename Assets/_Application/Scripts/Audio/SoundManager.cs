@@ -7,7 +7,6 @@ namespace GMTK2020.Audio
     [RequireComponent(typeof(AudioSource))]
     public class SoundManager : MonoBehaviour
     {
-
         public enum Effect
         {
             CLICK,
@@ -25,7 +24,6 @@ namespace GMTK2020.Audio
 
         private void Awake()
         {
-            DontDestroyOnLoad(gameObject);
             audioSource = GetComponent<AudioSource>();
             clipRepository = clips
                 .ToDictionary(

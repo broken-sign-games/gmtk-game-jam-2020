@@ -16,11 +16,6 @@ namespace GMTK2020.Audio
         private List<int> playlist;
         private int currentPlaylistIndex = 0;
 
-        private void Awake()
-        {
-            DontDestroyOnLoad(gameObject);
-        }
-
         private void Start()
         {
             audioSource = GetComponent<AudioSource>();
