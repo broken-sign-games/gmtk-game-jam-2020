@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace GMTK2020
+namespace GMTK2020.SceneManagement
 {
     public class SceneLoader
     {

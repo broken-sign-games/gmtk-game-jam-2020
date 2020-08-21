@@ -1,6 +1,6 @@
 ﻿using GMTK2020.Audio;
+using GMTK2020.SceneManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace GMTK2020.UI
 {
@@ -22,8 +22,13 @@ namespace GMTK2020.UI
                 playerIsReady = true;
                 if (soundManager)
                     soundManager.PlayEffect(SoundManager.Effect.CLICK);
-                SceneManager.LoadScene("TutorialScene");
+                LoadTutorialScene();
             }
+        }
+
+        private async void LoadTutorialScene()
+        {
+            await new SceneLoader().LoadSceneAsync("TutorialScene");
         }
     } 
 }
