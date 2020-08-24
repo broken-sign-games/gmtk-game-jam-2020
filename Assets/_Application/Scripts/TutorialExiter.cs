@@ -1,7 +1,7 @@
 ﻿using GMTK2020.Audio;
 using GMTK2020.Rendering;
+using GMTK2020.SceneManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace GMTK2020
 {
@@ -10,13 +10,13 @@ namespace GMTK2020
         [SerializeField] private string levelSceneName = null;
         [SerializeField] private BoardRenderer boardRenderer = null;
 
-        public void LoadLevel()
+        public async void LoadLevel()
         {
             SoundManager soundManager = FindObjectOfType<SoundManager>();
             if (soundManager)
                 soundManager.PlayEffect(SoundManager.Effect.CLICK);
             boardRenderer.CancelAnimation();
-            SceneManager.LoadScene(levelSceneName);
+            await new SceneLoader().LoadSceneAsync(levelSceneName);
         }
     }
 }

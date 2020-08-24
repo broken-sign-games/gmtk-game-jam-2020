@@ -1,7 +1,7 @@
 ﻿using GMTK2020.Audio;
 using GMTK2020.Data;
+using GMTK2020.SceneManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace GMTK2020
 {
@@ -43,8 +43,8 @@ namespace GMTK2020
             }
         }
 
-        private void LoadLevelScene() => SceneManager.LoadScene(levelSceneName);
-        private void LoadWinScene() => SceneManager.LoadScene(winSceneName);
-        private void LoadTutorialScene() => SceneManager.LoadScene(tutorialSceneName);
+        private async void LoadLevelScene() => await new SceneLoader().LoadSceneAsync(levelSceneName);
+        private async void LoadWinScene() => await new SceneLoader().LoadSceneAsync(winSceneName);
+        private async void LoadTutorialScene() => await new SceneLoader().LoadSceneAsync(tutorialSceneName);
     }
 }
