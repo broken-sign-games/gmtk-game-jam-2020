@@ -4,17 +4,40 @@ using UnityEngine.SceneManagement;
 
 namespace GMTK2020.SceneManagement
 {
-    public class SceneLoader
+    public class SceneLoader : MonoBehaviour
     {
-        private static Scene? activeScene;
-        private static bool loading = false;
+        [SerializeField] private string splashSceneName = "";
+        [SerializeField] private string tutorialSceneName = "";
+        [SerializeField] private string levelSceneName = "";
+        [SerializeField] private string winSceneName = "";
 
-        public async Task LoadSceneAsync(string sceneName, GameObject parameterObject = null)
+        public static SceneLoader Instance { get; private set; }
+
+        private Scene? activeScene;
+        private bool loading = false;
+
+        private void Awake()
+        {
+            if (Instance != null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+        }
+
+        public async void LoadSplashScene() => await LoadSceneAsync(splashSceneName);
+        public async void LoadLevelScene() => await LoadSceneAsync(levelSceneName);
+        public async void LoadWinScene() => await LoadSceneAsync(winSceneName);
+        public async void LoadTutorialScene() => await LoadSceneAsync(tutorialSceneName);
+
+        private async Task LoadSceneAsync(string sceneName, GameObject parameterObject = null)
         {
             await LoadSceneAsync(SceneUtility.GetBuildIndexByScenePath(sceneName), parameterObject);
         }
 
-        public async Task LoadSceneAsync(int sceneBuildIndex, GameObject parameterObject = null)
+        private async Task LoadSceneAsync(int sceneBuildIndex, GameObject parameterObject = null)
         {
             if (loading)
             {

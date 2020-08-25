@@ -26,9 +26,9 @@ namespace GMTK2020.UI
             }
         }
 
-        private async void LoadTutorialScene()
+        private void LoadTutorialScene()
         {
-            await new SceneLoader().LoadSceneAsync("TutorialScene");
+            SceneLoader.Instance.LoadTutorialScene();
         }
     } 
 }

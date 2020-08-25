@@ -4,9 +4,9 @@ namespace GMTK2020.SceneManagement
 {
     public class Bootstrapper : MonoBehaviour
     {
-        private async void Start()
+        private void Start()
         {
-            await new SceneLoader().LoadSceneAsync("SplashScene");
+            SceneLoader.Instance.LoadSplashScene();
             Destroy(gameObject);
         }
     } 
