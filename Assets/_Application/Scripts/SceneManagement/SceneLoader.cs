@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices.ComTypes;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,6 +7,7 @@ namespace GMTK2020.SceneManagement
 {
     public class SceneLoader : MonoBehaviour
     {
+        [SerializeField] private string loadingSceneName = "";
         [SerializeField] private string splashSceneName = "";
         [SerializeField] private string tutorialSceneName = "";
         [SerializeField] private string levelSceneName = "";
@@ -13,6 +15,8 @@ namespace GMTK2020.SceneManagement
 
         public static SceneLoader Instance { get; private set; }
 
+        private int loadingSceneIndex;
+        private Scene baseScene;
         private Scene? activeScene;
         private bool loading = false;
 
@@ -25,6 +29,8 @@ namespace GMTK2020.SceneManagement
             }
 
             Instance = this;
+            loadingSceneIndex = SceneUtility.GetBuildIndexByScenePath(loadingSceneName);
+            baseScene = SceneManager.GetSceneByBuildIndex(0);
         }
 
         public async void LoadSplashScene() => await LoadSceneAsync(splashSceneName);
@@ -47,23 +53,33 @@ namespace GMTK2020.SceneManagement
 
             loading = true;
 
-            await UnloadPreviousScene(parameterObject);
+            await SceneManager.LoadSceneAsync(loadingSceneIndex, LoadSceneMode.Additive);
+
+            LoadingScreen loadingScene = FindObjectOfType<LoadingScreen>();
+            await loadingScene.Show();
+
+            if (parameterObject)
+                SceneManager.MoveGameObjectToScene(parameterObject, baseScene);
+
+            await UnloadPreviousScene();
 
             await LoadNewScene(sceneBuildIndex);
+
+            await Awaiters.NextFrame;
+
+            await loadingScene.Dismiss();
+
+            await SceneManager.UnloadSceneAsync(loadingScene.gameObject.scene);
 
             loading = false;
         }
 
-        private async Task UnloadPreviousScene(GameObject parameterObject)
+        private async Task UnloadPreviousScene()
         {
-            if (activeScene.HasValue)
-            {
-                Scene baseScene = SceneManager.GetSceneByBuildIndex(0);
-                if (parameterObject)
-                    SceneManager.MoveGameObjectToScene(parameterObject, baseScene);
-
-                await SceneManager.UnloadSceneAsync(activeScene.Value);
-            }
+            if (!activeScene.HasValue)
+                return;
+            
+            await SceneManager.UnloadSceneAsync(activeScene.Value);
         }
 
         private async Task LoadNewScene(int sceneBuildIndex)
