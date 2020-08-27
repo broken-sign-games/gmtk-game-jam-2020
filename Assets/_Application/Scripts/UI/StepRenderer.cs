@@ -1,4 +1,4 @@
-﻿using DG.Tweening;
+﻿using GMTK2020.Audio;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,24 +8,25 @@ namespace GMTK2020.UI
     {
         [SerializeField] private Image successIndicator = null;
         [SerializeField] private Image failureIndicator = null;
-        [SerializeField] private float fadeDuration = 0.5f;
-
-        private SoundManager SoundManager = null;
+        
+        private SoundManager soundManager;
 
         private void Start()
         {
-            SoundManager = FindObjectOfType<SoundManager>();
+            soundManager = FindObjectOfType<SoundManager>();
         }
 
         public void ShowSuccess(int step)
         {
-            SoundManager?.PlayEffect(SoundManager.Effect.STEP_CORRECT, step);
+            if (soundManager)
+                soundManager.PlayEffect(SoundManager.Effect.STEP_CORRECT, step);
             successIndicator.gameObject.SetActive(true);
         }
 
         public void ShowFailure()
         {
-            SoundManager?.PlayEffect(SoundManager.Effect.STEP_WRONG);
+            if (soundManager)
+                soundManager.PlayEffect(SoundManager.Effect.STEP_WRONG);
             failureIndicator.gameObject.SetActive(true);
         }
     }

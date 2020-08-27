@@ -1,24 +1,34 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using GMTK2020.Audio;
+using GMTK2020.SceneManagement;
+using UnityEngine;
 
-public class Splash : MonoBehaviour
+namespace GMTK2020.UI
 {
-    private bool playerIsReady = false;
-
-    private SoundManager SoundManager = null;
-
-    private void Start()
+    public class Splash : MonoBehaviour
     {
-        SoundManager = FindObjectOfType<SoundManager>();
-    }
+        private bool playerIsReady = false;
 
-    void Update()
-    {
-        if (!playerIsReady && (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)))
+        private SoundManager soundManager;
+
+        private void Start()
         {
-            playerIsReady = true;
-            SoundManager?.PlayEffect(SoundManager.Effect.CLICK);
-            SceneManager.LoadScene("TutorialScene");
+            soundManager = FindObjectOfType<SoundManager>();
         }
-    }
+
+        private void Update()
+        {
+            if (!playerIsReady && (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)))
+            {
+                playerIsReady = true;
+                if (soundManager)
+                    soundManager.PlayEffect(SoundManager.Effect.CLICK);
+                LoadTutorialScene();
+            }
+        }
+
+        private void LoadTutorialScene()
+        {
+            SceneLoader.Instance.LoadTutorialScene();
+        }
+    } 
 }

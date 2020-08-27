@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using GMTK2020.Audio;
 using GMTK2020.Data;
 using GMTK2020.UI;
 using System;
@@ -24,11 +25,11 @@ namespace GMTK2020.Rendering
         [SerializeField] private float fallingSpeed = 1f;
         [SerializeField] private Ease fallingEase = Ease.InCubic;
 
-        private SoundManager SoundManager = null;
+        private SoundManager soundManager;
 
         public event Action SimulationRenderingCompleted;
 
-        private Dictionary<Tile, TileRenderer> tileDictionary = new Dictionary<Tile, TileRenderer>();
+        private readonly Dictionary<Tile, TileRenderer> tileDictionary = new Dictionary<Tile, TileRenderer>();
         private Tile[,] initialGrid;
         int width;
         int height;
@@ -37,7 +38,7 @@ namespace GMTK2020.Rendering
 
         private void Start()
         {
-            SoundManager = FindObjectOfType<SoundManager>();
+            soundManager = FindObjectOfType<SoundManager>();
         }
 
         public void RenderInitial(Tile[,] grid)
@@ -147,7 +148,7 @@ namespace GMTK2020.Rendering
                 {
                     TileRenderer tileRenderer = tileDictionary[tile];
                     Tween tween = tileRenderer.transform
-                        .DOLocalMove(new Vector3Int(newPosition.x, newPosition.y, 0), 0.75f)
+                        .DOLocalMove(new Vector3Int(newPosition.x, newPosition.y, 0), fallingSpeed)
                         .SetSpeedBased()
                         .SetEase(fallingEase);
                     seq.Join(tween);
@@ -169,7 +170,8 @@ namespace GMTK2020.Rendering
                 }
                 else
                 {
-                    SoundManager?.PlayEffect(SoundManager.Effect.WIN);
+                    if (soundManager)
+                        soundManager.PlayEffect(SoundManager.Effect.WIN);
                     nextButton.gameObject.SetActive(true);
                 }
             }
@@ -204,7 +206,9 @@ namespace GMTK2020.Rendering
         {
             Tile tile = initialGrid[pos.x, pos.y];
             UpdatePrediction(tile, value);
-            SoundManager?.PlayEffect(SoundManager.Effect.PREDICT, value);
+
+            if (soundManager) 
+                soundManager.PlayEffect(SoundManager.Effect.PREDICT, value);
         }
 
         public void UpdatePrediction(Tile tile, int value)
