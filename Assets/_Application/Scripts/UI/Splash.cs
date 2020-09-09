@@ -1,6 +1,9 @@
 ﻿using GMTK2020.Audio;
 using GMTK2020.SceneManagement;
+using GMTKJam2020.Input;
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace GMTK2020.UI
 {
@@ -10,14 +13,38 @@ namespace GMTK2020.UI
 
         private SoundManager soundManager;
 
+        private InputActions inputs;
+
+        private void Awake()
+        {
+            inputs = new InputActions();
+
+            inputs.Gameplay.Select.performed += OnSelect;
+        }
+
+        private void OnEnable()
+        {
+            inputs.Enable();
+        }
+
         private void Start()
         {
             soundManager = FindObjectOfType<SoundManager>();
         }
 
-        private void Update()
+        private void OnDisable()
         {
-            if (!playerIsReady && (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)))
+            inputs.Disable();
+        }
+
+        private void OnDestroy()
+        {
+            inputs.Gameplay.Select.performed -= OnSelect;
+        }
+
+        private void OnSelect(InputAction.CallbackContext obj)
+        {
+            if (!playerIsReady)
             {
                 playerIsReady = true;
                 if (soundManager)

@@ -1,12 +1,17 @@
 ﻿using GMTK2020.Data;
 using GMTK2020.Rendering;
+using GMTKJam2020.Input;
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace GMTK2020
 {
     public class PredictionEditor : MonoBehaviour
     {
         [SerializeField] private BoardRenderer boardRenderer = null;
+
+        private InputActions inputs;
 
         private Tile[,] initialGrid;
         private int[,] rawPredictions;
@@ -15,6 +20,45 @@ namespace GMTK2020
 
         int width;
         int height;
+
+        private void Awake()
+        {
+            inputs = new InputActions();
+
+            inputs.Gameplay.Select.performed += OnSelect;
+        }
+
+        private void OnEnable()
+        {
+            inputs.Enable();
+        }
+
+        private void OnDisable()
+        {
+            inputs.Disable();
+        }
+
+        private void OnDestroy()
+        {
+            inputs.Gameplay.Select.performed -= OnSelect;
+        }
+
+        private void OnSelect(InputAction.CallbackContext obj)
+        {
+            if (!initialized || predictionsFinalised)
+                return;
+
+
+            Vector2 pointerPos = inputs.Gameplay.Point.ReadValue<Vector2>();
+            Vector2Int? gridPosOrNull = boardRenderer.PixelSpaceToGridCoordinates(pointerPos);
+
+            if (gridPosOrNull is null)
+                return;
+
+            Vector2Int gridPos = gridPosOrNull.Value;
+
+            IncrementPrediction(gridPos);
+        }
 
         public void Initialize(Tile[,] initialGrid)
         {
@@ -44,30 +88,6 @@ namespace GMTK2020
             gameObject.SetActive(false);
 
             return predictions;
-        }
-
-        private void Update()
-        {
-            if (!initialized || predictionsFinalised)
-                return;
-
-            Vector2Int? gridPosOrNull = boardRenderer.PixelSpaceToGridCoordinates(Input.mousePosition);
-
-            if (gridPosOrNull is null)
-                return;
-
-            Vector2Int gridPos = gridPosOrNull.Value;
-
-            if (Input.GetMouseButtonDown(0))
-                IncrementPrediction(gridPos);
-            else if (Input.GetMouseButtonDown(1))
-                DecrementPrediction(gridPos);
-            else if (Input.anyKey
-                && Input.inputString.Length == 1
-                && int.TryParse(Input.inputString, out int digit))
-            {
-                SetPrediction(gridPos, digit);
-            }
         }
 
         private void SetPrediction(Vector2Int pos, int value)
