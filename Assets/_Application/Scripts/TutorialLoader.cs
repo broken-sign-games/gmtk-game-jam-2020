@@ -61,7 +61,7 @@ namespace GMTK2020
                 {
                     int color = intGrid[height - y - 1, x];
                     if (color >= 0)
-                        grid[x, y] = new Tile(color);
+                        grid[x, y] = new Tile(color, new Vector2Int(x, y));
                 }
 
             return grid;

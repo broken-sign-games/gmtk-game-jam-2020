@@ -30,5 +30,32 @@ namespace Tests
             Assert.Throws<ArgumentOutOfRangeException>(
                 () => new Board(width, height));
         }
+
+        [Test]
+        public void New_board_is_empty()
+        {
+            int width = 5;
+            int height = 3;
+            var board = new Board(width, height);
+
+            for (int x = 0; x < width; ++x)
+                for (int y = 0; y < height; ++y)
+                    Assert.That(board[x, y], Is.Null);
+        }
+
+        [TestCase(-1, 3)]
+        [TestCase(5, 2)]
+        [TestCase(4, -1)]
+        [TestCase(0, 4)]
+        public void Cannot_access_tiles_out_of_bounds(int x, int y)
+        {
+            var board = new Board(5, 4);
+
+            Assert.Throws<IndexOutOfRangeException>(
+                () =>
+                {
+                    Tile tile = board[x, y];
+                });
+        }
     }
 }

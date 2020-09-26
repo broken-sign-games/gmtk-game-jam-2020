@@ -65,7 +65,7 @@ namespace GMTK2020
             {
                 for (int y = 0; y < levelSpec.Size.y; ++y)
                 {
-                    tiles[x, y] = new Tile(rand.Next(levelSpec.ColorCount));
+                    tiles[x, y] = new Tile(rand.Next(levelSpec.ColorCount), new Vector2Int(x, y));
                 }
             }
             return tiles;
@@ -116,7 +116,7 @@ namespace GMTK2020
                     {
                         tiles[tile.x, y] = tiles[tile.x, y - 1];
                     }
-                    tiles[tile.x, tile.y] = new Tile(color);
+                    tiles[tile.x, tile.y] = new Tile(color, tile);
                 }
             }
 
@@ -185,7 +185,7 @@ namespace GMTK2020
                     {
                         tiles[tile.x, y] = tiles[tile.x, y - 1];
                     }
-                    tiles[tile.x, tile.y] = new Tile(color);
+                    tiles[tile.x, tile.y] = new Tile(color, tile);
                 }
             }
 
@@ -232,7 +232,7 @@ namespace GMTK2020
             }
 
             int color = colors.ElementAt(rng.Next(colors.Count));
-            return new Tile(color);
+            return new Tile(color, origin);
         }
 
         private bool ValidateSimulation(Simulation simulation)

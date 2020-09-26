@@ -168,7 +168,7 @@ namespace Tests
                     if (color == 0)
                         continue;
 
-                    grid[y, width - x - 1] = new Tile(color);
+                    grid[y, width - x - 1] = new Tile(color, new Vector2Int(y, width-x-1));
                 }
 
             return grid;

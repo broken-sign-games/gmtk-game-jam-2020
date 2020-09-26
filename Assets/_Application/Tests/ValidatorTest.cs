@@ -24,9 +24,9 @@ namespace Tests
 
         static object[] Cases()
         {
-            var tile1 = new Tile(0);
-            var tile2 = new Tile(2);
-            var tile3 = new Tile(3);
+            var tile1 = new Tile(0, Vector2Int.zero);
+            var tile2 = new Tile(2, Vector2Int.zero);
+            var tile3 = new Tile(3, Vector2Int.zero);
 
             return new object[]
             {
