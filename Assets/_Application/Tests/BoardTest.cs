@@ -1,6 +1,8 @@
 ﻿using GMTK2020.Data;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Tests
 {
@@ -56,6 +58,83 @@ namespace Tests
                 {
                     Tile tile = board[x, y];
                 });
+        }
+
+        [TestCase(0, 0)]
+        [TestCase(2, 3)]
+        [TestCase(5, 1)]
+        public void Test_setter_and_getter(int x, int y)
+        {
+            var board = new Board(6, 7);
+
+            var tile = new Tile(3);
+
+            board[x, y] = tile;
+
+            Assert.That(board[x, y], Is.SameAs(tile));
+        }
+
+        [TestCase(0, 0)]
+        [TestCase(2, 3)]
+        [TestCase(5, 1)]
+        public void Setter_updates_position_on_tile(int x, int y)
+        {
+            var board = new Board(6, 7);
+
+            var tile = new Tile(3);
+
+            board[x, y] = tile;
+
+            Vector2Int expectedPosition = new Vector2Int(x, y);
+            Assert.That(board[x, y].Position, Is.EqualTo(expectedPosition));
+        }
+
+        [TestCase(0, 0)]
+        [TestCase(2, 3)]
+        [TestCase(5, 1)]
+        public void Test_vector_setter_and_getter(int x, int y)
+        {
+            var board = new Board(6, 7);
+
+            var tile = new Tile(3);
+
+            var pos = new Vector2Int(x, y);
+            board[pos] = tile;
+
+            Assert.That(board[pos], Is.SameAs(tile));
+        }
+
+        [TestCase(0, 0)]
+        [TestCase(2, 3)]
+        [TestCase(5, 1)]
+        public void Vector_setter_updates_position_on_tile(int x, int y)
+        {
+            var board = new Board(6, 7);
+
+            var tile = new Tile(3);
+
+            var pos = new Vector2Int(x, y);
+            board[pos] = tile;
+
+            Assert.That(board[pos].Position, Is.EqualTo(pos));
+        }
+
+        [Test]
+        public void Iterating_over_board_gives_all_non_null_tiles()
+        {
+            var board = new Board(3, 3);
+
+            var tiles = new List<Tile>
+            {
+                (board[0, 0] = new Tile(0)),
+                (board[1, 0] = new Tile(1)),
+                (board[1, 1] = new Tile(2)),
+                (board[1, 2] = new Tile(3)),
+                (board[2, 0] = new Tile(4)),
+                (board[2, 1] = new Tile(5))
+            };
+
+            Assert.That(board, Is.EquivalentTo(tiles));
         }
     }
 }

@@ -10,6 +10,9 @@ namespace GMTK2020.Data
         public bool Marked { get; set; }
         public Vector2Int Position { get; set; }
 
+        public Tile(int color)
+            : this(color, new Vector2Int(-1, -1)) { }
+
         public Tile(int color, Vector2Int position)
         {
             Color = color;

@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace GMTK2020.Data
 {
-    public class Board
+    public class Board : IEnumerable<Tile>
     {
         public int Width { get; }
         public int Height { get; }
@@ -27,7 +30,36 @@ namespace GMTK2020.Data
         {
             get => tiles[x, y];
 
-            set => tiles[x, y] = value;
+            set
+            {
+                value.Position = new Vector2Int(x, y);
+                tiles[x, y] = value;
+            }
         }
+
+        public Tile this[Vector2Int pos]
+        {
+            get => tiles[pos.x, pos.y];
+
+            set
+            {
+                value.Position = pos;
+                tiles[pos.x, pos.y] = value;
+            }
+        }
+
+        public IEnumerator<Tile> GetEnumerator()
+        {
+            for (int x = 0; x < Width; ++x)
+                for (int y = 0; y < Width; ++y)
+                {
+                    Tile tile = tiles[x, y];
+                    if (tile != null)
+                        yield return tile;
+                }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() 
+            => GetEnumerator();
     } 
 }
