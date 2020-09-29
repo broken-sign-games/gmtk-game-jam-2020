@@ -2,6 +2,8 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.Linq;
 using UnityEngine;
 
 namespace Tests
@@ -135,6 +137,63 @@ namespace Tests
             };
 
             Assert.That(board, Is.EquivalentTo(tiles));
+        }
+
+        [TestCase(0, new[] { 1, 2, 3 })]
+        [TestCase(1, new[] { 4, 5, 6 })]
+        [TestCase(2, new[] { 7, 8, 9 })]
+        public void Get_row_from_left_to_right(int y, int[] colors)
+        {
+            Board board = GetTestBoard();
+
+            Assert.That(board.GetRow(y).Select(t => t.Color), Is.EqualTo(colors));
+        }
+
+        [TestCase(0, new[] { 3, 2, 1 })]
+        [TestCase(1, new[] { 6, 5, 4 })]
+        [TestCase(2, new[] { 9, 8, 7 })]
+        public void Get_row_from_right_to_left(int y, int[] colors)
+        {
+            Board board = GetTestBoard();
+
+            Assert.That(board.GetRow(y, HorizontalOrder.RightToLeft).Select(t => t.Color), Is.EqualTo(colors));
+        }
+
+        [TestCase(0, new[] { 1, 4, 7 })]
+        [TestCase(1, new[] { 2, 5, 8 })]
+        [TestCase(2, new[] { 3, 6, 9 })]
+        public void Get_column_from_bottom_to_top(int y, int[] colors)
+        {
+            Board board = GetTestBoard();
+
+            Assert.That(board.GetColumn(y).Select(t => t.Color), Is.EqualTo(colors));
+        }
+
+        [TestCase(0, new[] { 7, 4, 1 })]
+        [TestCase(1, new[] { 8, 5, 2 })]
+        [TestCase(2, new[] { 9, 6, 3 })]
+        public void Get_column_from_top_to_bottom(int y, int[] colors)
+        {
+            Board board = GetTestBoard();
+
+            Assert.That(board.GetColumn(y, VerticalOrder.TopToBottom).Select(t => t.Color), Is.EqualTo(colors));
+        }
+
+        private Board GetTestBoard()
+        {
+            var board = new Board(3, 3);
+
+            board[0, 0] = new Tile(1);
+            board[1, 0] = new Tile(2);
+            board[2, 0] = new Tile(3);
+            board[0, 1] = new Tile(4);
+            board[1, 1] = new Tile(5);
+            board[2, 1] = new Tile(6);
+            board[0, 2] = new Tile(7);
+            board[1, 2] = new Tile(8);
+            board[2, 2] = new Tile(9);
+
+            return board;
         }
     }
 }

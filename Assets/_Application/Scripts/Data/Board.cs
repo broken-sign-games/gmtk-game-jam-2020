@@ -61,5 +61,33 @@ namespace GMTK2020.Data
 
         IEnumerator IEnumerable.GetEnumerator() 
             => GetEnumerator();
-    } 
+
+        public IEnumerable<Tile> GetRow(int y, HorizontalOrder order = HorizontalOrder.LeftToRight)
+        {
+            if (order == HorizontalOrder.LeftToRight)
+            {
+                for (int x = 0; x < Width; ++x)
+                    yield return tiles[x, y];
+            }
+            else
+            {
+                for (int x = Width - 1; x >= 0; --x)
+                    yield return tiles[x, y];
+            }
+        }
+
+        public IEnumerable<Tile> GetColumn(int x, VerticalOrder order = VerticalOrder.BottomToTop)
+        {
+            if (order == VerticalOrder.BottomToTop)
+            {
+                for (int y = 0; y < Height; ++y)
+                    yield return tiles[x, y];
+            }
+            else
+            {
+                for (int y = Height - 1; y >= 0; --y)
+                    yield return tiles[x, y];
+            }
+        }
+    }
 }
