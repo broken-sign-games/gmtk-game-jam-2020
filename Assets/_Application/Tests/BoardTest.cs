@@ -139,7 +139,28 @@ namespace Tests
             Assert.That(board, Is.EquivalentTo(tiles));
         }
 
-        [TestCase(0, new[] { 1, 2, 3 })]
+        [TestCase(3, HorizontalOrder.LeftToRight, new[] { 0, 1, 2 })]
+        [TestCase(3, HorizontalOrder.RightToLeft, new[] { 2, 1, 0 })]
+        [TestCase(5, HorizontalOrder.LeftToRight, new[] { 0, 1, 2, 3, 4 })]
+        [TestCase(5, HorizontalOrder.RightToLeft, new[] { 4, 3, 2, 1, 0 })]
+        public void Get_x_indices(int width, HorizontalOrder order, int[] xs)
+        {
+            Board board = new Board(width, 4);
+
+            Assert.That(board.GetXs(order), Is.EqualTo(xs));
+        }
+
+        [TestCase(3, VerticalOrder.BottomToTop, new[] { 0, 1, 2 })]
+        [TestCase(3, VerticalOrder.TopToBottom, new[] { 2, 1, 0 })]
+        [TestCase(5, VerticalOrder.BottomToTop, new[] { 0, 1, 2, 3, 4 })]
+        [TestCase(5, VerticalOrder.TopToBottom, new[] { 4, 3, 2, 1, 0 })]
+        public void Get_y_indices(int height, VerticalOrder order, int[] ys)
+        {
+            Board board = new Board(4, height);
+
+            Assert.That(board.GetYs(order), Is.EqualTo(ys));
+        }
+
         [TestCase(1, new[] { 4, 5, 6 })]
         [TestCase(2, new[] { 7, 8, 9 })]
         public void Get_row_from_left_to_right(int y, int[] colors)
@@ -178,6 +199,100 @@ namespace Tests
 
             Assert.That(board.GetColumn(y, VerticalOrder.TopToBottom).Select(t => t.Color), Is.EqualTo(colors));
         }
+
+        [TestCaseSource(nameof(allRowsTestCases))]
+        public void Get_all_rows(HorizontalOrder horizontal, VerticalOrder vertical, int[][] colors)
+        {
+            Board board = GetTestBoard();
+
+            Assert.That(board.GetRows(horizontal, vertical).Select(r => r.Select(t => t.Color)), Is.EqualTo(colors));
+        }
+
+        [TestCaseSource(nameof(allColumnsTestCases))]
+        public void Get_all_columns(HorizontalOrder horizontal, VerticalOrder vertical, int[][] colors)
+        {
+            Board board = GetTestBoard();
+
+            Assert.That(board.GetColumns(horizontal, vertical).Select(r => r.Select(t => t.Color)), Is.EqualTo(colors));
+        }
+
+        private static readonly object[] allRowsTestCases = {
+            new object[] {
+                HorizontalOrder.LeftToRight,
+                VerticalOrder.BottomToTop,
+                new[] {
+                    new[] { 1, 2, 3 },
+                    new[] { 4, 5, 6 },
+                    new[] { 7, 8, 9 },
+                }
+            },
+            new object[] {
+                HorizontalOrder.LeftToRight,
+                VerticalOrder.TopToBottom,
+                new[] {
+                    new[] { 7, 8, 9 },
+                    new[] { 4, 5, 6 },
+                    new[] { 1, 2, 3 },
+                }
+            },
+            new object[] {
+                HorizontalOrder.RightToLeft,
+                VerticalOrder.BottomToTop,
+                new[] {
+                    new[] { 3, 2, 1 },
+                    new[] { 6, 5, 4 },
+                    new[] { 9, 8, 7 },
+                }
+            },
+            new object[] {
+                HorizontalOrder.RightToLeft,
+                VerticalOrder.TopToBottom,
+                new[] {
+                    new[] { 9, 8, 7 },
+                    new[] { 6, 5, 4 },
+                    new[] { 3, 2, 1 },
+                }
+            }
+        };
+
+        private static readonly object[] allColumnsTestCases = {
+            new object[] {
+                HorizontalOrder.LeftToRight,
+                VerticalOrder.BottomToTop,
+                new[] {
+                    new[] { 1, 4, 7 },
+                    new[] { 2, 5, 8 },
+                    new[] { 3, 6, 9 },
+                }
+            },
+            new object[] {
+                HorizontalOrder.LeftToRight,
+                VerticalOrder.TopToBottom,
+                new[] {
+                    new[] { 7, 4, 1 },
+                    new[] { 8, 5, 2 },
+                    new[] { 9, 6, 3 },
+                }
+            },
+            new object[] {
+                HorizontalOrder.RightToLeft,
+                VerticalOrder.BottomToTop,
+                new[] {
+                    new[] { 3, 6, 9 },
+                    new[] { 2, 5, 8 },
+                    new[] { 1, 4, 7 },
+                }
+            },
+            new object[] {
+                HorizontalOrder.RightToLeft,
+                VerticalOrder.TopToBottom,
+                new[] {
+                    new[] { 9, 6, 3 },
+                    new[] { 8, 5, 2 },
+                    new[] { 7, 4, 1 },
+                }
+            }
+        };
 
         private Board GetTestBoard()
         {

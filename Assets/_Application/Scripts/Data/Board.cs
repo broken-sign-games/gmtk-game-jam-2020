@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace GMTK2020.Data
@@ -64,30 +65,44 @@ namespace GMTK2020.Data
 
         public IEnumerable<Tile> GetRow(int y, HorizontalOrder order = HorizontalOrder.LeftToRight)
         {
-            if (order == HorizontalOrder.LeftToRight)
-            {
-                for (int x = 0; x < Width; ++x)
-                    yield return tiles[x, y];
-            }
-            else
-            {
-                for (int x = Width - 1; x >= 0; --x)
-                    yield return tiles[x, y];
-            }
+            foreach (int x in GetXs(order))
+                yield return tiles[x, y];
         }
 
         public IEnumerable<Tile> GetColumn(int x, VerticalOrder order = VerticalOrder.BottomToTop)
         {
-            if (order == VerticalOrder.BottomToTop)
-            {
-                for (int y = 0; y < Height; ++y)
-                    yield return tiles[x, y];
-            }
-            else
-            {
-                for (int y = Height - 1; y >= 0; --y)
-                    yield return tiles[x, y];
-            }
+            foreach (int y in GetYs(order))
+                yield return tiles[x, y];
+        }
+
+        public IEnumerable<IEnumerable<Tile>> GetRows(HorizontalOrder horizontalOrder, VerticalOrder verticalOrder)
+        {
+            foreach (int y in GetYs(verticalOrder))
+                yield return GetRow(y, horizontalOrder);
+        }
+
+        public IEnumerable<IEnumerable<Tile>> GetColumns(HorizontalOrder horizontalOrder, VerticalOrder verticalOrder)
+        {
+            foreach (int x in GetXs(horizontalOrder))
+                yield return GetColumn(x, verticalOrder);
+        }
+
+        public IEnumerable<int> GetXs(HorizontalOrder order = HorizontalOrder.LeftToRight)
+        {
+            IEnumerable<int> xs = Enumerable.Range(0, Width);
+
+            return order == HorizontalOrder.LeftToRight 
+                ? xs 
+                : xs.Reverse();
+        }
+
+        public IEnumerable<int> GetYs(VerticalOrder order = VerticalOrder.BottomToTop)
+        {
+            IEnumerable<int> ys = Enumerable.Range(0, Height);
+
+            return order == VerticalOrder.BottomToTop
+                ? ys
+                : ys.Reverse();
         }
     }
 }
