@@ -19,6 +19,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private Button retryButton = null;
         [SerializeField] private Button nextButton = null;
         [SerializeField] private SpriteRenderer border = null;
+        [SerializeField] private TileRenderer tileRendererPrefab = null;
 
         [SerializeField] private float postMatchDelay = 0.25f;
         [SerializeField] private float postFallDelay = 0.1f;
@@ -69,9 +70,9 @@ namespace GMTK2020.Rendering
                     if (tile is null)
                         continue;
 
-                    TileRenderer tileRenderer = Instantiate(tileData.PrefabMap[tile.Color], transform);
+                    TileRenderer tileRenderer = Instantiate(tileRendererPrefab, transform);
 
-                    tileRenderer.transform.localPosition = new Vector3(x, y, 0);
+                    tileRenderer.SetTile(tile);
                     tileDictionary[tile] = tileRenderer;
                 }
         }

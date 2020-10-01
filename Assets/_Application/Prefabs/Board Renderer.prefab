@@ -55,6 +55,8 @@ MonoBehaviour:
   retryButton: {fileID: 0}
   nextButton: {fileID: 0}
   border: {fileID: 269216730889641830}
+  tileRendererPrefab: {fileID: 3085825000685519523, guid: 506e82c7fda498c4c9837b64dfdcbf0d,
+    type: 3}
   postMatchDelay: 0.15
   postFallDelay: 0.1
   fallingSpeed: 0.75

@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using GMTK2020.Data;
 using TMPro;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private float textFadeDuration = 0.25f;
         [SerializeField] private float textRiseDuration = 0.5f;
         [SerializeField] private float textRiseDistance = 0.5f;
+        [SerializeField] private TileData tileData = null;
 
         private SpriteRenderer sprite;
 
@@ -24,6 +26,13 @@ namespace GMTK2020.Rendering
             sprite = GetComponent<SpriteRenderer>();
         }
 
+        public void SetTile(Tile tile)
+        {
+            sprite.sprite = tile.Marked 
+                ? tileData.UnmarkedSpriteMap[tile.Color] 
+                : tileData.MarkedSpriteMap[tile.Color];
+            transform.localPosition = (Vector2)tile.Position;
+        }
 
         public void UpdatePrediction(int value)
         {
