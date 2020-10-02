@@ -203,18 +203,18 @@ namespace GMTK2020.Rendering
             return gridPos;
         }
 
-        public void UpdatePrediction(Vector2Int pos, int value)
+        public void UpdatePrediction(Vector2Int pos)
         {
-            Tile tile = initialBoard[pos.x, pos.y];
-            UpdatePrediction(tile, value);
-
-            if (soundManager) 
-                soundManager.PlayEffect(SoundManager.Effect.PREDICT, value);
+            Tile tile = initialBoard[pos];
+            UpdatePrediction(tile);
         }
 
-        public void UpdatePrediction(Tile tile, int value)
+        public void UpdatePrediction(Tile tile)
         {
-            tileDictionary[tile].UpdatePrediction(value);
+            tileDictionary[tile].UpdatePrediction();
+
+            if (soundManager)
+                soundManager.PlayEffect(SoundManager.Effect.PREDICT);
         }
     }
 }
