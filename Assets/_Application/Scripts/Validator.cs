@@ -15,10 +15,7 @@ namespace GMTK2020
             for (int i = 0; i < prediction.MatchedTilesPerStep.Count; ++i)
             {
                 HashSet<Tile> predicted = prediction.MatchedTilesPerStep[i];
-                HashSet<Tile> simulated = new HashSet<Tile>(simulation.Steps[i].MatchedTiles.Select((tuple) => {
-                    (Tile tile, _) = tuple;
-                    return tile;
-                }));
+                HashSet<Tile> simulated = simulation.Steps[i].MatchedTiles;
 
                 if (!predicted.SetEquals(simulated))
                 {

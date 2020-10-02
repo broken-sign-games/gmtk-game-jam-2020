@@ -17,6 +17,40 @@ namespace Tests
         }
 
         [Test]
+        public void Copy_constructor_copies_all_properties()
+        {
+            int color = 3;
+            var pos = new Vector2Int(1, 3);
+            var tile = new Tile(color, pos);
+            tile.MakeInert();
+
+            var copy = new Tile(tile);
+
+            Assert.That(copy.Color, Is.EqualTo(color));
+            Assert.That(copy.Position, Is.EqualTo(pos));
+            Assert.That(copy.Marked, Is.EqualTo(false));
+            Assert.That(copy.Inert, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void Copy_constructor_creates_deep_copy()
+        {
+            int color = 3;
+            var pos = new Vector2Int(1, 3);
+            var tile = new Tile(color, pos);
+            tile.Marked = true;
+
+            var copy = new Tile(tile);
+            tile.MakeInert();
+            tile.Position = new Vector2Int(4, 2);
+
+            Assert.That(copy.Color, Is.EqualTo(color));
+            Assert.That(copy.Position, Is.EqualTo(pos));
+            Assert.That(copy.Marked, Is.EqualTo(true));
+            Assert.That(copy.Inert, Is.EqualTo(false));
+        }
+
+        [Test]
         public void Test_position_getter_and_setter()
         {
             Vector2Int initialPosition = new Vector2Int(4, 5);
@@ -65,7 +99,6 @@ namespace Tests
             tile.MakeInert();
 
             Assert.That(tile.Marked, Is.False);
-
         }
     }
 }

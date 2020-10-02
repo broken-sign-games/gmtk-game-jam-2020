@@ -29,7 +29,7 @@ namespace GMTK2020
                 try
                 {
                     board = GenerateLevel();
-                    simulation = simulator.Simulate(board);
+                    simulation = simulator.Simulate(board.DeepCopy());
                     isValid = ValidateSimulation(simulation);
                 }
                 catch (Exception e) when (
@@ -65,7 +65,7 @@ namespace GMTK2020
             {
                 for (int y = 0; y < levelSpec.Size.y; ++y)
                 {
-                    board[x, y] = new Tile(rand.Next(levelSpec.ColorCount), new Vector2Int(x, y));
+                    board[x, y] = new Tile(rand.Next(levelSpec.ColorCount));
                 }
             }
             return board;
@@ -116,7 +116,7 @@ namespace GMTK2020
                     {
                         board[tile.x, y] = board[tile.x, y - 1];
                     }
-                    board[tile.x, tile.y] = new Tile(color, tile);
+                    board[tile.x, tile.y] = new Tile(color);
                 }
             }
 
@@ -185,7 +185,7 @@ namespace GMTK2020
                     {
                         board[tile.x, y] = board[tile.x, y - 1];
                     }
-                    board[tile.x, tile.y] = new Tile(color, tile);
+                    board[tile] = new Tile(color, tile);
                 }
             }
 
@@ -224,11 +224,11 @@ namespace GMTK2020
                     || pos.y < 0
                     || pos.x >= width
                     || pos.y >= height
-                    || board[pos.x, pos.y] is null)
+                    || board[pos] is null)
                 {
                     continue;
                 }
-                colors.Remove(board[pos.x, pos.y].Color);
+                colors.Remove(board[pos].Color);
             }
 
             int color = colors.ElementAt(rng.Next(colors.Count));
@@ -252,12 +252,12 @@ namespace GMTK2020
         {
             foreach (SimulationStep step in simulation.Steps)
             {
-                (Tile tile, Vector2Int pos)[] tiles = step.MatchedTiles.ToArray();
+                Tile[] tiles = step.MatchedTiles.ToArray();
 
                 if (tiles.Length != 2)
                     return false;
 
-                Vector2Int delta = tiles[0].pos - tiles[1].pos;
+                Vector2Int delta = tiles[0].Position - tiles[1].Position;
 
                 if (delta.y != 0 || Math.Abs(delta.x) != 1)
                     return false;
@@ -286,7 +286,7 @@ namespace GMTK2020
                 int matches = 0;
                 for (int color = 0; color < levelSpec.ColorCount; ++color)
                 {
-                    int tileCount = step.MatchedTiles.Count<(Tile tile, Vector2Int)>(t => t.tile.Color == color);
+                    int tileCount = step.MatchedTiles.Count(t => t.Color == color);
                     if (tileCount == 0)
                         continue;
 
@@ -313,7 +313,7 @@ namespace GMTK2020
             {
                 for (int color = 0; color < levelSpec.ColorCount; ++color)
                 {
-                    int tileCount = step.MatchedTiles.Count<(Tile tile, Vector2Int)>(t => t.tile.Color == color);
+                    int tileCount = step.MatchedTiles.Count(t => t.Color == color);
                     if (tileCount % matchPatternSize != 0)
                         return true;
                 }

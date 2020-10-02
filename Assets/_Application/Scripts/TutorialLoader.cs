@@ -74,14 +74,14 @@ namespace GMTK2020
             await new WaitForSeconds(delayAfterRenderingInitialBoard);
 
             Simulator simulator = new Simulator(levelPattern);
-            Simulation simulation = simulator.Simulate(initialBoard, true);
+            Simulation simulation = simulator.Simulate(initialBoard.DeepCopy(), true);
 
             if (renderPredictions)
             {
                 int i = 1;
                 foreach (SimulationStep step in simulation.Steps)
                 {
-                    foreach ((Tile tile, _) in step.MatchedTiles)
+                    foreach (Tile tile in step.MatchedTiles)
                     {
                         boardRenderer.UpdatePrediction(tile, i);
                         await new WaitForSeconds(delayBetweenPredictions);

@@ -99,8 +99,7 @@ namespace Tests
 
         private static SimulationStep Step(HashSet<Tile> matchedTiles)
         {
-            var tilesWithFakePos = new HashSet<(Tile, Vector2Int)>(matchedTiles.Select((tile) => (tile, Vector2Int.zero)));
-            return new SimulationStep(tilesWithFakePos, new List<(Tile, Vector2Int)>());
+            return new SimulationStep(matchedTiles, new List<Tile>());
         }
     }
 }

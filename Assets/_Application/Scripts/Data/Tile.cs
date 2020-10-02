@@ -19,6 +19,14 @@ namespace GMTK2020.Data
             Position = position;
         }
 
+        public Tile(Tile other)
+        {
+            Color = other.Color;
+            Inert = other.Inert;
+            Marked = other.Marked;
+            Position = other.Position;
+        }
+
         public void MakeInert()
         {
             Inert = true;

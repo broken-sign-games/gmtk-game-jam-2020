@@ -112,7 +112,7 @@ namespace GMTK2020.Rendering
                     }
                 }
 
-                foreach ((Tile tile, _) in step.MatchedTiles)
+                foreach (Tile tile in step.MatchedTiles)
                 {
                     // TODO: indicate incorrect guesses
                     TileRenderer tileRenderer = tileDictionary[tile];
@@ -145,11 +145,11 @@ namespace GMTK2020.Rendering
 
                 seq = DOTween.Sequence();
 
-                foreach ((Tile tile, Vector2Int newPosition) in step.MovingTiles)
+                foreach (Tile tile in step.MovingTiles)
                 {
                     TileRenderer tileRenderer = tileDictionary[tile];
                     Tween tween = tileRenderer.transform
-                        .DOLocalMove(new Vector3Int(newPosition.x, newPosition.y, 0), fallingSpeed)
+                        .DOLocalMove(new Vector3Int(tile.Position.x, tile.Position.y, 0), fallingSpeed)
                         .SetSpeedBased()
                         .SetEase(fallingEase);
                     seq.Join(tween);

@@ -35,6 +35,16 @@ namespace GMTK2020.Data
             tiles = other.tiles.Clone() as Tile[,];
         }
 
+        public Board DeepCopy()
+        {
+            var copy = new Board(Width, Height);
+
+            foreach (var tile in this)
+                copy[tile.Position] = new Tile(tile);
+
+            return copy;
+        }
+
         public Tile this[int x, int y]
         {
             get => tiles[x, y];
@@ -53,7 +63,8 @@ namespace GMTK2020.Data
 
             set
             {
-                value.Position = pos;
+                if (value != null)
+                    value.Position = pos;
                 tiles[pos.x, pos.y] = value;
             }
         }

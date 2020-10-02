@@ -62,7 +62,7 @@ namespace GMTK2020
 
         public void Initialize(Board initialBoard)
         {
-            this.initialBoard = new Board(initialBoard);
+            this.initialBoard = initialBoard;
 
             width = initialBoard.Width;
             height = initialBoard.Height;

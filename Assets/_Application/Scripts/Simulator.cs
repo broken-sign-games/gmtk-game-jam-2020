@@ -35,11 +35,11 @@ namespace GMTK2020
         {
             var simulationSteps = new List<SimulationStep>();
 
-            var workingBoard = new Board(initialBoard);
+            var workingBoard = initialBoard;
 
             for (int i = 0; i < MAX_SIMULATION_STEPS; ++i)
             {
-                HashSet<(Tile, Vector2Int)> matchedTiles = RemoveMatchedTiles(workingBoard);
+                HashSet<Tile> matchedTiles = RemoveMatchedTiles(workingBoard);
                 if (matchedTiles.Count == 0)
                 {
                     if (allowShorterLevel)
@@ -48,7 +48,7 @@ namespace GMTK2020
                         throw new ArgumentException("Boring level.");
                 }
 
-                List<(Tile, Vector2Int)> movingTiles = MoveTilesDown(workingBoard);
+                List<Tile> movingTiles = MoveTilesDown(workingBoard);
 
                 simulationSteps.Add(new SimulationStep(matchedTiles, movingTiles));
             }
@@ -56,9 +56,9 @@ namespace GMTK2020
             return new Simulation(simulationSteps);
         }
 
-        public HashSet<(Tile, Vector2Int)> RemoveMatchedTiles(Board workingBoard)
+        public HashSet<Tile> RemoveMatchedTiles(Board workingBoard)
         {
-            var matchedTiles = new HashSet<(Tile, Vector2Int)>();
+            var matchedTiles = new HashSet<Tile>();
 
             int width = workingBoard.Width;
             int height = workingBoard.Height;
@@ -107,8 +107,8 @@ namespace GMTK2020
 
                     foreach (Vector2Int pos in matchedPositions)
                     {
-                        matchedTiles.Add((workingBoard[pos.x, pos.y], pos));
-                        workingBoard[pos.x, pos.y] = null;
+                        matchedTiles.Add(workingBoard[pos]);
+                        workingBoard[pos] = null;
                     }
                 }
 
@@ -159,12 +159,12 @@ namespace GMTK2020
             return fullMatch;
         }
 
-        public List<(Tile, Vector2Int)> MoveTilesDown(Board workingBoard)
+        public List<Tile> MoveTilesDown(Board workingBoard)
         {
             int width = workingBoard.Width;
             int height = workingBoard.Height;
 
-            var movedTiles = new List<(Tile, Vector2Int)>();
+            var movedTiles = new List<Tile>();
 
             for (int x = 0; x < width; ++x)
             {
@@ -177,9 +177,9 @@ namespace GMTK2020
 
                     if (y > top)
                     {
-                        movedTiles.Add((tile, new Vector2Int(x, top)));
                         workingBoard[x, top] = tile;
                         workingBoard[x, y] = null;
+                        movedTiles.Add(tile);
                     }
 
                     ++top;
