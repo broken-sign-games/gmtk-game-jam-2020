@@ -31,15 +31,15 @@ namespace GMTK2020
             }
         }
 
-        public Simulation Simulate(Tile[,] initialGrid, bool allowShorterLevel = false)
+        public Simulation Simulate(Board initialBoard, bool allowShorterLevel = false)
         {
             var simulationSteps = new List<SimulationStep>();
 
-            Tile[,] workingGrid = initialGrid.Clone() as Tile[,];
+            var workingBoard = new Board(initialBoard);
 
             for (int i = 0; i < MAX_SIMULATION_STEPS; ++i)
             {
-                HashSet<(Tile, Vector2Int)> matchedTiles = RemoveMatchedTiles(workingGrid);
+                HashSet<(Tile, Vector2Int)> matchedTiles = RemoveMatchedTiles(workingBoard);
                 if (matchedTiles.Count == 0)
                 {
                     if (allowShorterLevel)
@@ -48,7 +48,7 @@ namespace GMTK2020
                         throw new ArgumentException("Boring level.");
                 }
 
-                List<(Tile, Vector2Int)> movingTiles = MoveTilesDown(workingGrid);
+                List<(Tile, Vector2Int)> movingTiles = MoveTilesDown(workingBoard);
 
                 simulationSteps.Add(new SimulationStep(matchedTiles, movingTiles));
             }
@@ -56,17 +56,17 @@ namespace GMTK2020
             return new Simulation(simulationSteps);
         }
 
-        public HashSet<(Tile, Vector2Int)> RemoveMatchedTiles(Tile[,] workingGrid)
+        public HashSet<(Tile, Vector2Int)> RemoveMatchedTiles(Board workingBoard)
         {
             var matchedTiles = new HashSet<(Tile, Vector2Int)>();
 
-            int width = workingGrid.GetLength(0);
-            int height = workingGrid.GetLength(1);
+            int width = workingBoard.Width;
+            int height = workingBoard.Height;
 
             for (int x = 0; x < width; ++x)
                 for (int y = 0; y < height; ++y)
                 {
-                    Tile tile = workingGrid[x, y];
+                    Tile tile = workingBoard[x, y];
                     if (tile is null)
                         continue;
 
@@ -86,7 +86,7 @@ namespace GMTK2020
                                 || pos.y < 0
                                 || pos.x >= width
                                 || pos.y >= height
-                                || workingGrid[pos.x, pos.y]?.Color != tile.Color)
+                                || workingBoard[pos.x, pos.y]?.Color != tile.Color)
                             {
                                 doesThisSymmetryMatch = false;
                                 break;
@@ -103,23 +103,23 @@ namespace GMTK2020
                     if (!isMatch)
                         continue;
 
-                    HashSet<Vector2Int> matchedPositions = ExpandMatch(workingGrid, origin);
+                    HashSet<Vector2Int> matchedPositions = ExpandMatch(workingBoard, origin);
 
                     foreach (Vector2Int pos in matchedPositions)
                     {
-                        matchedTiles.Add((workingGrid[pos.x, pos.y], pos));
-                        workingGrid[pos.x, pos.y] = null;
+                        matchedTiles.Add((workingBoard[pos.x, pos.y], pos));
+                        workingBoard[pos.x, pos.y] = null;
                     }
                 }
 
             return matchedTiles;
         }
 
-        private HashSet<Vector2Int> ExpandMatch(Tile[,] workingGrid, Vector2Int origin)
+        private HashSet<Vector2Int> ExpandMatch(Board workingBoard, Vector2Int origin)
         {
-            int width = workingGrid.GetLength(0);
-            int height = workingGrid.GetLength(1);
-            int color = workingGrid[origin.x, origin.y].Color;
+            int width = workingBoard.Width;
+            int height = workingBoard.Height;
+            int color = workingBoard[origin.x, origin.y].Color;
 
             var fullMatch = new HashSet<Vector2Int>() { origin };
 
@@ -148,7 +148,7 @@ namespace GMTK2020
                         && candidate.y >= 0
                         && candidate.x < width
                         && candidate.y < height
-                        && workingGrid[candidate.x, candidate.y]?.Color == color)
+                        && workingBoard[candidate.x, candidate.y]?.Color == color)
                     {
                         positionsToProcess.Enqueue(candidate);
                         fullMatch.Add(candidate);
@@ -159,10 +159,10 @@ namespace GMTK2020
             return fullMatch;
         }
 
-        public List<(Tile, Vector2Int)> MoveTilesDown(Tile[,] workingGrid)
+        public List<(Tile, Vector2Int)> MoveTilesDown(Board workingBoard)
         {
-            int width = workingGrid.GetLength(0);
-            int height = workingGrid.GetLength(1);
+            int width = workingBoard.Width;
+            int height = workingBoard.Height;
 
             var movedTiles = new List<(Tile, Vector2Int)>();
 
@@ -171,15 +171,15 @@ namespace GMTK2020
                 int top = 0;
                 for (int y = 0; y < height; ++y)
                 {
-                    Tile tile = workingGrid[x, y];
+                    Tile tile = workingBoard[x, y];
                     if (tile is null)
                         continue;
 
                     if (y > top)
                     {
                         movedTiles.Add((tile, new Vector2Int(x, top)));
-                        workingGrid[x, top] = tile;
-                        workingGrid[x, y] = null;
+                        workingBoard[x, top] = tile;
+                        workingBoard[x, y] = null;
                     }
 
                     ++top;

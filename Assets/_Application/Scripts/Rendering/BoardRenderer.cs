@@ -31,7 +31,7 @@ namespace GMTK2020.Rendering
         public event Action SimulationRenderingCompleted;
 
         private readonly Dictionary<Tile, TileRenderer> tileDictionary = new Dictionary<Tile, TileRenderer>();
-        private Tile[,] initialGrid;
+        private Board initialBoard;
         int width;
         int height;
 
@@ -42,7 +42,7 @@ namespace GMTK2020.Rendering
             soundManager = FindObjectOfType<SoundManager>();
         }
 
-        public void RenderInitial(Tile[,] grid)
+        public void RenderInitial(Board board)
         {
             if (cancelAnimation)
                 return;
@@ -55,10 +55,10 @@ namespace GMTK2020.Rendering
 
             tileDictionary.Clear();
 
-            initialGrid = grid;
+            initialBoard = board;
 
-            width = grid.GetLength(0);
-            height = grid.GetLength(1);
+            width = board.Width;
+            height = board.Height;
 
             border.size = new Vector2(width + 0.375f, height + 0.375f);
             transform.localPosition = new Vector2(-(width - 1) / 2f, -(height - 1) / 2f);
@@ -66,7 +66,7 @@ namespace GMTK2020.Rendering
             for (int x = 0; x < width; ++x)
                 for (int y = 0; y < height; ++y)
                 {
-                    Tile tile = grid[x, y];
+                    Tile tile = board[x, y];
                     if (tile is null)
                         continue;
 
@@ -205,7 +205,7 @@ namespace GMTK2020.Rendering
 
         public void UpdatePrediction(Vector2Int pos, int value)
         {
-            Tile tile = initialGrid[pos.x, pos.y];
+            Tile tile = initialBoard[pos.x, pos.y];
             UpdatePrediction(tile, value);
 
             if (soundManager) 

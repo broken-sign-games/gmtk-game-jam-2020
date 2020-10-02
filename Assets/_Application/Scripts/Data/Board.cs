@@ -27,13 +27,22 @@ namespace GMTK2020.Data
             tiles = new Tile[Width, Height];
         }
 
+        public Board(Board other)
+        {
+            Width = other.Width;
+            Height = other.Height;
+
+            tiles = other.tiles.Clone() as Tile[,];
+        }
+
         public Tile this[int x, int y]
         {
             get => tiles[x, y];
 
             set
             {
-                value.Position = new Vector2Int(x, y);
+                if (value != null)
+                    value.Position = new Vector2Int(x, y);
                 tiles[x, y] = value;
             }
         }

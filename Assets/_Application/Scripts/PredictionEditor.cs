@@ -13,7 +13,7 @@ namespace GMTK2020
 
         private InputActions inputs;
 
-        private Tile[,] initialGrid;
+        private Board initialBoard;
         private int[,] rawPredictions;
         private bool initialized = false;
         private bool predictionsFinalised = false;
@@ -60,12 +60,12 @@ namespace GMTK2020
             IncrementPrediction(gridPos);
         }
 
-        public void Initialize(Tile[,] initialGrid)
+        public void Initialize(Board initialBoard)
         {
-            this.initialGrid = initialGrid.Clone() as Tile[,];
+            this.initialBoard = new Board(initialBoard);
 
-            width = initialGrid.GetLength(0);
-            height = initialGrid.GetLength(1);
+            width = initialBoard.Width;
+            height = initialBoard.Height;
 
             rawPredictions = new int[width, height];
             initialized = true;
@@ -82,7 +82,7 @@ namespace GMTK2020
                 {
                     int step = rawPredictions[x, y];
                     if (step > 0)
-                        predictions.MatchedTilesPerStep[step - 1].Add(initialGrid[x, y]);
+                        predictions.MatchedTilesPerStep[step - 1].Add(initialBoard[x, y]);
                 }
 
             gameObject.SetActive(false);

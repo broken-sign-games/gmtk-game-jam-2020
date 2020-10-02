@@ -21,7 +21,7 @@ namespace GMTK2020
         [SerializeField] private float delayAfterPredictions = 1f;
 
         private HashSet<Vector2Int> levelPattern;
-        private Tile[,] initialGrid;
+        private Board initialBoard;
 
         private void Start()
         {
@@ -43,38 +43,38 @@ namespace GMTK2020
             tutorialText.text = levelSpec.TutorialText;
 
             patternRenderer.RenderPattern(levelPattern);
-            initialGrid = LoadTileGrid(levelSpec.TutorialBoard);
+            initialBoard = LoadTileGrid(levelSpec.TutorialBoard);
 
             RenderSimulatedTutorial(false);
         }
 
-        private Tile[,] LoadTileGrid(Array2DInt tutorialBoard)
+        private Board LoadTileGrid(Array2DInt tutorialBoard)
         {
             int[,] intGrid = tutorialBoard.GetCells();
 
             int width = tutorialBoard.GridSize.x;
             int height = tutorialBoard.GridSize.y;
-            var grid = new Tile[width, height];
+            var board = new Board(width, height);
 
             for (int x = 0; x < width; ++x)
                 for (int y = 0; y < height; ++y)
                 {
                     int color = intGrid[height - y - 1, x];
                     if (color >= 0)
-                        grid[x, y] = new Tile(color, new Vector2Int(x, y));
+                        board[x, y] = new Tile(color);
                 }
 
-            return grid;
+            return board;
         }
 
         private async void RenderSimulatedTutorial(bool renderPredictions)
         {
-            boardRenderer.RenderInitial(initialGrid);
+            boardRenderer.RenderInitial(initialBoard);
 
             await new WaitForSeconds(delayAfterRenderingInitialBoard);
 
             Simulator simulator = new Simulator(levelPattern);
-            Simulation simulation = simulator.Simulate(initialGrid, true);
+            Simulation simulation = simulator.Simulate(initialBoard, true);
 
             if (renderPredictions)
             {

@@ -4,22 +4,22 @@ namespace GMTK2020.Data
 {
     public class Level
     {
-        public Tile[,] Grid { get; }
+        public Board Board { get; }
         public Simulation Simulation { get; }
-        public Level(Tile[,] grid, Simulation simulation)
+        public Level(Board board, Simulation simulation)
         {
-            Grid = grid;
+            Board = board;
             Simulation = simulation;
         }
 
         public override string ToString()
         {
             var message = new StringBuilder();
-            for (int y = Grid.GetLength(1) - 1; y >= 0; --y)
+            foreach (int y in Board.GetYs(VerticalOrder.TopToBottom))
             {
-                for (int x = 0; x < Grid.GetLength(0); ++x)
+                foreach (int x in Board.GetXs(HorizontalOrder.LeftToRight))
                 {
-                    message.Append($"{Grid[x, y]?.Color ?? 0}\t");
+                    message.Append($"{Board[x, y]?.Color.ToString() ?? "_"}\t");
                 }
                 message.AppendLine("");
             }

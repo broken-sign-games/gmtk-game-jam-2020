@@ -26,7 +26,7 @@ namespace Tests
                 { 0, 0, 0, 0, 0, 7, 8, 9, 6 },
                 { 0, 5, 5, 5, 0, 0, 7, 8, 7 },
             };
-            Tile[,] grid = IntToTileGrid(intGrid);
+            Board board = IntToTileGrid(intGrid);
 
             var pattern = new HashSet<Vector2Int>()
             {
@@ -35,9 +35,9 @@ namespace Tests
             };
             var simulator = new Simulator(pattern);
 
-            List<(Tile, Vector2Int)> movedTiles = simulator.MoveTilesDown(grid);
+            List<(Tile, Vector2Int)> movedTiles = simulator.MoveTilesDown(board);
 
-            var expected = IntToTileGrid(new int[,]
+            Board expected = IntToTileGrid(new int[,]
             {
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -50,10 +50,10 @@ namespace Tests
                 { 0, 5, 5, 5, 0, 7, 7, 8, 7 },
             });
 
-            for (int x = 0; x < expected.GetLength(0); ++x)
-                for (int y = 0; y < expected.GetLength(1); ++y)
+            for (int x = 0; x < expected.Width; ++x)
+                for (int y = 0; y < expected.Height; ++y)
                 {
-                    Assert.That(grid[x, y]?.Color ?? 0, Is.EqualTo(expected[x, y]?.Color ?? 0));
+                    Assert.That(board[x, y]?.Color ?? 0, Is.EqualTo(expected[x, y]?.Color ?? 0));
                 }
             Assert.That(movedTiles.Count, Is.EqualTo(14));
         }
@@ -73,7 +73,7 @@ namespace Tests
                 { 0, 0, 0, 0, 0, 7, 8, 9, 6 },
                 { 0, 5, 5, 5, 0, 0, 7, 8, 7 },
             };
-            Tile[,] grid = IntToTileGrid(intGrid);
+            Board board = IntToTileGrid(intGrid);
 
             var pattern = new HashSet<Vector2Int>()
             {
@@ -82,9 +82,9 @@ namespace Tests
             };
             var simulator = new Simulator(pattern);
 
-            HashSet<(Tile, Vector2Int)> removedTiles = simulator.RemoveMatchedTiles(grid);
+            HashSet<(Tile, Vector2Int)> removedTiles = simulator.RemoveMatchedTiles(board);
 
-            var expected = IntToTileGrid(new int[,]
+            Board expected = IntToTileGrid(new int[,]
             {
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 1, 0, 0, 0, 0, 0, 0, 0 },
@@ -97,10 +97,10 @@ namespace Tests
                 { 0, 0, 0, 0, 0, 0, 7, 8, 7 },
             });
 
-            for (int x = 0; x < expected.GetLength(0); ++x)
-                for (int y = 0; y < expected.GetLength(1); ++y)
+            for (int x = 0; x < expected.Width; ++x)
+                for (int y = 0; y < expected.Height; ++y)
                 {
-                    Assert.That(grid[x, y]?.Color ?? 0, Is.EqualTo(expected[x, y]?.Color ?? 0));
+                    Assert.That(board[x, y]?.Color ?? 0, Is.EqualTo(expected[x, y]?.Color ?? 0));
                 }
 
             Assert.That(removedTiles.Count, Is.EqualTo(16));
@@ -120,7 +120,7 @@ namespace Tests
                 { 0, 0, 0, 5, 0, 7, 8, 9, 6 },
                 { 0, 5, 5, 5, 0, 0, 7, 8, 7 },
             };
-            Tile[,] grid = IntToTileGrid(intGrid);
+            Board grid = IntToTileGrid(intGrid);
 
             var pattern = new HashSet<Vector2Int>()
             {
@@ -133,7 +133,7 @@ namespace Tests
 
             HashSet<(Tile, Vector2Int)> removedTiles = simulator.RemoveMatchedTiles(grid);
 
-            var expected = IntToTileGrid(new int[,]
+            Board expected = IntToTileGrid(new int[,]
             {
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 1, 0, 0, 0, 3, 0, 0, 6 },
@@ -146,8 +146,8 @@ namespace Tests
                 { 0, 0, 0, 0, 0, 0, 7, 8, 7 },
             });
 
-            for (int x = 0; x < expected.GetLength(0); ++x)
-                for (int y = 0; y < expected.GetLength(1); ++y)
+            for (int x = 0; x < expected.Width; ++x)
+                for (int y = 0; y < expected.Height; ++y)
                 {
                     Assert.That(grid[x, y]?.Color ?? 0, Is.EqualTo(expected[x, y]?.Color ?? 0));
                 }
@@ -155,11 +155,11 @@ namespace Tests
             Assert.That(removedTiles.Count, Is.EqualTo(9));
         }
 
-        private static Tile[,] IntToTileGrid(int[,] intGrid)
+        private static Board IntToTileGrid(int[,] intGrid)
         {
             int width = intGrid.GetLength(0);
             int height = intGrid.GetLength(1);
-            var grid = new Tile[height, width];
+            var board = new Board(height, width);
 
             for (int x = 0; x < width; ++x)
                 for (int y = 0; y < height; ++y)
@@ -168,10 +168,10 @@ namespace Tests
                     if (color == 0)
                         continue;
 
-                    grid[y, width - x - 1] = new Tile(color, new Vector2Int(y, width-x-1));
+                    board[y, width - x - 1] = new Tile(color);
                 }
 
-            return grid;
+            return board;
         }
     }
 }
