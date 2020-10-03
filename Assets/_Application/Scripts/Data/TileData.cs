@@ -8,5 +8,6 @@ namespace GMTK2020.Data
     {
         public Sprite[] UnmarkedSpriteMap;
         public Sprite[] MarkedSpriteMap;
+        public Sprite[] LiquidMaskMap;
     }
 }

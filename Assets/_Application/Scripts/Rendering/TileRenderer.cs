@@ -10,6 +10,8 @@ namespace GMTK2020.Rendering
     {
         [SerializeField] private SpriteRenderer incorrectBackground = null;
         [SerializeField] private SpriteRenderer missingPredictionIndicator = null;
+        [SerializeField] private SpriteMask liquidMask = null;
+        [SerializeField] private ParticleSystem bubbles = null;
         [SerializeField] private float tileFadeDuration = 0.25f;
         [SerializeField] private TileData tileData = null;
 
@@ -27,6 +29,7 @@ namespace GMTK2020.Rendering
 
             UpdatePrediction();
             transform.localPosition = (Vector2)tile.Position;
+            liquidMask.sprite = tileData.LiquidMaskMap[tile.Color];
         }
 
         public void UpdatePrediction()
@@ -34,6 +37,11 @@ namespace GMTK2020.Rendering
             sprite.sprite = tile.Marked
                 ? tileData.MarkedSpriteMap[tile.Color]
                 : tileData.UnmarkedSpriteMap[tile.Color];
+
+            if (tile.Marked)
+                bubbles.Play();
+            else
+                bubbles.Stop();
         }
 
         public Tween ShowCorrectPrediction()
