@@ -13,11 +13,12 @@ namespace GMTK2020.Rendering
         [SerializeField] private SpriteMask liquidMask = null;
         [SerializeField] private ParticleSystem bubbles = null;
         [SerializeField] private float tileFadeDuration = 0.25f;
+        [SerializeField] private float rotationDuration = 1f;
         [SerializeField] private TileData tileData = null;
 
         private Tile tile;
         private SpriteRenderer sprite;
-
+        private Sequence shakingTween;
         private void Awake()
         {
             sprite = GetComponent<SpriteRenderer>();
@@ -39,9 +40,22 @@ namespace GMTK2020.Rendering
                 : tileData.UnmarkedSpriteMap[tile.Color];
 
             if (tile.Marked)
+            {
                 bubbles.Play();
+                shakingTween = DOTween.Sequence();
+                shakingTween.Append(transform.DOLocalRotate(new Vector3(0, 0, 5f), rotationDuration/2).SetEase(Ease.Linear));
+                shakingTween.Append(transform.DOLocalRotate(new Vector3(0, 0, -5f), rotationDuration).SetEase(Ease.Linear).SetLoops(int.MaxValue, LoopType.Yoyo));
+            }
             else
+            {
                 bubbles.Stop();
+                if (shakingTween != null)
+                {
+                    shakingTween.Kill();
+                    transform.DOLocalRotate(Vector3.zero, rotationDuration);
+                    shakingTween = null;
+                }
+            }
         }
 
         public Tween ShowCorrectPrediction()

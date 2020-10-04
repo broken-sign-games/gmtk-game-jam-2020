@@ -49,7 +49,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -106,7 +106,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -116,7 +116,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.25
+      scalar: 1
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -1601,14 +1601,14 @@ ParticleSystem:
     y:
       serializedVersion: 2
       minMaxState: 1
-      scalar: 1
+      scalar: 2
       minScalar: 0
       maxCurve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0.45945898
+          value: 0.4864861
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -1616,7 +1616,7 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.98565674
+          time: 1
           value: 1
           inSlope: 0
           outSlope: 0
@@ -5027,6 +5027,7 @@ MonoBehaviour:
   liquidMask: {fileID: 6303465340729924876}
   bubbles: {fileID: 7590753912377047651}
   tileFadeDuration: 0.25
+  rotationDuration: 0.1
   tileData: {fileID: 11400000, guid: f963dc801adc7b84fa1b10998885ace9, type: 2}
 --- !u!1 &4528919620766283687
 GameObject:
