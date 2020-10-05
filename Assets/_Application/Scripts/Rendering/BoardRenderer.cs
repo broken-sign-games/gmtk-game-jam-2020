@@ -19,6 +19,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private Button retryButton = null;
         [SerializeField] private Button nextButton = null;
         [SerializeField] private SpriteRenderer border = null;
+        [SerializeField] private SpriteRenderer gridLines = null;
         [SerializeField] private TileRenderer tileRendererPrefab = null;
 
         [SerializeField] private float postMatchDelay = 0.25f;
@@ -60,7 +61,8 @@ namespace GMTK2020.Rendering
             width = board.Width;
             height = board.Height;
 
-            border.size = new Vector2(width + 0.375f, height + 0.375f);
+            border.size = new Vector2(width + 0.375f - 0.03125f, height + 0.375f - 0.03125f);
+            gridLines.size = new Vector2(width - 0.03125f, height - 0.03125f);
             transform.localPosition = new Vector2(-(width - 1) / 2f, -(height - 1) / 2f);
 
             for (int x = 0; x < width; ++x)
