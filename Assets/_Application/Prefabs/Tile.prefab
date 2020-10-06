@@ -5027,7 +5027,8 @@ MonoBehaviour:
   liquidMask: {fileID: 6303465340729924876}
   bubbles: {fileID: 7590753912377047651}
   tileFadeDuration: 0.25
-  rotationDuration: 0.1
+  tiltFrequency: 30
+  tiltAmplitude: 3
   tileData: {fileID: 11400000, guid: f963dc801adc7b84fa1b10998885ace9, type: 2}
 --- !u!1 &4528919620766283687
 GameObject:

@@ -13,7 +13,8 @@ namespace GMTK2020.Rendering
         [SerializeField] private SpriteMask liquidMask = null;
         [SerializeField] private ParticleSystem bubbles = null;
         [SerializeField] private float tileFadeDuration = 0.25f;
-        [SerializeField] private float rotationDuration = 1f;
+        [SerializeField] private float tiltFrequency = 1f;
+        [SerializeField] private float tiltAmplitude = 10f;
         [SerializeField] private TileData tileData = null;
 
         private Tile tile;
@@ -22,6 +23,14 @@ namespace GMTK2020.Rendering
         private void Awake()
         {
             sprite = GetComponent<SpriteRenderer>();
+        }
+
+        private void Update()
+        {
+            if (!tile.Marked)
+                return;
+
+            transform.localRotation = Quaternion.Euler(0, 0, Mathf.Sin(Time.time * tiltFrequency) * tiltAmplitude);
         }
 
         public void SetTile(Tile tile)
@@ -42,19 +51,11 @@ namespace GMTK2020.Rendering
             if (tile.Marked)
             {
                 bubbles.Play();
-                shakingTween = DOTween.Sequence();
-                shakingTween.Append(transform.DOLocalRotate(new Vector3(0, 0, 5f), rotationDuration/2).SetEase(Ease.Linear));
-                shakingTween.Append(transform.DOLocalRotate(new Vector3(0, 0, -5f), rotationDuration).SetEase(Ease.Linear).SetLoops(int.MaxValue, LoopType.Yoyo));
             }
             else
             {
                 bubbles.Stop();
-                if (shakingTween != null)
-                {
-                    shakingTween.Kill();
-                    transform.DOLocalRotate(Vector3.zero, rotationDuration);
-                    shakingTween = null;
-                }
+                transform.localRotation = Quaternion.identity;
             }
         }
 
