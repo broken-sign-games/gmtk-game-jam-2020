@@ -44,12 +44,12 @@ namespace GMTK2020.UI
         {
             if (soundManager)
                 soundManager.PlayEffect(SoundManager.Effect.CLICK);
-            LoadTutorialScene();
+            LoadLevelScene();
         }
 
-        private void LoadTutorialScene()
+        private void LoadLevelScene()
         {
-            SceneLoader.Instance.LoadTutorialScene();
+            SceneLoader.Instance.LoadLevelScene();
         }
     }
 }

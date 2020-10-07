@@ -32,10 +32,7 @@ namespace GMTK2020.SceneManagement
                 SceneLoader.Instance.LoadWinScene();
             else
             {
-                if (levelSequence.Levels[GameProgression.CurrentLevelIndex].TutorialBoard != null)
-                    SceneLoader.Instance.LoadTutorialScene();
-                else
-                    SceneLoader.Instance.LoadLevelScene();
+                SceneLoader.Instance.LoadLevelScene();
             }
         }
     }
