@@ -9,8 +9,6 @@ namespace GMTK2020.UI
 {
     public class Splash : MonoBehaviour
     {
-        private bool playerIsReady = false;
-
         private SoundManager soundManager;
 
         private InputActions inputs;
@@ -44,18 +42,14 @@ namespace GMTK2020.UI
 
         private void OnSelect(InputAction.CallbackContext obj)
         {
-            if (!playerIsReady)
-            {
-                playerIsReady = true;
-                if (soundManager)
-                    soundManager.PlayEffect(SoundManager.Effect.CLICK);
-                LoadTutorialScene();
-            }
+            if (soundManager)
+                soundManager.PlayEffect(SoundManager.Effect.CLICK);
+            LoadTutorialScene();
         }
 
         private void LoadTutorialScene()
         {
             SceneLoader.Instance.LoadTutorialScene();
         }
-    } 
+    }
 }
