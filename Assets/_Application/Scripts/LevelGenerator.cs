@@ -46,7 +46,7 @@ namespace GMTK2020
 
         private Board GenerateLevel()
         {
-            switch (levelSpec.GeneratorStrategy)
+            switch (GeneratorStrategy.Random)
             {
             case GeneratorStrategy.Random: return GenerateRandomLevel();
             case GeneratorStrategy.SingleHorizontalMatch: return GenerateSingleHorizontalMatchLevel();
@@ -237,7 +237,7 @@ namespace GMTK2020
 
         private bool ValidateSimulation(Simulation simulation)
         {
-            switch (levelSpec.GeneratorStrategy)
+            switch (GeneratorStrategy.Random)
             {
             case GeneratorStrategy.Random: return true;
             case GeneratorStrategy.SingleHorizontalMatch: return ValidateSingleHorizontalMatches(simulation);
@@ -308,7 +308,7 @@ namespace GMTK2020
 
         private bool ValidateBiggerMatches(Simulation simulation)
         {
-            int matchPatternSize = levelSpec.MatchingPattern.Count;
+            int matchPatternSize = 3;
             foreach (SimulationStep step in simulation.Steps)
             {
                 for (int color = 0; color < levelSpec.ColorCount; ++color)

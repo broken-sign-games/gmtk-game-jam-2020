@@ -11,8 +11,9 @@ namespace GMTK2020
         public const int MAX_SIMULATION_STEPS = 5;
         private readonly List<HashSet<Vector2Int>> matchingPatterns;
 
-        public Simulator(HashSet<Vector2Int> matchingPattern)
+        public Simulator()
         {
+            var matchingPattern = new HashSet<Vector2Int>();
             matchingPatterns = new List<HashSet<Vector2Int>>() { matchingPattern };
 
             for (int i = 0; i < 3; ++i)

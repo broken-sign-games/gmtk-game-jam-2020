@@ -10,14 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7d9ef4a76cbdd245993739125072e5b, type: 3}
-  m_Name: Level4
+  m_Name: Endless Level
   m_EditorClassIdentifier: 
-  Size: {x: 5, y: 5}
-  ColorCount: 5
-  MatchingPattern:
-  - {x: 0, y: 0}
-  - {x: 1, y: 0}
-  GeneratorStrategy: 4
-  TutorialText: When a match is found, all adjacent tiles of the same colour are
-    included in the match and removed as well.
-  TutorialBoard: {fileID: 11400000, guid: 284aad7a831384c47aed6f523958685f, type: 2}
+  Size: {x: 9, y: 9}
+  ColorCount: 7

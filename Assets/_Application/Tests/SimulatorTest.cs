@@ -28,12 +28,7 @@ namespace Tests
             };
             Board board = IntToTileGrid(intGrid);
 
-            var pattern = new HashSet<Vector2Int>()
-            {
-                new Vector2Int(0, 0),
-                new Vector2Int(1, 0)
-            };
-            var simulator = new Simulator(pattern);
+            var simulator = new Simulator();
 
             List<Tile> movedTiles = simulator.MoveTilesDown(board);
 
@@ -75,12 +70,7 @@ namespace Tests
             };
             Board board = IntToTileGrid(intGrid);
 
-            var pattern = new HashSet<Vector2Int>()
-            {
-                new Vector2Int(0, 0),
-                new Vector2Int(1, 0)
-            };
-            var simulator = new Simulator(pattern);
+            var simulator = new Simulator();
 
             HashSet<Tile> removedTiles = simulator.RemoveMatchedTiles(board);
 
@@ -122,14 +112,7 @@ namespace Tests
             };
             Board grid = IntToTileGrid(intGrid);
 
-            var pattern = new HashSet<Vector2Int>()
-            {
-                new Vector2Int(0, 0),
-                new Vector2Int(1, 0),
-                new Vector2Int(2, 0),
-                new Vector2Int(2, 1)
-            };
-            var simulator = new Simulator(pattern);
+            var simulator = new Simulator();
 
             HashSet<Tile> removedTiles = simulator.RemoveMatchedTiles(grid);
 

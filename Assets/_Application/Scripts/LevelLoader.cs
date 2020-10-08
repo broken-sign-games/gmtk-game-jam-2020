@@ -12,7 +12,6 @@ namespace GMTK2020
     public class LevelLoader : MonoBehaviour
     {
         [SerializeField] private BoardRenderer boardRenderer = null;
-        [SerializeField] private PatternRenderer patternRenderer = null;
         [SerializeField] private TextMeshProUGUI levelLabel = null;
         [SerializeField] private PredictionEditor predictionEditor = null;
         [SerializeField] private LevelSequence levelSequence = null;
@@ -28,16 +27,14 @@ namespace GMTK2020
         {
             int levelIndex = GameProgression.CurrentLevelIndex;
             LevelSpecification levelSpec = levelSequence.Levels[levelIndex];
-            HashSet<Vector2Int> levelPattern = new HashSet<Vector2Int>(levelSpec.MatchingPattern);
 
-            Simulator simulator = new Simulator(levelPattern);
+            Simulator simulator = new Simulator();
 
             Level = new LevelGenerator(levelSpec, simulator).GenerateValidLevel();
 
             levelLabel.text = $"Level {levelIndex + 1}";
             predictionEditor.Initialize(Level.Board);
             boardRenderer.RenderInitial(Level.Board);
-            patternRenderer.RenderPattern(levelPattern);
         }
     }
 }
