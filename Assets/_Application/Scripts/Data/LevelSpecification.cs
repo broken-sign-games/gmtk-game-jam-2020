@@ -7,5 +7,6 @@ namespace GMTK2020.Data
     {
         public Vector2Int Size;
         public int ColorCount;
+        public int GuaranteedChain;
     }
 }

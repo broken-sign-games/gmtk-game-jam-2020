@@ -46,83 +46,7 @@ namespace GMTK2020
 
         private Board GenerateLevel()
         {
-            switch (GeneratorStrategy.Random)
-            {
-            case GeneratorStrategy.Random: return GenerateRandomLevel();
-            case GeneratorStrategy.SingleHorizontalMatch: return GenerateSingleHorizontalMatchLevel();
-            case GeneratorStrategy.SingleMatch: return GenerateSingleMatchLevel();
-            case GeneratorStrategy.MultipleMatches: return GenerateSingleMatchLevel();
-            case GeneratorStrategy.BiggerMatches: return GenerateSingleMatchLevel();
-            default: throw new InvalidOperationException("Unknown level generation strategy.");
-            }
-        }
-
-        private Board GenerateRandomLevel()
-        {
-            var rand = new Random();
-            var board = new Board(levelSpec.Size.x, levelSpec.Size.y);
-            for (int x = 0; x < levelSpec.Size.x; ++x)
-            {
-                for (int y = 0; y < levelSpec.Size.y; ++y)
-                {
-                    board[x, y] = new Tile(rand.Next(levelSpec.ColorCount));
-                }
-            }
-            return board;
-        }
-
-        private Board GenerateSingleHorizontalMatchLevel()
-        {
-            var rng = new Random();
-            int width = levelSpec.Size.x;
-            int height = levelSpec.Size.y;
-            var board = new Board(width, height);
-
-            List<int> colors = Enumerable.Range(0, levelSpec.ColorCount).ToList().Shuffle(rng);
-
-            var anchors = new List<Vector2Int> { new Vector2Int(width / 2, 0) };
-
-            for (int i = 0; i < colors.Count; ++i)
-            {
-                int color = colors[i];
-                int leftEnd;
-                if (anchors.Count == 1)
-                {
-                    leftEnd = anchors[0].x == 0 ? 0 :
-                                anchors[0].x == width - 1 ? width - 2 :
-                                anchors[0].x - rng.Next(2);
-                }
-                else
-                {
-                    leftEnd = anchors[0].x == 0 ? 1 :
-                                anchors[1].x == width - 1 ? width - 3 :
-                                anchors[1].x - 2 * rng.Next(2);
-                }
-
-                if (board[leftEnd, height - 1] != null || board[leftEnd + 1, height - 1] != null)
-                    throw new InvalidOperationException("Can't fit horizontal match");
-
-                var newTiles = new Vector2Int[2]
-                {
-                    new Vector2Int(leftEnd, anchors[0].y),
-                    new Vector2Int(leftEnd + 1, anchors[0].y)
-                };
-
-                anchors = newTiles.ToList();
-
-                foreach (Vector2Int tile in newTiles)
-                {
-                    for (int y = height - 1; y > tile.y; --y)
-                    {
-                        board[tile.x, y] = board[tile.x, y - 1];
-                    }
-                    board[tile.x, tile.y] = new Tile(color);
-                }
-            }
-
-            FillBoardWithNonMatchingTiles(board, rng);
-
-            return board;
+            return GenerateSingleMatchLevel();
         }
 
         private Board GenerateSingleMatchLevel()
@@ -132,8 +56,15 @@ namespace GMTK2020
             int height = levelSpec.Size.y;
             var board = new Board(width, height);
 
-            List<int> colors = Enumerable.Range(0, levelSpec.ColorCount).ToList().Shuffle(rng);
-            List<bool> verticalList = new List<bool> { true, true, false, false, false }.Shuffle(rng);
+            List<int> colors = Enumerable.Range(0, levelSpec.GuaranteedChain).ToList().Shuffle(rng);
+            int verticalMatches = levelSpec.GuaranteedChain / 2;
+            int horizontalMatches = levelSpec.GuaranteedChain - verticalMatches;
+
+            List<bool> verticalList = Enumerable.Repeat(true, verticalMatches).ToList();
+            verticalList.AddRange(
+                Enumerable.Repeat(false, horizontalMatches)
+            );
+            verticalList = verticalList.Shuffle(rng);
 
             var anchors = new List<Vector2Int> { new Vector2Int(width / 2, 0) };
 
@@ -142,41 +73,38 @@ namespace GMTK2020
                 int color = colors[i];
                 bool vertical = verticalList[i];
 
-                var newTiles = new Vector2Int[2];
+                var newTiles = new Vector2Int[3];
                 if (vertical)
                 {
                     Vector2Int anchor = anchors[rng.Next(anchors.Count)];
-                    if (board[anchor.x, height - 1] != null || board[anchor.x, height - 2] != null)
+                    if (board[anchor.x, height - 1] != null || board[anchor.x, height - 2] != null || board[anchor.x, height - 3] != null)
                         throw new InvalidOperationException("Can't fit vertical match");
 
                     newTiles[0] = anchor;
                     newTiles[1] = anchor + new Vector2Int(0, 1);
+                    newTiles[2] = anchor + new Vector2Int(0, 2);
 
-                    anchors = new List<Vector2Int> { newTiles[1] };
+                    anchors = new List<Vector2Int> { newTiles[1], newTiles[2] };
                 }
                 else
                 {
-                    int leftEnd;
-                    if (anchors.Count == 1)
-                    {
-                        leftEnd = anchors[0].x == 0 ? 0 :
-                                  anchors[0].x == width - 1 ? width - 2 :
-                                  anchors[0].x - rng.Next(2);
-                    }
-                    else
-                    {
-                        leftEnd = anchors[0].x == 0 ? 1 :
-                                  anchors[1].x == width - 1 ? width - 3 :
-                                  anchors[1].x - 2 * rng.Next(2);
-                    }
+                    Vector2Int anchor = anchors[rng.Next(anchors.Count)];
+                    int leftEnd = Math.Max(0, Math.Min(width - 3, anchor.x - rng.Next(3)));
 
-                    if (board[leftEnd, height - 1] != null || board[leftEnd + 1, height - 1] != null)
+                    if (board[leftEnd, height - 1] != null || board[leftEnd + 1, height - 1] != null || board[leftEnd + 2, height - 1] != null)
                         throw new InvalidOperationException("Can't fit horizontal match");
 
-                    newTiles[0] = new Vector2Int(leftEnd, anchors[0].y);
-                    newTiles[1] = new Vector2Int(leftEnd+1, anchors[0].y);
+                    newTiles[0] = new Vector2Int(leftEnd, anchor.y);
+                    newTiles[1] = new Vector2Int(leftEnd+1, anchor.y);
+                    newTiles[2] = new Vector2Int(leftEnd+2, anchor.y);
 
-                    anchors = newTiles.ToList();
+                    anchors = new List<Vector2Int>();
+
+                    for (int y = anchor.y; y >= 0; --y)
+                    {
+                        anchors.Add(new Vector2Int(newTiles[0].x, y));
+                        anchors.Add(new Vector2Int(newTiles[2].x, y));
+                    }
                 }
 
                 foreach (Vector2Int tile in newTiles)
