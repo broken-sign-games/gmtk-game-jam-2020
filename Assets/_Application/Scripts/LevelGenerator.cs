@@ -23,23 +23,40 @@ namespace GMTK2020
             Board board = null;
             Simulation simulation = null;
             bool isValid;
+            var failureReasons = new Dictionary<string, int>();
+            string FAILED_VALIDATION = "Failed validation";
+            int MAX_ATTEMPTS = 1000;
+            int nAttempts = 0;
             do
             {
+                ++nAttempts;
                 isValid = true;
                 try
                 {
                     board = GenerateLevel();
                     simulation = simulator.Simulate(board.DeepCopy());
                     isValid = ValidateSimulation(simulation);
+
+                    if (!isValid)
+                        failureReasons[FAILED_VALIDATION] = failureReasons.GetValueOrDefault(FAILED_VALIDATION, 0) + 1;
                 }
                 catch (Exception e) when (
                     e is ArgumentException ||
                     e is InvalidOperationException)
                 {
                     isValid = false;
+                    failureReasons[e.Message] = failureReasons.GetValueOrDefault(e.Message, 0) + 1;
                 }
+
+                if (nAttempts >= MAX_ATTEMPTS)
+                    isValid = true;
             }
             while (!isValid);
+
+            foreach ((string reason, int count) in failureReasons)
+            {
+                Debug.Log($"{reason}: {count}");
+            }
 
             return new Level(board, simulation);
         }

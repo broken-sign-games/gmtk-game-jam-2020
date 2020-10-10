@@ -13,7 +13,12 @@ namespace GMTK2020
 
         public Simulator()
         {
-            var matchingPattern = new HashSet<Vector2Int>();
+            var matchingPattern = new HashSet<Vector2Int>()
+            {
+                new Vector2Int(0, 0),
+                new Vector2Int(-1, 0),
+                new Vector2Int(1, 0),
+            };
             matchingPatterns = new List<HashSet<Vector2Int>>() { matchingPattern };
 
             for (int i = 0; i < 3; ++i)
