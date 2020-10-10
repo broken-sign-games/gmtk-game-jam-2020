@@ -15,6 +15,8 @@ namespace GMTK2020.Rendering
         [SerializeField] private SpriteRenderer missingPredictionIndicator = null;
         [SerializeField] private ParticleSystem bubbles = null;
         [SerializeField] private float tileFadeDuration = 0.25f;
+        [SerializeField] private float corkDistance = 0.1f;
+        [SerializeField] private float corkSpeed = 0.5f;
         [SerializeField] private float tiltFrequency = 1f;
         [SerializeField] private float tiltAmplitude = 10f;
         [SerializeField] private TileData tileData = null;
@@ -44,16 +46,17 @@ namespace GMTK2020.Rendering
 
         public void UpdatePrediction()
         {
-            corkSprite.enabled = !tile.Marked;
-
             if (tile.Marked)
             {
                 bubbles.Play();
+                corkSprite.transform.DOLocalMoveY(corkDistance, corkSpeed).SetSpeedBased().OnComplete(() => corkSprite.enabled = false);
             }
             else
             {
                 bubbles.Stop();
                 transform.localRotation = Quaternion.identity;
+                corkSprite.enabled = true;
+                corkSprite.transform.DOLocalMoveY(0, corkSpeed).SetSpeedBased();
             }
         }
 
