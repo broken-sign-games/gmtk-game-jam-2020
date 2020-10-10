@@ -16,6 +16,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private SpriteRenderer incorrectBackground = null;
         [SerializeField] private SpriteRenderer missingPredictionIndicator = null;
         [SerializeField] private ParticleSystem bubbles = null;
+        [SerializeField] private ParticleSystem pop = null;
 
         [SerializeField] private float tileFadeDuration = 0.25f;
 
@@ -59,6 +60,7 @@ namespace GMTK2020.Rendering
             if (tile.Marked)
             {
                 bubbles.Play();
+                //pop.Play();
                 DOTween.Complete(corkSprite);
                 Sequence seq = DOTween.Sequence().SetId(corkSprite);
                 seq.Append(corkSprite.transform.DOLocalMoveY(corkDistance, corkMoveDuration));
