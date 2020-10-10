@@ -26,12 +26,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1476968157739544638}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 3573266944748384803}
-  m_RootOrder: 3
+  m_Father: {fileID: 1809928738623958545}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &7590753912377047651
 ParticleSystem:
@@ -4923,6 +4923,39 @@ SpriteMask:
   m_BackSortingOrder: 0
   m_IsCustomRangeActive: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1950751756962898418
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1809928738623958545}
+  m_Layer: 0
+  m_Name: Vial
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1809928738623958545
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950751756962898418}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 747504675179439893}
+  - {fileID: 828196705511981769}
+  - {fileID: 1244800958611837377}
+  m_Father: {fileID: 3573266944748384803}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3573266944748384802
 GameObject:
   m_ObjectHideFlags: 0
@@ -4953,10 +4986,8 @@ Transform:
   m_Children:
   - {fileID: 5935976935870132402}
   - {fileID: 6941760465583259850}
-  - {fileID: 747504675179439893}
-  - {fileID: 828196705511981769}
-  - {fileID: 1244800958611837377}
   - {fileID: 8629806234853858263}
+  - {fileID: 1809928738623958545}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4972,7 +5003,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1ec21b955d26874a8c12fc2cba2e456, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vialSprite: {fileID: 6142567410655826140}
+  vialTransform: {fileID: 1809928738623958545}
+  glassSprite: {fileID: 6142567410655826140}
   liquidSprite: {fileID: 576428070069699708}
   corkSprite: {fileID: 7884741616787689440}
   liquidMask: {fileID: 6303465340729924876}
@@ -4980,6 +5012,9 @@ MonoBehaviour:
   missingPredictionIndicator: {fileID: 637144989252294456}
   bubbles: {fileID: 7590753912377047651}
   tileFadeDuration: 0.25
+  corkDistance: 0.15
+  corkMoveDuration: 0.25
+  corkFadeDuration: 0.1
   tiltFrequency: 30
   tiltAmplitude: 3
   tileData: {fileID: 11400000, guid: f963dc801adc7b84fa1b10998885ace9, type: 2}
@@ -5177,7 +5212,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3573266944748384803}
-  m_RootOrder: 5
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7884741616787689440
 SpriteRenderer:
@@ -5255,12 +5290,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6761604498199467225}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 3573266944748384803}
-  m_RootOrder: 4
+  m_Father: {fileID: 1809928738623958545}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &576428070069699708
 SpriteRenderer:
@@ -5325,7 +5360,7 @@ GameObject:
   - component: {fileID: 747504675179439893}
   - component: {fileID: 6142567410655826140}
   m_Layer: 0
-  m_Name: Vial
+  m_Name: Glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5338,12 +5373,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9033303056180843816}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 3573266944748384803}
-  m_RootOrder: 2
+  m_Father: {fileID: 1809928738623958545}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6142567410655826140
 SpriteRenderer:
