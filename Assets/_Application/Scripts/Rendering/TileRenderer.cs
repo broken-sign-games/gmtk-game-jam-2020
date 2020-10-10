@@ -1,16 +1,18 @@
 ﻿using DG.Tweening;
 using GMTK2020.Data;
-using TMPro;
 using UnityEngine;
 
 namespace GMTK2020.Rendering
 {
-    [RequireComponent(typeof(SpriteRenderer))]
     public class TileRenderer : MonoBehaviour
     {
+        [SerializeField] private SpriteRenderer vialSprite = null;
+        [SerializeField] private SpriteRenderer liquidSprite = null;
+        [SerializeField] private SpriteRenderer corkSprite = null;
+        [SerializeField] private SpriteMask liquidMask = null;
+
         [SerializeField] private SpriteRenderer incorrectBackground = null;
         [SerializeField] private SpriteRenderer missingPredictionIndicator = null;
-        [SerializeField] private SpriteMask liquidMask = null;
         [SerializeField] private ParticleSystem bubbles = null;
         [SerializeField] private float tileFadeDuration = 0.25f;
         [SerializeField] private float tiltFrequency = 1f;
@@ -18,12 +20,6 @@ namespace GMTK2020.Rendering
         [SerializeField] private TileData tileData = null;
 
         private Tile tile;
-        private SpriteRenderer sprite;
-        private Sequence shakingTween;
-        private void Awake()
-        {
-            sprite = GetComponent<SpriteRenderer>();
-        }
 
         private void Update()
         {
@@ -39,14 +35,16 @@ namespace GMTK2020.Rendering
 
             UpdatePrediction();
             transform.localPosition = (Vector2)tile.Position;
-            liquidMask.sprite = tileData.LiquidMaskMap[tile.Color];
+
+            vialSprite.sprite = tileData.VialSpriteMap[tile.Color];
+            corkSprite.sprite = tileData.CorkSpriteMap[tile.Color];
+            liquidSprite.sprite = tileData.LiquidSpriteMap[tile.Color];
+            liquidMask.sprite = tileData.LiquidSpriteMap[tile.Color];
         }
 
         public void UpdatePrediction()
         {
-            sprite.sprite = tile.Marked
-                ? tileData.MarkedSpriteMap[tile.Color]
-                : tileData.UnmarkedSpriteMap[tile.Color];
+            corkSprite.enabled = !tile.Marked;
 
             if (tile.Marked)
             {
@@ -62,7 +60,7 @@ namespace GMTK2020.Rendering
         public Tween ShowCorrectPrediction()
         {
             Sequence seq = DOTween.Sequence();
-            seq.Join(sprite.DOFade(0.0f, tileFadeDuration));
+            seq.Join(vialSprite.DOFade(0.0f, tileFadeDuration));
             
             return seq;
         }

@@ -48,6 +48,9 @@ TagManager:
   - name: Board
     uniqueID: 3624534889
     locked: 0
+  - name: Tiles
+    uniqueID: 3956253717
+    locked: 0
   - name: Predictions
     uniqueID: 3436856807
     locked: 0

@@ -94,25 +94,25 @@ TextureImporter:
     second: tiles-beaker_4
   - first:
       213: 8733879238454702373
-    second: tiles-beaker-default_0
+    second: tiles-beaker-liquid_0
   - first:
       213: -4352051276440017604
-    second: tiles-beaker-default_1
+    second: tiles-beaker-liquid_1
   - first:
       213: -3175731094253468307
-    second: tiles-beaker-default_2
+    second: tiles-beaker-liquid_2
   - first:
       213: 869895202589529891
-    second: tiles-beaker-default_3
+    second: tiles-beaker-liquid_3
   - first:
       213: 910759167074198782
-    second: tiles-beaker-default_4
+    second: tiles-beaker-liquid_4
   - first:
       213: 1521727087695285084
-    second: tiles-beaker-default_5
+    second: tiles-beaker-liquid_5
   - first:
       213: -4141366953436107110
-    second: tiles-beaker-default_6
+    second: tiles-beaker-liquid_6
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -134,6 +134,7 @@ TextureImporter:
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
+  vTOnly: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -168,6 +169,7 @@ TextureImporter:
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
+  ignorePngGamma: 0
   applyGammaDecoding: 0
   platformSettings:
   - serializedVersion: 3
@@ -210,7 +212,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: tiles-beaker-default_0
+      name: tiles-beaker-liquid_0
       rect:
         serializedVersion: 2
         x: 0
@@ -218,7 +220,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -231,7 +233,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles-beaker-default_1
+      name: tiles-beaker-liquid_1
       rect:
         serializedVersion: 2
         x: 128
@@ -239,7 +241,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -252,7 +254,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles-beaker-default_2
+      name: tiles-beaker-liquid_2
       rect:
         serializedVersion: 2
         x: 256
@@ -260,7 +262,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -273,7 +275,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles-beaker-default_3
+      name: tiles-beaker-liquid_3
       rect:
         serializedVersion: 2
         x: 384
@@ -281,7 +283,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -294,7 +296,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles-beaker-default_4
+      name: tiles-beaker-liquid_4
       rect:
         serializedVersion: 2
         x: 512
@@ -302,7 +304,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -315,7 +317,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles-beaker-default_5
+      name: tiles-beaker-liquid_5
       rect:
         serializedVersion: 2
         x: 640
@@ -323,7 +325,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -336,7 +338,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles-beaker-default_6
+      name: tiles-beaker-liquid_6
       rect:
         serializedVersion: 2
         x: 768
@@ -344,7 +346,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

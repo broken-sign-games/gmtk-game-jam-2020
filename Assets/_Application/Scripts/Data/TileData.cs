@@ -6,8 +6,8 @@ namespace GMTK2020.Data
     [CreateAssetMenu]
     public class TileData : ScriptableObject
     {
-        public Sprite[] UnmarkedSpriteMap;
-        public Sprite[] MarkedSpriteMap;
-        public Sprite[] LiquidMaskMap;
+        public Sprite[] VialSpriteMap;
+        public Sprite[] LiquidSpriteMap;
+        public Sprite[] CorkSpriteMap;
     }
 }
