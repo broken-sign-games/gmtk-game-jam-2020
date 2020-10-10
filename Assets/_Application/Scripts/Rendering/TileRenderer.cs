@@ -10,17 +10,26 @@ namespace GMTK2020.Rendering
         [SerializeField] private SpriteRenderer glassSprite = null;
         [SerializeField] private SpriteRenderer liquidSprite = null;
         [SerializeField] private SpriteRenderer corkSprite = null;
+        [SerializeField] private SpriteRenderer glowSprite = null;
         [SerializeField] private SpriteMask liquidMask = null;
 
         [SerializeField] private SpriteRenderer incorrectBackground = null;
         [SerializeField] private SpriteRenderer missingPredictionIndicator = null;
         [SerializeField] private ParticleSystem bubbles = null;
+
         [SerializeField] private float tileFadeDuration = 0.25f;
+
         [SerializeField] private float corkDistance = 0.1f;
         [SerializeField] private float corkMoveDuration = 0.5f;
         [SerializeField] private float corkFadeDuration = 0.5f;
+
+        [SerializeField] private float glowOpacity = 0.15f;
+        [SerializeField] private float glowFlashOpacity = 0.4f;
+        [SerializeField] private float glowFadeDuration = 0.1f;
+
         [SerializeField] private float tiltFrequency = 1f;
         [SerializeField] private float tiltAmplitude = 10f;
+
         [SerializeField] private TileData tileData = null;
 
         private Tile tile;
@@ -43,8 +52,6 @@ namespace GMTK2020.Rendering
             corkSprite.sprite = tileData.CorkSpriteMap[tile.Color];
             liquidSprite.sprite = tileData.LiquidSpriteMap[tile.Color];
             liquidMask.sprite = tileData.LiquidSpriteMap[tile.Color];
-
-            UpdatePrediction();
         }
 
         public void UpdatePrediction()
@@ -56,6 +63,12 @@ namespace GMTK2020.Rendering
                 Sequence seq = DOTween.Sequence().SetId(corkSprite);
                 seq.Append(corkSprite.transform.DOLocalMoveY(corkDistance, corkMoveDuration));
                 seq.Append(corkSprite.DOFade(0, corkFadeDuration));
+
+                //Sequence glowSeq = DOTween.Sequence();
+                //glowSeq.Append(glowSprite.DOFade(glowFlashOpacity, glowFadeDuration));
+                //glowSeq.Append(glowSprite.DOFade(glowOpacity, glowFadeDuration));
+                
+                //seq.Insert(0, glowSeq);
             }
             else
             {
@@ -66,6 +79,7 @@ namespace GMTK2020.Rendering
                 Sequence seq = DOTween.Sequence().SetId(corkSprite);
                 seq.Append(corkSprite.DOFade(1, corkFadeDuration));
                 seq.Append(corkSprite.transform.DOLocalMoveY(0, corkMoveDuration));
+                //seq.Insert(0, glowSprite.DOFade(0, glowFadeDuration));
             }
         }
 
