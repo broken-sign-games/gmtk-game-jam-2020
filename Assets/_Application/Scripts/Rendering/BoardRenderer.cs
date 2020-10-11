@@ -1,7 +1,6 @@
 ﻿using DG.Tweening;
 using GMTK2020.Audio;
 using GMTK2020.Data;
-using GMTK2020.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;

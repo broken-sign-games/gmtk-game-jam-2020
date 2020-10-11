@@ -23,12 +23,10 @@ namespace GMTK2020
             if (soundManager)
                 soundManager.PlayEffect(SoundManager.Effect.CLICK);
 
-            var validator = new Validator();
             Prediction prediction = predictionEditor.GetPredictions();
             Level level = levelLoader.Level;
-            LevelResult levelResult = validator.ValidatePrediction(level.Simulation, prediction);
-
-            boardRenderer.KickOffRenderSimulation(level.Simulation, levelResult);
+            
+            //boardRenderer.KickOffRenderSimulation(level.Simulation, levelResult);
         }
     }
 }
