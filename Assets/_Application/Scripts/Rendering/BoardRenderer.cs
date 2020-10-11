@@ -15,7 +15,6 @@ namespace GMTK2020.Rendering
     {
         [SerializeField] private Camera mainCamera = null;
         [SerializeField] private TileData tileData = null;
-        [SerializeField] private StepRenderer[] stepRenderers = null;
         [SerializeField] private Button retryButton = null;
         [SerializeField] private Button nextButton = null;
         [SerializeField] private SpriteRenderer border = null;
@@ -100,19 +99,6 @@ namespace GMTK2020.Rendering
                 Sequence seq = DOTween.Sequence();
 
                 bool incorrectStep = false;
-
-                if (stepRenderers.Length > i)
-                {
-                    if (i < levelResult.CorrectPredictions)
-                    {
-                        stepRenderers[i].ShowSuccess(i);
-                    }
-                    else
-                    {
-                        incorrectStep = true;
-                        stepRenderers[i].ShowFailure();
-                    }
-                }
 
                 foreach (Tile tile in step.MatchedTiles)
                 {
