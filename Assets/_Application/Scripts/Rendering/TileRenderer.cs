@@ -20,6 +20,9 @@ namespace GMTK2020.Rendering
 
         [SerializeField] private float tileFadeDuration = 0.25f;
 
+        [SerializeField] private float clickPulseScale = 1.1f;
+        [SerializeField] private float clickPulseDuration = 0.5f;
+
         [SerializeField] private float corkDistance = 0.1f;
         [SerializeField] private float corkMoveDuration = 0.5f;
         [SerializeField] private float corkFadeDuration = 0.5f;
@@ -65,6 +68,7 @@ namespace GMTK2020.Rendering
                 Sequence seq = DOTween.Sequence().SetId(corkSprite);
                 seq.Append(corkSprite.transform.DOLocalMoveY(corkDistance, corkMoveDuration));
                 seq.Append(corkSprite.DOFade(0, corkFadeDuration));
+                seq.Insert(0, transform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0));
 
                 //Sequence glowSeq = DOTween.Sequence();
                 //glowSeq.Append(glowSprite.DOFade(glowFlashOpacity, glowFadeDuration));

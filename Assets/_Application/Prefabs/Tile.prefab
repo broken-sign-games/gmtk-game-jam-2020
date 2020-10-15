@@ -9886,6 +9886,8 @@ MonoBehaviour:
   bubbles: {fileID: 7590753912377047651}
   pop: {fileID: 4745967582937362059}
   tileFadeDuration: 0.25
+  clickPulseScale: 0.2
+  clickPulseDuration: 0.25
   corkDistance: 0.15
   corkMoveDuration: 0.25
   corkFadeDuration: 0.1
