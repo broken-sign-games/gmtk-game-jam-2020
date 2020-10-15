@@ -85,6 +85,7 @@ namespace GMTK2020.Rendering
                 Sequence seq = DOTween.Sequence().SetId(corkSprite);
                 seq.Append(corkSprite.DOFade(1, corkFadeDuration));
                 seq.Append(corkSprite.transform.DOLocalMoveY(0, corkMoveDuration));
+                seq.Insert(0, transform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0));
                 //seq.Insert(0, glowSprite.DOFade(0, glowFadeDuration));
             }
         }
