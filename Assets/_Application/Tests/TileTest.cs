@@ -100,5 +100,101 @@ namespace Tests
 
             Assert.That(tile.Marked, Is.False);
         }
+
+        [Test]
+        public void Cannot_mark_inert_tile()
+        {
+
+            Tile tile = new Tile(3, Vector2Int.zero);
+            tile.MakeInert();
+            tile.Marked = true;
+
+            Assert.That(tile.Marked, Is.False);
+        }
+
+        [Test]
+        public void Equality_is_value_equality()
+        {
+            int color = 3;
+            var position = new Vector2Int(3, 4);
+
+            var tile1 = new Tile(color, position);
+            tile1.MakeInert();
+
+            var tile2 = new Tile(color, position);
+            tile2.MakeInert();
+
+            Assert.That(tile1, Is.EqualTo(tile2));
+            Assert.That(tile1 == tile2, Is.True);
+            Assert.That(tile1 != tile2, Is.False);
+        }
+
+        [Test]
+        public void Inequality_by_color()
+        {
+            int color = 3;
+            var position = new Vector2Int(3, 4);
+
+            var tile1 = new Tile(color, position);
+            tile1.MakeInert();
+
+            var tile2 = new Tile(color+1, position);
+            tile2.MakeInert();
+
+            Assert.That(tile1, Is.Not.EqualTo(tile2));
+            Assert.That(tile1 == tile2, Is.False);
+            Assert.That(tile1 != tile2, Is.True);
+        }
+
+        [Test]
+        public void Inequality_by_position()
+        {
+            int color = 3;
+            var position = new Vector2Int(3, 4);
+
+            var tile1 = new Tile(color, position);
+            tile1.MakeInert();
+
+            var tile2 = new Tile(color, position + Vector2Int.right);
+            tile2.MakeInert();
+
+            Assert.That(tile1, Is.Not.EqualTo(tile2));
+            Assert.That(tile1 == tile2, Is.False);
+            Assert.That(tile1 != tile2, Is.True);
+        }
+
+        [Test]
+        public void Inequality_by_inert()
+        {
+            int color = 3;
+            var position = new Vector2Int(3, 4);
+
+            var tile1 = new Tile(color, position);
+            tile1.MakeInert();
+
+            var tile2 = new Tile(color, position);
+
+            Assert.That(tile1, Is.Not.EqualTo(tile2));
+            Assert.That(tile1 == tile2, Is.False);
+            Assert.That(tile1 != tile2, Is.True);
+        }
+
+        [Test]
+        public void Inequality_by_marked()
+        {
+            int color = 3;
+            var position = new Vector2Int(3, 4);
+
+            var tile1 = new Tile(color, position)
+            {
+                Marked = true
+            };
+
+            var tile2 = new Tile(color, position);
+
+            Assert.That(tile1, Is.Not.EqualTo(tile2));
+            Assert.That(tile1 == tile2, Is.False);
+            Assert.That(tile1 != tile2, Is.True);
+        }
     }
 }

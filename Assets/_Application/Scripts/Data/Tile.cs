@@ -1,13 +1,25 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace GMTK2020.Data
 {
-    public sealed class Tile
+    public sealed class Tile : IEquatable<Tile>
     {
+        public Guid ID { get; } = Guid.NewGuid();
+
         public int Color { get; }
 
         public bool Inert { get; private set; }
-        public bool Marked { get; set; }
+
+        private bool _marked;
+        public bool Marked {
+            get => _marked;
+            set
+            {
+                _marked = value && !Inert;
+            }
+        }
+
         public Vector2Int Position { get; set; }
 
         public Tile(int color)
@@ -32,5 +44,71 @@ namespace GMTK2020.Data
             Inert = true;
             Marked = false;
         }
+
+        public override string ToString()
+            => $"Tile: {Color} at {Position} ({(Inert ? "Inert" : Marked ? "Marked" : "Unmarked")})";
+
+        #region Equality pattern
+        public override bool Equals(object other)
+        {
+            return Equals(other as Tile);
+        }
+
+        public bool Equals(Tile other)
+        {
+            // If parameter is null, return false.
+            if (other is null)
+            {
+                return false;
+            }
+
+            // Optimization for a common success case.
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            // If run-time types are not exactly the same, return false.
+            if (GetType() != other.GetType())
+            {
+                return false;
+            }
+
+            // Return true if the fields match.
+            // Note that the base class is not invoked because it is
+            // System.Object, which defines Equals as reference equality.
+            return Color == other.Color
+                && Position == other.Position
+                && Marked == other.Marked
+                && Inert == other.Inert;
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 13;
+            hash = hash * 7 + Color.GetHashCode();
+            hash = hash * 7 + Position.GetHashCode();
+            hash = hash * 7 + Marked.GetHashCode();
+            hash = hash * 7 + Inert.GetHashCode();
+            return hash;
+        }
+
+        public static bool operator ==(Tile lhs, Tile rhs)
+        {
+            // Check for null on left side.
+            if (lhs is null)
+            {
+                // null == null = true.
+                return rhs is null;
+            }
+            // Equals handles case of null on right side.
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(Tile lhs, Tile rhs)
+        {
+            return !(lhs == rhs);
+        }
+        #endregion
     }
 }

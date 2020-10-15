@@ -62,6 +62,40 @@ namespace Tests
                 });
         }
 
+        [TestCase(0, 0, ExpectedResult = true)]
+        [TestCase(3, 0, ExpectedResult = true)]
+        [TestCase(0, 2, ExpectedResult = true)]
+        [TestCase(3, 2, ExpectedResult = true)]
+        [TestCase(1, 1, ExpectedResult = true)]
+        [TestCase(4, 1, ExpectedResult = false)]
+        [TestCase(-1, 1, ExpectedResult = false)]
+        [TestCase(1, 3, ExpectedResult = false)]
+        [TestCase(1, -1, ExpectedResult = false)]
+        [TestCase(4, -1, ExpectedResult = false)]
+        public bool Test_in_bounds_check_via_integers(int x, int y)
+        {
+            var board = new Board(4, 3);
+
+            return board.IsInBounds(x, y);
+        }
+
+        [TestCase(0, 0, ExpectedResult = true)]
+        [TestCase(3, 0, ExpectedResult = true)]
+        [TestCase(0, 2, ExpectedResult = true)]
+        [TestCase(3, 2, ExpectedResult = true)]
+        [TestCase(1, 1, ExpectedResult = true)]
+        [TestCase(4, 1, ExpectedResult = false)]
+        [TestCase(-1, 1, ExpectedResult = false)]
+        [TestCase(1, 3, ExpectedResult = false)]
+        [TestCase(1, -1, ExpectedResult = false)]
+        [TestCase(4, -1, ExpectedResult = false)]
+        public bool Test_in_bounds_check_via_vector(int x, int y)
+        {
+            var board = new Board(4, 3);
+
+            return board.IsInBounds(new Vector2Int(x, y));
+        }
+
         [TestCase(0, 0)]
         [TestCase(2, 3)]
         [TestCase(5, 1)]
@@ -214,6 +248,84 @@ namespace Tests
             Board board = GetTestBoard();
 
             Assert.That(board.GetColumns(horizontal, vertical).Select(r => r.Select(t => t.Color)), Is.EqualTo(colors));
+        }
+
+        [Test]
+        public void Move_tile()
+        {
+            var board = new Board(5, 5);
+            var from = new Vector2Int(3, 4);
+            var to = new Vector2Int(1, 2);
+            var tile = new Tile(3);
+
+            board[from] = tile;
+
+            MovedTile movedTile = board.MoveTile(tile, to);
+
+            Assert.That(board[from], Is.Null);
+            Assert.That(board[to], Is.SameAs(tile));
+            Assert.That(movedTile.Tile, Is.SameAs(tile));
+            Assert.That(movedTile.From, Is.EqualTo(from));
+            Assert.That(movedTile.To, Is.EqualTo(to));
+        }
+
+        [Test]
+        public void Move_tile_via_integer_coordinates()
+        {
+            var board = new Board(5, 5);
+            var from = new Vector2Int(3, 4);
+            var to = new Vector2Int(1, 2);
+            var tile = new Tile(3);
+
+            board[from] = tile;
+
+            MovedTile movedTile = board.MoveTile(tile, to.x, to.y);
+
+            Assert.That(board[from], Is.Null);
+            Assert.That(board[to], Is.SameAs(tile));
+            Assert.That(movedTile.Tile, Is.SameAs(tile));
+            Assert.That(movedTile.From, Is.EqualTo(from));
+            Assert.That(movedTile.To, Is.EqualTo(to));
+        }
+
+        [Test]
+        public void Cannot_move_null_tile()
+        {
+            var board = new Board(5, 5);
+            Assert.Throws<NullReferenceException>(
+                () => board.MoveTile(null, Vector2Int.zero));
+        }
+
+        [Test]
+        public void Cannot_move_tile_that_doesnt_exist_in_starting_position()
+        {
+            var board = new Board(5, 5);
+            var from = new Vector2Int(3, 4);
+            var to = new Vector2Int(1, 2);
+            var tile = new Tile(3);
+
+            board[from] = tile;
+
+            tile.Position = new Vector2Int(2, 3);
+
+            Assert.Throws<InvalidOperationException>(
+                () => board.MoveTile(tile, to));
+        }
+
+        [Test]
+        public void Can_move_tile_from_off_the_board()
+        {
+            var board = new Board(5, 5);
+            var from = new Vector2Int(3, 8);
+            var to = new Vector2Int(1, 2);
+            var tile = new Tile(3, from);
+
+            MovedTile movedTile = board.MoveTile(tile, to);
+
+            Assert.That(board[to], Is.SameAs(tile));
+            Assert.That(movedTile.Tile, Is.SameAs(tile));
+            Assert.That(movedTile.From, Is.EqualTo(from));
+            Assert.That(movedTile.To, Is.EqualTo(to));
         }
 
         private static readonly object[] allRowsTestCases = {

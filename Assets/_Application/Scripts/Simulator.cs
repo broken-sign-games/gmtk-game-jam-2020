@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = System.Random;
 
 namespace GMTK2020
 {
@@ -11,8 +12,19 @@ namespace GMTK2020
         public const int MAX_SIMULATION_STEPS = 5;
         private readonly List<HashSet<Vector2Int>> matchingPatterns;
 
-        public Simulator()
+        private Board board;
+
+        private Random rng;
+        private int colorCount;
+
+        public Simulator(Board initialBoard, int colorCount)
         {
+            board = initialBoard;
+            this.colorCount = colorCount;
+
+            // TODO: We probably want more control over the seed...
+            rng = new Random(Time.frameCount);
+
             var matchingPattern = new HashSet<Vector2Int>()
             {
                 new Vector2Int(0, 0),
@@ -37,155 +49,127 @@ namespace GMTK2020
             }
         }
 
-        public Simulation Simulate(Board initialBoard, bool allowShorterLevel = false)
+        public SimulationStep SimulateNextStep()
         {
-            var simulationSteps = new List<SimulationStep>();
+            HashSet<Tile> matchedTiles = RemoveMatchedTiles();
 
-            var workingBoard = initialBoard;
-
-            for (int i = 0; i < MAX_SIMULATION_STEPS; ++i)
+            if (matchedTiles.Count > 0)
             {
-                HashSet<Tile> matchedTiles = RemoveMatchedTiles(workingBoard);
-                if (matchedTiles.Count == 0)
-                {
-                    if (allowShorterLevel)
-                        break;
-                    else
-                        throw new ArgumentException("Boring level.");
-                }
+                List<MovedTile> movedTiles = MoveTilesDown();
 
-                List<Tile> movingTiles = MoveTilesDown(workingBoard);
-
-                simulationSteps.Add(new SimulationStep(matchedTiles, movingTiles));
+                return new MatchStep(matchedTiles, movedTiles);
             }
 
-            return new Simulation(simulationSteps);
+            HashSet<Tile> inertTiles = MakeMarkedTilesInert();
+            List<MovedTile> newTiles = FillBoardWithTiles();
+
+            return new CleanUpStep(newTiles, inertTiles);
         }
 
-        public HashSet<Tile> RemoveMatchedTiles(Board workingBoard)
+        public List<SimulationStep> SimulateToStop()
+        {
+            var steps = new List<SimulationStep>();
+
+            do
+            {
+                steps.Add(SimulateNextStep());
+            }
+            while (!steps.Last().FinalStep);
+
+            return steps;
+        }
+
+        public HashSet<Tile> RemoveMatchedTiles()
         {
             var matchedTiles = new HashSet<Tile>();
 
-            int width = workingBoard.Width;
-            int height = workingBoard.Height;
-
-            for (int x = 0; x < width; ++x)
-                for (int y = 0; y < height; ++y)
+            foreach (int x in board.GetXs())
+            {
+                int matchStart = 0;
+                foreach (int y in board.GetYs())
                 {
-                    Tile tile = workingBoard[x, y];
-                    if (tile is null)
-                        continue;
-
-                    Vector2Int origin = new Vector2Int(x, y);
-
-                    bool isMatch = false;
-                    foreach (HashSet<Vector2Int> pattern in matchingPatterns)
+                    Tile tile = board[x, y];
+                    if (tile is null || tile.Inert || !tile.Marked)
                     {
-                        bool doesThisSymmetryMatch = true;
-                        foreach (Vector2Int offset in pattern)
-                        {
-                            if (offset == Vector2Int.zero)
-                                continue;
-
-                            Vector2Int pos = origin + offset;
-                            if (pos.x < 0
-                                || pos.y < 0
-                                || pos.x >= width
-                                || pos.y >= height
-                                || workingBoard[pos.x, pos.y]?.Color != tile.Color)
-                            {
-                                doesThisSymmetryMatch = false;
-                                break;
-                            }
-                        }
-
-                        if (doesThisSymmetryMatch)
-                        {
-                            isMatch = true;
-                            break;
-                        }
+                        matchStart = y + 1;
+                        continue;
                     }
 
-                    if (!isMatch)
-                        continue;
-
-                    HashSet<Vector2Int> matchedPositions = ExpandMatch(workingBoard, origin);
-
-                    foreach (Vector2Int pos in matchedPositions)
+                    if (tile.Color != board[x, matchStart].Color)
                     {
-                        matchedTiles.Add(workingBoard[pos]);
-                        workingBoard[pos] = null;
+                        matchStart = y;
+                        continue;
+                    }
+
+                    if (y - matchStart == 2)
+                    {
+                        matchedTiles.Add(board[x, matchStart]);
+                        matchedTiles.Add(board[x, matchStart + 1]);
+                    }
+
+                    if (y - matchStart >= 2)
+                    {
+                        matchedTiles.Add(board[x, y]);
                     }
                 }
+            }
+
+            foreach (int y in board.GetYs())
+            {
+                int matchStart = 0;
+                foreach (int x in board.GetXs())
+                {
+                    Tile tile = board[x, y];
+                    if (tile is null || tile.Inert || !tile.Marked)
+                    {
+                        matchStart = x + 1;
+                        continue;
+                    }
+
+                    if (tile.Color != board[matchStart, y].Color)
+                    {
+                        matchStart = x;
+                        continue;
+                    }
+
+                    if (x - matchStart == 2)
+                    {
+                        matchedTiles.Add(board[matchStart, y]);
+                        matchedTiles.Add(board[matchStart + 1, y]);
+                    }
+
+                    if (x - matchStart >= 2)
+                    {
+                        matchedTiles.Add(board[x, y]);
+                    }
+                }
+            }
+
+            foreach (Tile tile in matchedTiles)
+                board[tile.Position] = null;
 
             return matchedTiles;
         }
 
-        private HashSet<Vector2Int> ExpandMatch(Board workingBoard, Vector2Int origin)
+        public List<MovedTile> MoveTilesDown()
         {
-            int width = workingBoard.Width;
-            int height = workingBoard.Height;
-            int color = workingBoard[origin.x, origin.y].Color;
+            var movedTiles = new List<MovedTile>();
 
-            var fullMatch = new HashSet<Vector2Int>() { origin };
-
-            var positionsToProcess = new Queue<Vector2Int>();
-            positionsToProcess.Enqueue(origin);
-
-            var neighborhood = new HashSet<Vector2Int>()
-            {
-                new Vector2Int(1, 0),
-                new Vector2Int(-1, 0),
-                new Vector2Int(0, 1),
-                new Vector2Int(0, -1)
-            };
-
-            while (positionsToProcess.Count > 0)
-            {
-                Vector2Int pos = positionsToProcess.Dequeue();
-
-                foreach (Vector2Int offset in neighborhood)
-                {
-                    Vector2Int candidate = pos + offset;
-                    if (fullMatch.Contains(candidate))
-                        continue;
-
-                    if (candidate.x >= 0
-                        && candidate.y >= 0
-                        && candidate.x < width
-                        && candidate.y < height
-                        && workingBoard[candidate.x, candidate.y]?.Color == color)
-                    {
-                        positionsToProcess.Enqueue(candidate);
-                        fullMatch.Add(candidate);
-                    }
-                }
-            }
-
-            return fullMatch;
-        }
-
-        public List<Tile> MoveTilesDown(Board workingBoard)
-        {
-            int width = workingBoard.Width;
-            int height = workingBoard.Height;
-
-            var movedTiles = new List<Tile>();
-
-            for (int x = 0; x < width; ++x)
+            foreach (int x in board.GetXs())
             {
                 int top = 0;
-                for (int y = 0; y < height; ++y)
+                foreach (int y in board.GetYs(VerticalOrder.BottomToTop))
                 {
-                    Tile tile = workingBoard[x, y];
+                    Vector2Int from = new Vector2Int(x, y);
+                    Tile tile = board[from];
                     if (tile is null)
                         continue;
 
                     if (y > top)
                     {
-                        workingBoard[x, top] = tile;
-                        workingBoard[x, y] = null;
-                        movedTiles.Add(tile);
+                        movedTiles.Add(
+                            board.MoveTile(tile, x, top)
+                        );
                     }
 
                     ++top;
@@ -193,6 +177,45 @@ namespace GMTK2020
             }
 
             return movedTiles;
+        }
+
+        private HashSet<Tile> MakeMarkedTilesInert()
+        {
+            var inertTiles = new HashSet<Tile>();
+
+            foreach (Tile tile in board)
+            {
+                if (tile.Marked)
+                {
+                    tile.MakeInert();
+                    inertTiles.Add(tile);
+                }
+            }
+
+            return inertTiles;
+        }
+
+        private List<MovedTile> FillBoardWithTiles()
+        {
+            var newTiles = new List<MovedTile>();
+
+            foreach (int x in board.GetXs())
+            {
+                int newTilesInColumn = board.Height;
+                foreach (int y in board.GetYs(VerticalOrder.BottomToTop))
+                {
+                    if (board[x, y] != null)
+                    {
+                        --newTilesInColumn;
+                        continue;
+                    }
+
+                    Tile newTile = new Tile(rng.Next(colorCount), new Vector2Int(x, y + newTilesInColumn));
+                    newTiles.Add(board.MoveTile(newTile, x, y));
+                }
+            }
+
+            return newTiles;
         }
 
         private HashSet<Vector2Int> MirrorPattern(HashSet<Vector2Int> pattern)

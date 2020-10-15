@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace GMTK2020.Data
@@ -51,6 +52,9 @@ namespace GMTK2020.Data
 
             set
             {
+                if (!IsInBounds(x, y))
+                    throw new IndexOutOfRangeException($"({x}, {y}) out of bounds for board of size ({Width}, {Height}).");
+
                 if (value != null)
                     value.Position = new Vector2Int(x, y);
                 tiles[x, y] = value;
@@ -63,6 +67,9 @@ namespace GMTK2020.Data
 
             set
             {
+                if (!IsInBounds(pos))
+                    throw new IndexOutOfRangeException($"({pos.x}, {pos.y}) out of bounds for board of size ({Width}, {Height}).");
+
                 if (value != null)
                     value.Position = pos;
                 tiles[pos.x, pos.y] = value;
@@ -82,6 +89,14 @@ namespace GMTK2020.Data
 
         IEnumerator IEnumerable.GetEnumerator() 
             => GetEnumerator();
+
+        public bool IsInBounds(Vector2Int pos)
+            => IsInBounds(pos.x, pos.y);
+
+        public bool IsInBounds(int x, int y)
+        {
+            return x >= 0 && y >= 0 && x < Width && y < Height;
+        }
 
         public IEnumerable<Tile> GetRow(int y, HorizontalOrder order = HorizontalOrder.LeftToRight)
         {
@@ -123,6 +138,43 @@ namespace GMTK2020.Data
             return order == VerticalOrder.BottomToTop
                 ? ys
                 : ys.Reverse();
+        }
+
+        public MovedTile MoveTile(Tile tile, int x, int y)
+            => MoveTile(tile, new Vector2Int(x, y));
+
+        public MovedTile MoveTile(Tile tile, Vector2Int to)
+        {
+            if (tile is null)
+                throw new NullReferenceException("Cannot move null tile");
+
+            Vector2Int from = tile.Position;
+
+            if (IsInBounds(from))
+            {
+                if (!ReferenceEquals(this[from], tile))
+                    throw new InvalidOperationException("Found another tile at tile.Position");
+
+                this[from] = null;
+            }
+
+            this[to] = tile;
+
+            return new MovedTile(tile, from);
+        }
+
+        public override string ToString()
+        {
+            var message = new StringBuilder();
+            foreach (int y in GetYs(VerticalOrder.TopToBottom))
+            {
+                foreach (int x in GetXs(HorizontalOrder.LeftToRight))
+                {
+                    message.Append($"{this[x, y]?.Color.ToString() ?? "_"}\t");
+                }
+                message.AppendLine("");
+            }
+            return message.ToString();
         }
     }
 }

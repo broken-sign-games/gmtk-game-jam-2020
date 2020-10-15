@@ -29,7 +29,7 @@ namespace GMTK2020.Rendering
 
         public event Action SimulationRenderingCompleted;
 
-        private readonly Dictionary<Tile, TileRenderer> tileDictionary = new Dictionary<Tile, TileRenderer>();
+        private readonly Dictionary<Guid, TileRenderer> tileDictionary = new Dictionary<Guid, TileRenderer>();
         private Board initialBoard;
         int width;
         int height;
@@ -73,20 +73,20 @@ namespace GMTK2020.Rendering
                     TileRenderer tileRenderer = Instantiate(tileRendererPrefab, transform);
 
                     tileRenderer.SetTile(tile);
-                    tileDictionary[tile] = tileRenderer;
+                    tileDictionary[tile.ID] = tileRenderer;
                 }
         }
 
-        public async void KickOffRenderSimulation(Simulation simulation, LevelResult result)
+        public async void KickOffRenderSimulation(List<SimulationStep> simulation, LevelResult result)
         {
             await RenderSimulationAsync(simulation, result);
         }
 
-        public async Task RenderSimulationAsync(Simulation simulation, LevelResult levelResult)
+        public async Task RenderSimulationAsync(List<SimulationStep> simulation, LevelResult levelResult)
         {
             await new WaitForSeconds(postMatchDelay * 2);
 
-            for (int i = 0; i < simulation.Steps.Count; ++i)
+            for (int i = 0; i < simulation.Count; ++i)
             {
                 if (i > 0)
                     await new WaitForSeconds(postFallDelay);
@@ -94,15 +94,15 @@ namespace GMTK2020.Rendering
                 if (cancelAnimation)
                     return;
 
-                SimulationStep step = simulation.Steps[i];
+                SimulationStep step = simulation[i];
                 Sequence seq = DOTween.Sequence();
 
                 bool incorrectStep = false;
 
-                foreach (Tile tile in step.MatchedTiles)
+                foreach (Tile tile in ((MatchStep)step).MatchedTiles)
                 {
                     // TODO: indicate incorrect guesses
-                    TileRenderer tileRenderer = tileDictionary[tile];
+                    TileRenderer tileRenderer = tileDictionary[tile.ID];
 
                     bool missedPrediction = incorrectStep && levelResult.MissingPredictions.Contains(tile);
                     if (missedPrediction)
@@ -117,7 +117,7 @@ namespace GMTK2020.Rendering
                 if (incorrectStep)
                 {
                     foreach (Tile tile in levelResult.ExtraneousPredictions)
-                        tileDictionary[tile].ShowIncorrectPrediction();
+                        tileDictionary[tile.ID].ShowIncorrectPrediction();
                 }
 
                 await CompletionOf(seq);
@@ -132,9 +132,9 @@ namespace GMTK2020.Rendering
 
                 seq = DOTween.Sequence();
 
-                foreach (Tile tile in step.MovingTiles)
+                foreach (Tile tile in ((MatchStep)step).MovedTiles.Select(mt => mt.Tile))
                 {
-                    TileRenderer tileRenderer = tileDictionary[tile];
+                    TileRenderer tileRenderer = tileDictionary[tile.ID];
                     Tween tween = tileRenderer.transform
                         .DOLocalMove(new Vector3Int(tile.Position.x, tile.Position.y, 0), fallingSpeed)
                         .SetSpeedBased()
@@ -198,7 +198,7 @@ namespace GMTK2020.Rendering
 
         public void UpdatePrediction(Tile tile)
         {
-            tileDictionary[tile].UpdatePrediction();
+            tileDictionary[tile.ID].UpdatePrediction();
 
             if (soundManager)
                 soundManager.PlayEffect(SoundManager.Effect.PREDICT);

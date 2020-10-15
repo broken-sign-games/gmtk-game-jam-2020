@@ -28,9 +28,7 @@ namespace GMTK2020
             int levelIndex = GameProgression.CurrentLevelIndex;
             LevelSpecification levelSpec = levelSequence.Levels[levelIndex];
 
-            Simulator simulator = new Simulator();
-
-            Level = new LevelGenerator(levelSpec, simulator).GenerateValidLevel();
+            Level = new LevelGenerator(levelSpec).GenerateValidLevel();
 
             levelLabel.text = $"Level {levelIndex + 1}";
             predictionEditor.Initialize(Level.Board);

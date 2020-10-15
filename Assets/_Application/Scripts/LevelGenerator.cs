@@ -10,18 +10,19 @@ namespace GMTK2020
     public class LevelGenerator
     {
         private LevelSpecification levelSpec;
-        private Simulator simulator;
 
-        public LevelGenerator(LevelSpecification levelSpec, Simulator simulator)
+        private Random rng;
+        
+        public LevelGenerator(LevelSpecification levelSpec)
         {
             this.levelSpec = levelSpec;
-            this.simulator = simulator;
+
+            rng = new Random(Time.frameCount);
         }
 
         public Level GenerateValidLevel()
         {
             Board board = null;
-            Simulation simulation = null;
             bool isValid;
             var failureReasons = new Dictionary<string, int>();
             string FAILED_VALIDATION = "Failed validation";
@@ -34,8 +35,11 @@ namespace GMTK2020
                 try
                 {
                     board = GenerateLevel();
-                    simulation = simulator.Simulate(board.DeepCopy());
-                    isValid = ValidateSimulation(simulation);
+                    Board workingCopy = board.DeepCopy();
+                    foreach (Tile tile in workingCopy)
+                        tile.Marked = true;
+                    List<SimulationStep> steps = new Simulator(workingCopy, levelSpec.ColorCount).SimulateToStop();
+                    isValid = ValidateSimulation(steps);
 
                     if (!isValid)
                         failureReasons[FAILED_VALIDATION] = failureReasons.GetValueOrDefault(FAILED_VALIDATION, 0) + 1;
@@ -58,7 +62,7 @@ namespace GMTK2020
                 Debug.Log($"{reason}: {count}");
             }
 
-            return new Level(board, simulation);
+            return new Level(board);
         }
 
         private Board GenerateLevel()
@@ -68,7 +72,6 @@ namespace GMTK2020
 
         private Board GenerateSingleMatchLevel()
         {
-            var rng = new Random();
             int width = levelSpec.Size.x;
             int height = levelSpec.Size.y;
             var board = new Board(width, height);
@@ -134,20 +137,20 @@ namespace GMTK2020
                 }
             }
 
-            FillBoardWithNonMatchingTiles(board, rng);
+            FillBoardWithNonMatchingTiles(board);
 
             return board;
         }
 
-        private void FillBoardWithNonMatchingTiles(Board board, Random rng)
+        private void FillBoardWithNonMatchingTiles(Board board)
         {
             foreach (int y in board.GetYs())
                 foreach (int x in board.GetXs())
                     if (board[x, y] is null)
-                        board[x, y] = GetNonMatchingTile(x, y, board, rng);
+                        board[x, y] = GetNonMatchingTile(x, y, board);
         }
 
-        private Tile GetNonMatchingTile(int x, int y, Board board, Random rng)
+        private Tile GetNonMatchingTile(int x, int y, Board board)
         {
             var neighborhood = new HashSet<Vector2Int>
             {
@@ -173,98 +176,16 @@ namespace GMTK2020
                 {
                     continue;
                 }
-                colors.Remove(board[pos].Color);
+                //colors.Remove(board[pos].Color);
             }
 
             int color = colors.ElementAt(rng.Next(colors.Count));
             return new Tile(color, origin);
         }
 
-        private bool ValidateSimulation(Simulation simulation)
+        private bool ValidateSimulation(List<SimulationStep> steps)
         {
-            switch (GeneratorStrategy.Random)
-            {
-            case GeneratorStrategy.Random: return true;
-            case GeneratorStrategy.SingleHorizontalMatch: return ValidateSingleHorizontalMatches(simulation);
-            case GeneratorStrategy.SingleMatch: return ValidateSingleMatches(simulation);
-            case GeneratorStrategy.MultipleMatches: return ValidateMultipleMatches(simulation);
-            case GeneratorStrategy.BiggerMatches: return ValidateBiggerMatches(simulation);
-            default: return true;
-            }
-        }
-
-        private bool ValidateSingleHorizontalMatches(Simulation simulation)
-        {
-            foreach (SimulationStep step in simulation.Steps)
-            {
-                Tile[] tiles = step.MatchedTiles.ToArray();
-
-                if (tiles.Length != 2)
-                    return false;
-
-                Vector2Int delta = tiles[0].Position - tiles[1].Position;
-
-                if (delta.y != 0 || Math.Abs(delta.x) != 1)
-                    return false;
-            }
-
-            return true;
-        }
-
-        private bool ValidateSingleMatches(Simulation simulation)
-        {
-            foreach (SimulationStep step in simulation.Steps)
-            {
-                if (step.MatchedTiles.Count != 2)
-                    return false;
-            }
-
-            return true;
-        }
-
-        private bool ValidateMultipleMatches(Simulation simulation)
-        {
-            bool foundMultiMatch = false;
-
-            foreach (SimulationStep step in simulation.Steps)
-            {
-                int matches = 0;
-                for (int color = 0; color < levelSpec.ColorCount; ++color)
-                {
-                    int tileCount = step.MatchedTiles.Count(t => t.Color == color);
-                    if (tileCount == 0)
-                        continue;
-
-                    if (tileCount != 2)
-                        return false;
-
-                    ++matches;
-                }
-
-                if (matches == 0)
-                    return false;
-
-                if (matches > 1)
-                    foundMultiMatch = true;
-            }
-
-            return foundMultiMatch;
-        }
-
-        private bool ValidateBiggerMatches(Simulation simulation)
-        {
-            int matchPatternSize = 3;
-            foreach (SimulationStep step in simulation.Steps)
-            {
-                for (int color = 0; color < levelSpec.ColorCount; ++color)
-                {
-                    int tileCount = step.MatchedTiles.Count(t => t.Color == color);
-                    if (tileCount % matchPatternSize != 0)
-                        return true;
-                }
-            }
-
-            return false;
+            return steps.Count == levelSpec.GuaranteedChain + 1;
         }
     }
 }
