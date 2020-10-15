@@ -18,14 +18,14 @@ namespace GMTK2020.SceneManagement
         public void RestartLevel()
         {
             if (soundManager)
-                soundManager.PlayEffect(SoundManager.Effect.CLICK);
+                soundManager.PlayEffect(SoundEffect.Click);
             SceneLoader.Instance.LoadLevelScene();
         }
 
         public void LoadNextLevel()
         {
             if (soundManager)
-                soundManager.PlayEffect(SoundManager.Effect.CLICK);
+                soundManager.PlayEffect(SoundEffect.Click);
 
             ++GameProgression.CurrentLevelIndex;
             if (GameProgression.CurrentLevelIndex >= levelSequence.Levels.Count)

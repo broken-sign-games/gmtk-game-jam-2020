@@ -1,7 +1,6 @@
 ﻿using GMTK2020.Data;
 using GMTK2020.Rendering;
 using GMTKJam2020.Input;
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,9 +15,6 @@ namespace GMTK2020
         private Board board;
         private bool initialized = false;
         private bool predictionsFinalised = false;
-
-        int width;
-        int height;
 
         private void Awake()
         {

@@ -159,7 +159,7 @@ namespace GMTK2020.Rendering
                 else
                 {
                     if (soundManager)
-                        soundManager.PlayEffect(SoundManager.Effect.WIN);
+                        soundManager.PlayEffect(SoundEffect.Win);
                     nextButton.gameObject.SetActive(true);
                 }
             }
@@ -201,7 +201,7 @@ namespace GMTK2020.Rendering
             tileDictionary[tile.ID].UpdatePrediction();
 
             if (soundManager)
-                soundManager.PlayEffect(SoundManager.Effect.PREDICT);
+                soundManager.PlayEffect(tile.Marked ? SoundEffect.SelectTile : SoundEffect.DeselectTile);
         }
     }
 }

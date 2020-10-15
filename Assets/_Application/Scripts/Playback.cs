@@ -21,7 +21,7 @@ namespace GMTK2020
         public void Run()
         {
             if (soundManager)
-                soundManager.PlayEffect(SoundManager.Effect.CLICK);
+                soundManager.PlayEffect(SoundEffect.Click);
 
             Prediction prediction = predictionEditor.GetPredictions();
             Level level = levelLoader.Level;

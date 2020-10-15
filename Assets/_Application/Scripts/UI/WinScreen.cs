@@ -11,7 +11,7 @@ namespace GMTK2020
         {
             soundManager = FindObjectOfType<SoundManager>();
             if (soundManager)
-                soundManager.PlayEffect(SoundManager.Effect.YOU_WIN);
+                soundManager.PlayEffect(SoundEffect.YouWin);
         }
     } 
 }

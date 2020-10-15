@@ -43,7 +43,7 @@ namespace GMTK2020.UI
         private void OnSelect(InputAction.CallbackContext obj)
         {
             if (soundManager)
-                soundManager.PlayEffect(SoundManager.Effect.CLICK);
+                soundManager.PlayEffect(SoundEffect.Click);
             LoadLevelScene();
         }
 
