@@ -56,6 +56,7 @@ namespace GMTK2020.Rendering
             corkSprite.sprite = tileData.CorkSpriteMap[tile.Color];
             liquidSprite.sprite = tileData.LiquidSpriteMap[tile.Color];
             liquidMask.sprite = tileData.LiquidSpriteMap[tile.Color];
+            glowSprite.sprite = tileData.GlowSpriteMap[tile.Color];
         }
 
         public void UpdatePrediction()
@@ -70,11 +71,11 @@ namespace GMTK2020.Rendering
                 seq.Append(corkSprite.DOFade(0, corkFadeDuration));
                 seq.Insert(0, transform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0));
 
-                //Sequence glowSeq = DOTween.Sequence();
-                //glowSeq.Append(glowSprite.DOFade(glowFlashOpacity, glowFadeDuration));
-                //glowSeq.Append(glowSprite.DOFade(glowOpacity, glowFadeDuration));
-                
-                //seq.Insert(0, glowSeq);
+                Sequence glowSeq = DOTween.Sequence();
+                glowSeq.Append(glowSprite.DOFade(glowFlashOpacity, glowFadeDuration));
+                glowSeq.Append(glowSprite.DOFade(glowOpacity, glowFadeDuration));
+
+                seq.Insert(0, glowSeq);
             }
             else
             {
@@ -86,7 +87,7 @@ namespace GMTK2020.Rendering
                 seq.Append(corkSprite.DOFade(1, corkFadeDuration));
                 seq.Append(corkSprite.transform.DOLocalMoveY(0, corkMoveDuration));
                 seq.Insert(0, transform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0));
-                //seq.Insert(0, glowSprite.DOFade(0, glowFadeDuration));
+                seq.Insert(0, glowSprite.DOFade(0, glowFadeDuration));
             }
         }
 

@@ -9,5 +9,6 @@ namespace GMTK2020.Data
         public Sprite[] VialSpriteMap;
         public Sprite[] LiquidSpriteMap;
         public Sprite[] CorkSpriteMap;
+        public Sprite[] GlowSpriteMap;
     }
 }

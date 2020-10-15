@@ -9891,8 +9891,8 @@ MonoBehaviour:
   corkDistance: 0.15
   corkMoveDuration: 0.25
   corkFadeDuration: 0.1
-  glowOpacity: 0.2
-  glowFlashOpacity: 0.4
+  glowOpacity: 0.75
+  glowFlashOpacity: 1
   glowFadeDuration: 0.1
   tiltFrequency: 30
   tiltAmplitude: 2
