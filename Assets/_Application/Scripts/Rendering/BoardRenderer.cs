@@ -201,7 +201,16 @@ namespace GMTK2020.Rendering
             tileDictionary[tile.ID].UpdatePrediction();
 
             if (soundManager)
-                soundManager.PlayEffect(tile.Marked ? SoundEffect.SelectTile : SoundEffect.DeselectTile);
+            {
+                if (tile.Marked)
+                {
+                    soundManager.PlayEffect(SoundEffect.SelectTile);
+                }
+                else
+                {
+                    soundManager.PlayEffect(SoundEffect.DeselectTile);
+                }
+            }
         }
     }
 }
