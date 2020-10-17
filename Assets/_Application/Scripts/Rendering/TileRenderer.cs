@@ -17,6 +17,8 @@ namespace GMTK2020.Rendering
         [SerializeField] private SpriteRenderer missingPredictionIndicator = null;
         [SerializeField] private ParticleSystem bubbles = null;
         [SerializeField] private ParticleSystem pop = null;
+        [SerializeField] private ParticleSystem popRing = null;
+        [SerializeField] private ParticleSystem puff = null;
 
         [SerializeField] private float tileFadeDuration = 0.25f;
 
@@ -59,8 +61,12 @@ namespace GMTK2020.Rendering
             glowSprite.sprite = tileData.GlowSpriteMap[tile.Color];
             glowSprite.color = tileData.GlowColor[tile.Color];
 
-            ParticleSystem.MainModule mainModule = pop.main;
-            mainModule.startColor = tileData.PopDropletColor[tile.Color];
+            ParticleSystem.MainModule mainPop = pop.main;
+            mainPop.startColor = tileData.PopDropletColor[tile.Color];
+            ParticleSystem.MainModule mainPopRing = popRing.main;
+            mainPopRing.startColor = tileData.PopDropletColor[tile.Color];
+            ParticleSystem.MainModule mainPuff = puff.main;
+            mainPuff.startColor = tileData.PopDropletColor[tile.Color];
         }
 
         public void UpdatePrediction()
