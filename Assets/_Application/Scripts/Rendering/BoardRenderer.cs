@@ -208,7 +208,7 @@ namespace GMTK2020.Rendering
                 }
                 else
                 {
-                    soundManager.PlayEffect(SoundEffect.DeselectTile);
+                    soundManager.PlayEffectWithRandomPitch(SoundEffect.DeselectTile);
                 }
             }
         }

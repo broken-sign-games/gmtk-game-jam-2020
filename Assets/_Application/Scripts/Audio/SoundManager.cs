@@ -29,6 +29,11 @@ namespace GMTK2020.Audio
 
             audioSource.PlayOneShot(availableClips.RandomChoice(rng));
         }
+
+        public void PlayEffectWithRandomPitch(SoundEffect effect)
+        {
+            PlayEffect(effect, (float)rng.NextDouble() * 2 - 1);
+        }
     }
 
 }
