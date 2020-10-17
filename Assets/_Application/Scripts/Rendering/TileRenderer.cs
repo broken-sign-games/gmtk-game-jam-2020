@@ -57,6 +57,7 @@ namespace GMTK2020.Rendering
             liquidSprite.sprite = tileData.LiquidSpriteMap[tile.Color];
             liquidMask.sprite = tileData.LiquidSpriteMap[tile.Color];
             glowSprite.sprite = tileData.GlowSpriteMap[tile.Color];
+            glowSprite.color = tileData.GlowColor[tile.Color];
 
             ParticleSystem.MainModule mainModule = pop.main;
             mainModule.startColor = tileData.PopDropletColor[tile.Color];
@@ -88,7 +89,7 @@ namespace GMTK2020.Rendering
                 DOTween.Complete(corkSprite);
                 Sequence seq = DOTween.Sequence().SetId(corkSprite);
                 seq.Append(corkSprite.DOFade(1, corkFadeDuration));
-                seq.Append(corkSprite.transform.DOLocalMoveY(0, corkMoveDuration));
+                seq.Append(corkSprite.transform.DOLocalMoveY(0, corkMoveDuration).SetEase(Ease.OutBack));
                 seq.Insert(0, transform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0));
                 seq.Insert(0, glowSprite.DOFade(0, glowFadeDuration));
             }
