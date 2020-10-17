@@ -64,7 +64,7 @@ namespace GMTK2020.Rendering
             if (tile.Marked)
             {
                 bubbles.Play();
-                //pop.Play();
+                pop.Play();
                 DOTween.Complete(corkSprite);
                 Sequence seq = DOTween.Sequence().SetId(corkSprite);
                 seq.Append(corkSprite.transform.DOLocalMoveY(corkDistance, corkMoveDuration));

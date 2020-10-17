@@ -10,5 +10,6 @@ namespace GMTK2020.Data
         public Sprite[] LiquidSpriteMap;
         public Sprite[] CorkSpriteMap;
         public Sprite[] GlowSpriteMap;
+        public Color[] PopDropletColor;
     }
 }
