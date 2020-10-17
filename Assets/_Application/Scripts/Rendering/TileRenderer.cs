@@ -57,6 +57,9 @@ namespace GMTK2020.Rendering
             liquidSprite.sprite = tileData.LiquidSpriteMap[tile.Color];
             liquidMask.sprite = tileData.LiquidSpriteMap[tile.Color];
             glowSprite.sprite = tileData.GlowSpriteMap[tile.Color];
+
+            ParticleSystem.MainModule mainModule = pop.main;
+            mainModule.startColor = tileData.PopDropletColor[tile.Color];
         }
 
         public void UpdatePrediction()
