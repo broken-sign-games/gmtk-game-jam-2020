@@ -11,6 +11,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private SpriteRenderer liquidSprite = null;
         [SerializeField] private SpriteRenderer corkSprite = null;
         [SerializeField] private SpriteRenderer glowSprite = null;
+        [SerializeField] private SpriteRenderer tileHighlight = null;
         [SerializeField] private SpriteMask liquidMask = null;
 
         [SerializeField] private SpriteRenderer incorrectBackground = null;
@@ -61,6 +62,10 @@ namespace GMTK2020.Rendering
             glowSprite.sprite = tileData.GlowSpriteMap[tile.Color];
             glowSprite.color = tileData.GlowColor[tile.Color];
 
+            Color highlightColor = tileData.PopDropletColor[tile.Color];
+            highlightColor.a = 0;
+            tileHighlight.color = highlightColor;
+
             ParticleSystem.MainModule mainPop = pop.main;
             mainPop.startColor = tileData.PopDropletColor[tile.Color];
             ParticleSystem.MainModule mainPopRing = popRing.main;
@@ -84,6 +89,9 @@ namespace GMTK2020.Rendering
                 Sequence glowSeq = DOTween.Sequence();
                 glowSeq.Append(glowSprite.DOFade(glowFlashOpacity, glowFadeDuration));
                 glowSeq.Append(glowSprite.DOFade(glowOpacity, glowFadeDuration));
+                glowSeq.Append(tileHighlight.DOFade(glowFlashOpacity, glowFadeDuration));
+                glowSeq.Append(tileHighlight.DOFade(glowOpacity, glowFadeDuration));
+
 
                 seq.Insert(0, glowSeq);
             }
@@ -98,6 +106,7 @@ namespace GMTK2020.Rendering
                 seq.Append(corkSprite.transform.DOLocalMoveY(0, corkMoveDuration).SetEase(Ease.OutBack));
                 seq.Insert(0, transform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0));
                 seq.Insert(0, glowSprite.DOFade(0, glowFadeDuration));
+                seq.Insert(0, tileHighlight.DOFade(0, glowFadeDuration));
             }
         }
 
