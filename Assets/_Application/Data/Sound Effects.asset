@@ -35,8 +35,8 @@ MonoBehaviour:
       elementIcon: {fileID: 0}
     reqReferences: {fileID: 0}
     isExpanded: 1
-    _keyValues: 00000000010000000200000003000000040000000500000006000000
-    _keys: 00000000010000000200000003000000040000000500000006000000
+    _keyValues: 000000000100000002000000030000000400000005000000
+    _keys: 000000000100000002000000030000000400000005000000
     _values:
     - Clips:
       - {fileID: 8300000, guid: e006316f0938138468d1a3dbee06673b, type: 3}
@@ -67,5 +67,3 @@ MonoBehaviour:
       - {fileID: 8300000, guid: 68bcf097b1e14694485c5853b68c7665, type: 3}
     - Clips:
       - {fileID: 8300000, guid: 3f587e4cbddd6214793162566397446c, type: 3}
-    - Clips:
-      - {fileID: 8300000, guid: e4d86405d1ef32b45b372b7fd78abe97, type: 3}

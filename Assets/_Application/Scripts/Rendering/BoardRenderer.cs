@@ -22,13 +22,11 @@ namespace GMTK2020.Rendering
 
         [SerializeField] private float postMatchDelay = 0.25f;
         [SerializeField] private float postFallDelay = 0.1f;
-        [SerializeField] private float fallingSpeed = 1f;
-        [SerializeField] private Ease fallingEase = Ease.InCubic;
-
-        public event Action SimulationRenderingCompleted;
+        [SerializeField] private float postInertDelay = 0.1f;
 
         private readonly Dictionary<Guid, TileRenderer> tileDictionary = new Dictionary<Guid, TileRenderer>();
         private Board initialBoard;
+
         int width;
         int height;
 
@@ -69,94 +67,95 @@ namespace GMTK2020.Rendering
                     tileDictionary[tile.ID] = tileRenderer;
                 }
         }
-
-        public async void KickOffRenderSimulation(List<SimulationStep> simulation, LevelResult result)
+        public async Task AnimateSimulationStepAsync(SimulationStep step)
         {
-            await RenderSimulationAsync(simulation, result);
+            switch (step)
+            {
+            case MatchStep matchStep: await AnimateMatchStepAsync(matchStep); break;
+            case CleanUpStep cleanUpStep: await RenderCleanUpStepAsync(cleanUpStep); break;
+            }
         }
 
-        public async Task RenderSimulationAsync(List<SimulationStep> simulation, LevelResult levelResult)
+        private async Task AnimateMatchStepAsync(MatchStep step)
         {
-            await new WaitForSeconds(postMatchDelay * 2);
+            await AnimateMatchedTilesAsync(step.MatchedTiles);
+            await AnimateMovingTilesAsync(step.MovedTiles);
+        }
 
-            for (int i = 0; i < simulation.Count; ++i)
+        private async Task RenderCleanUpStepAsync(CleanUpStep step)
+        {
+            await AnimateInertTilesAsync(step.InertTiles);
+            await AnimateNewTilesAsync(step.NewTiles);
+        }
+
+        private async Task AnimateMatchedTilesAsync(HashSet<Tile> matchedTiles)
+        {
+            Sequence seq = DOTween.Sequence();
+
+            foreach (Tile tile in matchedTiles)
             {
-                if (i > 0)
-                    await new WaitForSeconds(postFallDelay);
+                TileRenderer tileRenderer = tileDictionary[tile.ID];
 
-                if (cancelAnimation)
-                    return;
+                seq.Insert(0, tileRenderer.MatchAndDestroy());
 
-                SimulationStep step = simulation[i];
-                Sequence seq = DOTween.Sequence();
-
-                bool incorrectStep = false;
-
-                foreach (Tile tile in ((MatchStep)step).MatchedTiles)
-                {
-                    // TODO: indicate incorrect guesses
-                    TileRenderer tileRenderer = tileDictionary[tile.ID];
-
-                    bool missedPrediction = incorrectStep && levelResult.MissingPredictions.Contains(tile);
-                    if (missedPrediction)
-                        tileRenderer.ShowMissingPrediction();
-
-                    seq.Insert(0, tileRenderer.ShowCorrectPrediction());
-
-                    if (!missedPrediction)
-                        seq.AppendCallback(() => Destroy(tileRenderer.gameObject));
-                }
-
-                if (incorrectStep)
-                {
-                    foreach (Tile tile in levelResult.ExtraneousPredictions)
-                        tileDictionary[tile.ID].ShowIncorrectPrediction();
-                }
-
-                await CompletionOf(seq);
-
-                await new WaitForSeconds(postMatchDelay);
-
-                if (cancelAnimation)
-                    return;
-
-                if (i >= levelResult.CorrectPredictions)
-                    break;
-
-                seq = DOTween.Sequence();
-
-                foreach (Tile tile in ((MatchStep)step).MovedTiles.Select(mt => mt.Tile))
-                {
-                    TileRenderer tileRenderer = tileDictionary[tile.ID];
-                    Tween tween = tileRenderer.transform
-                        .DOLocalMove(new Vector3Int(tile.Position.x, tile.Position.y, 0), fallingSpeed)
-                        .SetSpeedBased()
-                        .SetEase(fallingEase);
-                    seq.Join(tween);
-                }
-
-                await CompletionOf(seq);
-
-                if (cancelAnimation)
-                    return;
+                tileDictionary.Remove(tile.ID);
             }
 
-            if (retryButton && nextButton)
-            {
-                await new WaitForSeconds(postMatchDelay);
+            await CompletionOf(seq);
 
-                if (levelResult.CorrectPredictions < Simulator.MAX_SIMULATION_STEPS)
-                {
-                    retryButton.gameObject.SetActive(true);
-                }
-                else
-                {
-                    SoundManager.Instance.PlayEffect(SoundEffect.Win);
-                    nextButton.gameObject.SetActive(true);
-                }
+            await new WaitForSeconds(postMatchDelay);
+        }
+
+        private async Task AnimateMovingTilesAsync(List<MovedTile> movedTiles)
+        { 
+            Sequence seq = DOTween.Sequence();
+
+            foreach (MovedTile movedTile in movedTiles)
+            {
+                Tile tile = movedTile.Tile;
+                TileRenderer tileRenderer = tileDictionary[tile.ID];
+
+                seq.Insert(0, tileRenderer.FallToCurrentPosition());
             }
 
-            SimulationRenderingCompleted?.Invoke();
+            await CompletionOf(seq);
+
+            await new WaitForSeconds(postFallDelay);
+        }
+
+        private async Task AnimateInertTilesAsync(HashSet<Tile> inertTiles)
+        {
+            Sequence seq = DOTween.Sequence();
+
+            foreach (Tile tile in inertTiles)
+            {
+                TileRenderer tileRenderer = tileDictionary[tile.ID];
+
+                seq.Insert(0, tileRenderer.TransitionToInert());
+            }
+
+            await CompletionOf(seq);
+
+            await new WaitForSeconds(postInertDelay);
+        }
+
+        private async Task AnimateNewTilesAsync(List<MovedTile> newTiles)
+        {
+            Sequence seq = DOTween.Sequence();
+
+            foreach (MovedTile movedTile in newTiles)
+            {
+                TileRenderer tileRenderer = Instantiate(tileRendererPrefab, transform);
+
+                tileRenderer.SetTile(movedTile.Tile, movedTile.From);
+                tileDictionary[movedTile.Tile.ID] = tileRenderer;
+
+                seq.Insert(0, tileRenderer.FallToCurrentPosition());
+            }
+
+            await CompletionOf(seq);
+
+            await new WaitForSeconds(postFallDelay);
         }
 
         System.Collections.IEnumerator CompletionOf(Tween tween)

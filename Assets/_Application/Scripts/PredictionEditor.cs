@@ -61,13 +61,18 @@ namespace GMTK2020
             initialized = true;
         }
 
-        public Prediction GetPredictions()
+        public void LockPredictions()
         {
             predictionsFinalised = true;
 
             gameObject.SetActive(false);
+        }
 
-            return new Prediction();
+        public void UnlockPredictions()
+        {
+            predictionsFinalised = false;
+
+            gameObject.SetActive(true);
         }
 
         private void TogglePrediction(Vector2Int pos)

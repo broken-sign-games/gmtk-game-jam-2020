@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using GMTK2020.Audio;
 using GMTK2020.Data;
+using System;
 using UnityEngine;
 
 namespace GMTK2020.Rendering
@@ -38,6 +39,11 @@ namespace GMTK2020.Rendering
         [SerializeField] private float tiltFrequency = 1f;
         [SerializeField] private float tiltAmplitude = 10f;
 
+        [SerializeField] private float matchShrinkDuration = 0.5f;
+
+        [SerializeField] private float fallingSpeed = 0.75f;
+        [SerializeField] private Ease fallingEase = Ease.OutBounce;
+
         [SerializeField] private TileData tileData = null;
 
         private Tile tile;
@@ -51,10 +57,13 @@ namespace GMTK2020.Rendering
         }
 
         public void SetTile(Tile tile)
+            => SetTile(tile, tile.Position);
+
+        public void SetTile(Tile tile, Vector2Int initialPosition)
         {
             this.tile = tile;
 
-            transform.localPosition = (Vector2)tile.Position;
+            transform.localPosition = (Vector2)initialPosition;
 
             glassSprite.sprite = tileData.VialSpriteMap[tile.Color];
             corkSprite.sprite = tileData.CorkSpriteMap[tile.Color];
@@ -75,7 +84,7 @@ namespace GMTK2020.Rendering
             mainPuff.startColor = tileData.PopDropletColor[tile.Color];
         }
 
-        public void UpdatePrediction()
+        public Tween UpdatePrediction()
         {
             if (tile.Marked)
             {
@@ -95,6 +104,8 @@ namespace GMTK2020.Rendering
                 glowSeq.Join(tileHighlight.DOFade(glowOpacity, glowFadeDuration));
 
                 seq.Insert(0, glowSeq);
+
+                return seq;
             }
             else
             {
@@ -109,7 +120,46 @@ namespace GMTK2020.Rendering
                 seq.Insert(0, transform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0));
                 seq.Insert(0, glowSprite.DOFade(0, glowFadeDuration));
                 seq.Insert(0, tileHighlight.DOFade(0, glowFadeDuration));
+
+                return seq;
             }
+        }
+
+        public Tween TransitionToInert()
+        {
+            bubbles.Stop();
+            vialTransform.localRotation = Quaternion.identity;
+
+            Sequence seq = DOTween.Sequence();
+
+            seq.Join(glowSprite.DOFade(0, glowFadeDuration));
+            seq.Join(tileHighlight.DOFade(0, glowFadeDuration));
+
+            liquidSprite.enabled = false;
+
+            return seq;
+        }
+
+        public Tween FallToCurrentPosition()
+        {
+            Tween tween = transform
+                .DOLocalMove((Vector3Int)tile.Position, fallingSpeed)
+                .SetSpeedBased()
+                .SetEase(fallingEase);
+
+            return tween;
+        }
+
+        public Tween MatchAndDestroy()
+        {
+            puff.Play();
+            Sequence seq = DOTween.Sequence();
+
+            seq.Append(vialTransform.DOScale(0, matchShrinkDuration).SetEase(Ease.OutBack));
+            seq.Join(tileHighlight.DOFade(0, matchShrinkDuration));
+            seq.AppendCallback(() => Destroy(gameObject));
+
+            return seq;
         }
 
         public Tween ShowCorrectPrediction()

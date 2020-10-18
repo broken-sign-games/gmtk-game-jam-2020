@@ -1,5 +1,4 @@
 ﻿using GMTK2020.Data;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,7 +9,6 @@ namespace GMTK2020
     public class Simulator
     {
         public const int MAX_SIMULATION_STEPS = 5;
-        private readonly List<HashSet<Vector2Int>> matchingPatterns;
 
         private Board board;
 
@@ -24,29 +22,6 @@ namespace GMTK2020
 
             // TODO: We probably want more control over the seed...
             rng = new Random(Time.frameCount);
-
-            var matchingPattern = new HashSet<Vector2Int>()
-            {
-                new Vector2Int(0, 0),
-                new Vector2Int(-1, 0),
-                new Vector2Int(1, 0),
-            };
-            matchingPatterns = new List<HashSet<Vector2Int>>() { matchingPattern };
-
-            for (int i = 0; i < 3; ++i)
-            {
-                matchingPattern = RotatePattern(matchingPattern);
-                matchingPatterns.Add(matchingPattern);
-            }
-
-            matchingPattern = MirrorPattern(matchingPattern);
-            matchingPatterns.Add(matchingPattern);
-
-            for (int i = 0; i < 3; ++i)
-            {
-                matchingPattern = RotatePattern(matchingPattern);
-                matchingPatterns.Add(matchingPattern);
-            }
         }
 
         public SimulationStep SimulateNextStep()
@@ -216,24 +191,6 @@ namespace GMTK2020
             }
 
             return newTiles;
-        }
-
-        private HashSet<Vector2Int> MirrorPattern(HashSet<Vector2Int> pattern)
-        {
-            return new HashSet<Vector2Int>(pattern.Select((vec2) =>
-            {
-                (int x, int y) = vec2;
-                return new Vector2Int(x, -y);
-            }));
-        }
-
-        private HashSet<Vector2Int> RotatePattern(HashSet<Vector2Int> pattern)
-        {
-            return new HashSet<Vector2Int>(pattern.Select((vec2) =>
-            {
-                (int x, int y) = vec2;
-                return new Vector2Int(y, -x);
-            }));
         }
     }
 }

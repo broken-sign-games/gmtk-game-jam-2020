@@ -1,6 +1,8 @@
 ﻿using GMTK2020.Audio;
 using GMTK2020.Data;
 using GMTK2020.Rendering;
+using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace GMTK2020
@@ -11,14 +13,36 @@ namespace GMTK2020
         [SerializeField] private PredictionEditor predictionEditor = null;
         [SerializeField] private LevelLoader levelLoader = null;
 
-        public void Run()
+        private Board board;
+        private int colorCount;
+
+        public void Initialize(Board initialBoard, int colorCount)
         {
+            board = initialBoard;
+            this.colorCount = colorCount;
+        }
+
+        public async void KickOffPlayback()
+        {
+            // TODO: This should be triggered directly by the button instead
             SoundManager.Instance.PlayEffect(SoundEffect.Click);
 
-            Prediction prediction = predictionEditor.GetPredictions();
-            Level level = levelLoader.Level;
+            await RunPlaybackAsync();
+        }
+
+        private async Task RunPlaybackAsync()
+        {
+            var simulator = new Simulator(board, colorCount);
             
-            //boardRenderer.KickOffRenderSimulation(level.Simulation, levelResult);
+            while (true)
+            {
+                SimulationStep step = simulator.SimulateNextStep();
+
+                await boardRenderer.AnimateSimulationStepAsync(step);
+
+                if (step.FinalStep)
+                    break;
+            }
         }
     }
 }
