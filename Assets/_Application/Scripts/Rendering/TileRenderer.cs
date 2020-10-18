@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using GMTK2020.Audio;
 using GMTK2020.Data;
 using UnityEngine;
 
@@ -78,6 +79,7 @@ namespace GMTK2020.Rendering
         {
             if (tile.Marked)
             {
+                SoundManager.Instance.PlayEffect(SoundEffect.SelectTile);
                 bubbles.Play();
                 pop.Play();
                 DOTween.Complete(corkSprite);
@@ -96,6 +98,7 @@ namespace GMTK2020.Rendering
             }
             else
             {
+                SoundManager.Instance.PlayEffectWithRandomPitch(SoundEffect.DeselectTile);
                 bubbles.Stop();
                 vialTransform.localRotation = Quaternion.identity;
 

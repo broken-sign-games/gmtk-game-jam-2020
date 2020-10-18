@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using GMTK2020.Data;
 using Random = System.Random;
-using System;
 
 namespace GMTK2020.Audio
 {
     [RequireComponent(typeof(AudioSource))]
-    public partial class SoundManager : MonoBehaviour
+    public class SoundManager : MonoBehaviour
     {
+        public static SoundManager Instance { get; private set; }
+
         [SerializeField] private SoundEffectData soundEffects;
 
         private AudioSource audioSource;
@@ -16,6 +17,15 @@ namespace GMTK2020.Audio
 
         private void Awake()
         {
+            if (Instance != null)
+            {
+                Debug.LogWarning("Two instances of SoundManager detected. Deleting this one.");
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+
             audioSource = GetComponent<AudioSource>();
 
             rng = new Random(Time.frameCount);
