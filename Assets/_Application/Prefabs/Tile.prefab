@@ -4882,6 +4882,7 @@ GameObject:
   - component: {fileID: 7590753912377047651}
   - component: {fileID: 4999064906209991652}
   - component: {fileID: 6303465340729924876}
+  - component: {fileID: 7658478056285262092}
   m_Layer: 0
   m_Name: Bubbles
   m_TagString: Untagged
@@ -9793,6 +9794,17 @@ SpriteMask:
   m_BackSortingOrder: 0
   m_IsCustomRangeActive: 0
   m_SpriteSortPoint: 0
+--- !u!210 &7658478056285262092
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1476968157739544638}
+  m_Enabled: 1
+  m_SortingLayerID: -338713579
+  m_SortingLayer: 3
+  m_SortingOrder: 1
 --- !u!1 &1950751756962898418
 GameObject:
   m_ObjectHideFlags: 0

@@ -47,22 +47,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
   tileData: {fileID: 11400000, guid: f963dc801adc7b84fa1b10998885ace9, type: 2}
-  stepRenderers:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   retryButton: {fileID: 0}
   nextButton: {fileID: 0}
   border: {fileID: 269216730889641830}
   gridLines: {fileID: 7149662318030561903}
+  boardMask: {fileID: 0}
   tileRendererPrefab: {fileID: 3085825000685519523, guid: 506e82c7fda498c4c9837b64dfdcbf0d,
     type: 3}
   postMatchDelay: 0.15
   postFallDelay: 0.1
-  fallingSpeed: 0.75
-  fallingEase: 30
+  postInertDelay: 0.1
 --- !u!1 &269216730889641824
 GameObject:
   m_ObjectHideFlags: 0
