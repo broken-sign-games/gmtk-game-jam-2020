@@ -11,17 +11,9 @@ namespace GMTK2020
         [SerializeField] private PredictionEditor predictionEditor = null;
         [SerializeField] private LevelLoader levelLoader = null;
 
-        private SoundManager soundManager;
-
-        private void Start()
-        {
-            soundManager = FindObjectOfType<SoundManager>();
-        }
-
         public void Run()
         {
-            if (soundManager)
-                soundManager.PlayEffect(SoundEffect.Click);
+            SoundManager.Instance.PlayEffect(SoundEffect.Click);
 
             Prediction prediction = predictionEditor.GetPredictions();
             Level level = levelLoader.Level;

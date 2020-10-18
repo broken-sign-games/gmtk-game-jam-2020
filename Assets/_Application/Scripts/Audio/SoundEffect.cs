@@ -8,6 +8,5 @@
         StepCorrect,
         StepWrong,
         Win,
-        YouWin,
     }
 }

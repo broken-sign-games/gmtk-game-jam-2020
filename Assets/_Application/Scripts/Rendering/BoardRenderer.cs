@@ -25,8 +25,6 @@ namespace GMTK2020.Rendering
         [SerializeField] private float fallingSpeed = 1f;
         [SerializeField] private Ease fallingEase = Ease.InCubic;
 
-        private SoundManager soundManager;
-
         public event Action SimulationRenderingCompleted;
 
         private readonly Dictionary<Guid, TileRenderer> tileDictionary = new Dictionary<Guid, TileRenderer>();
@@ -35,11 +33,6 @@ namespace GMTK2020.Rendering
         int height;
 
         bool cancelAnimation = false;
-
-        private void Start()
-        {
-            soundManager = FindObjectOfType<SoundManager>();
-        }
 
         public void RenderInitial(Board board)
         {
@@ -158,8 +151,7 @@ namespace GMTK2020.Rendering
                 }
                 else
                 {
-                    if (soundManager)
-                        soundManager.PlayEffect(SoundEffect.Win);
+                    SoundManager.Instance.PlayEffect(SoundEffect.Win);
                     nextButton.gameObject.SetActive(true);
                 }
             }
@@ -199,18 +191,6 @@ namespace GMTK2020.Rendering
         public void UpdatePrediction(Tile tile)
         {
             tileDictionary[tile.ID].UpdatePrediction();
-
-            if (soundManager)
-            {
-                if (tile.Marked)
-                {
-                    soundManager.PlayEffect(SoundEffect.SelectTile);
-                }
-                else
-                {
-                    soundManager.PlayEffectWithRandomPitch(SoundEffect.DeselectTile);
-                }
-            }
         }
     }
 }
