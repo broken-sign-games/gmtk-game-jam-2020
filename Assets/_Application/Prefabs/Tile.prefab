@@ -14708,6 +14708,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3573266944748384803}
   - component: {fileID: 3085825000685519523}
+  - component: {fileID: 5235250848188289279}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -14773,7 +14774,20 @@ MonoBehaviour:
   tiltFrequency: 30
   tiltAmplitude: 2
   matchShrinkDuration: 0.5
+  fallingSpeed: 0.75
+  fallingEase: 30
   tileData: {fileID: 11400000, guid: f963dc801adc7b84fa1b10998885ace9, type: 2}
+--- !u!210 &5235250848188289279
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3573266944748384802}
+  m_Enabled: 1
+  m_SortingLayerID: -338713579
+  m_SortingLayer: 3
+  m_SortingOrder: 0
 --- !u!1 &3780749098170415395
 GameObject:
   m_ObjectHideFlags: 0
