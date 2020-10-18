@@ -113,6 +113,27 @@ TextureImporter:
   - first:
       213: -4141366953436107110
     second: tiles-beaker-liquid_6
+  - first:
+      213: 8144137224127611171
+    second: tilesV2-beaker-liquid_0
+  - first:
+      213: 6186804361802955470
+    second: tilesV2-beaker-liquid_1
+  - first:
+      213: 8801588090236326218
+    second: tilesV2-beaker-liquid_2
+  - first:
+      213: 7511120704476519805
+    second: tilesV2-beaker-liquid_3
+  - first:
+      213: -3912579438459341644
+    second: tilesV2-beaker-liquid_4
+  - first:
+      213: 7572194833641064672
+    second: tilesV2-beaker-liquid_5
+  - first:
+      213: 1480613564591051698
+    second: tilesV2-beaker-liquid_6
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -157,7 +178,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 128
+  spritePixelsToUnits: 256
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -212,13 +233,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: tiles-beaker-liquid_0
+      name: tilesV2-beaker-liquid_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 128
-        height: 128
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -226,41 +247,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 521704fa4e8f43970800000000000000
-      internalID: 8733879238454702373
+      spriteID: 3218926e7a9c50170800000000000000
+      internalID: 8144137224127611171
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles-beaker-liquid_1
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 0
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c35e1871c686a93c0800000000000000
-      internalID: -4352051276440017604
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles-beaker-liquid_2
+      name: tilesV2-beaker-liquid_1
       rect:
         serializedVersion: 2
         x: 256
         y: 0
-        width: 128
-        height: 128
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -268,41 +268,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d650cd045698de3d0800000000000000
-      internalID: -3175731094253468307
+      spriteID: eca3a18b9c1fbd550800000000000000
+      internalID: 6186804361802955470
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles-beaker-liquid_3
-      rect:
-        serializedVersion: 2
-        x: 384
-        y: 0
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3275a2ee31d721c00800000000000000
-      internalID: 869895202589529891
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles-beaker-liquid_4
+      name: tilesV2-beaker-liquid_2
       rect:
         serializedVersion: 2
         x: 512
         y: 0
-        width: 128
-        height: 128
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -310,41 +289,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ef4636513aaa3ac00800000000000000
-      internalID: 910759167074198782
+      spriteID: a4158d93cb5852a70800000000000000
+      internalID: 8801588090236326218
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles-beaker-liquid_5
-      rect:
-        serializedVersion: 2
-        x: 640
-        y: 0
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c5bca2b49b24e1510800000000000000
-      internalID: 1521727087695285084
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles-beaker-liquid_6
+      name: tilesV2-beaker-liquid_3
       rect:
         serializedVersion: 2
         x: 768
         y: 0
-        width: 128
-        height: 128
+        width: 256
+        height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -352,8 +310,71 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a9e26ef92b8e686c0800000000000000
-      internalID: -4141366953436107110
+      spriteID: d7d976f2c7cdc3860800000000000000
+      internalID: 7511120704476519805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tilesV2-beaker-liquid_4
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 0
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b4322ffab9b3b9c0800000000000000
+      internalID: -3912579438459341644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tilesV2-beaker-liquid_5
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 0
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e8493df417d51960800000000000000
+      internalID: 7572194833641064672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tilesV2-beaker-liquid_6
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 0
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b3131f31323c8410800000000000000
+      internalID: 1480613564591051698
       vertices: []
       indices: 
       edges: []
