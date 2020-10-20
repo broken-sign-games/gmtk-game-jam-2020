@@ -42,6 +42,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private float matchShrinkDuration = 0.5f;
 
         [SerializeField] private float fallingSpeed = 0.75f;
+        [SerializeField] private float staggeredFallingDelay = 0.1f;
         [SerializeField] private Ease fallingEase = Ease.OutBounce;
 
         [SerializeField] private TileData tileData = null;
@@ -140,12 +141,12 @@ namespace GMTK2020.Rendering
             return seq;
         }
 
-        public Tween FallToCurrentPosition()
+        public Tween FallToCurrentPosition(Vector2Int from)
         {
             Tween tween = transform
-                .DOLocalMove((Vector3Int)tile.Position, fallingSpeed)
-                .SetSpeedBased()
-                .SetEase(fallingEase);
+                .DOLocalMove((Vector3Int)tile.Position, Mathf.Sqrt((from.y - tile.Position.y) / fallingSpeed))
+                .SetEase(fallingEase)
+                .SetDelay(tile.Position.y * staggeredFallingDelay);
 
             return tween;
         }

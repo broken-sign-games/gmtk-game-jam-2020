@@ -115,7 +115,7 @@ namespace GMTK2020.Rendering
                 Tile tile = movedTile.Tile;
                 TileRenderer tileRenderer = tileDictionary[tile.ID];
 
-                seq.Insert(0, tileRenderer.FallToCurrentPosition());
+                seq.Insert(0, tileRenderer.FallToCurrentPosition(movedTile.From));
             }
 
             await CompletionOf(seq);
@@ -150,7 +150,7 @@ namespace GMTK2020.Rendering
                 tileRenderer.SetTile(movedTile.Tile, movedTile.From);
                 tileDictionary[movedTile.Tile.ID] = tileRenderer;
 
-                seq.Insert(0, tileRenderer.FallToCurrentPosition());
+                seq.Insert(0, tileRenderer.FallToCurrentPosition(movedTile.From));
             }
 
             await CompletionOf(seq);
