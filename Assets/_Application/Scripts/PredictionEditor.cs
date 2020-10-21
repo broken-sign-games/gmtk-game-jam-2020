@@ -78,6 +78,11 @@ namespace GMTK2020
         private void TogglePrediction(Vector2Int pos)
         {
             Tile tile = board[pos];
+
+            // TODO: Play a sound effect, maybe do a little animation on the vial
+            if (tile.Inert)
+                return;
+
             tile.Marked = !tile.Marked;
 
             boardRenderer.UpdatePrediction(tile);

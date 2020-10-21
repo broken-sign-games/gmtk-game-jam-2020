@@ -45,6 +45,11 @@ namespace GMTK2020.Rendering
         [SerializeField] private float staggeredFallingDelay = 0.1f;
         [SerializeField] private Ease fallingEase = Ease.OutBounce;
 
+        [SerializeField] private float landingShakeDuration = 0.2f;
+        [SerializeField] private Vector3 landingShakeStrength = new Vector3(1f, 1f, 0f);
+        [SerializeField] private int landingShakeVibrato = 10;
+        [SerializeField] private float landingShakeRandomness = 90f;
+
         [SerializeField] private TileData tileData = null;
 
         private Tile tile;
@@ -143,12 +148,15 @@ namespace GMTK2020.Rendering
 
         public Tween FallToCurrentPosition(Vector2Int from)
         {
-            Tween tween = transform
+            Sequence seq = DOTween.Sequence();
+            seq.Append(transform
                 .DOLocalMove((Vector3Int)tile.Position, Mathf.Sqrt((from.y - tile.Position.y) / fallingSpeed))
                 .SetEase(fallingEase)
-                .SetDelay(tile.Position.y * staggeredFallingDelay);
+                .SetDelay(tile.Position.y * staggeredFallingDelay));
 
-            return tween;
+            seq.Append(vialTransform.DOShakePosition(landingShakeDuration, landingShakeStrength * (from.y - tile.Position.y) / 9, landingShakeVibrato, landingShakeRandomness));
+
+            return seq;
         }
 
         public Tween MatchAndDestroy()

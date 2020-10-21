@@ -14789,6 +14789,10 @@ MonoBehaviour:
   fallingSpeed: 10
   staggeredFallingDelay: 0.05
   fallingEase: 5
+  landingShakeDuration: 0.2
+  landingShakeStrength: {x: 0.1, y: 0, z: 0}
+  landingShakeVibrato: 30
+  landingShakeRandomness: 90
   tileData: {fileID: 11400000, guid: f963dc801adc7b84fa1b10998885ace9, type: 2}
 --- !u!210 &5235250848188289279
 SortingGroup:
