@@ -323,6 +323,92 @@ namespace Tests
                 Assert.That(expected[newTile.Tile.Position], Is.Null);
         }
 
+        [Test]
+        public void Check_for_possible_matches_when_none_exist()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 4, 0, 6, 1, 0, 0, 0, 6 },
+                { 0, 3, 0, 7, 9, 3, 4, 0, 7 },
+                { 4, 5, 5, 6, 2, 3, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 4, 2, 5, 6 },
+            });
+
+            var simulator = new Simulator(board, 9);
+
+            Assert.That(simulator.FurtherMatchesPossible(), Is.False);
+        }
+
+        [Test]
+        public void Check_for_possible_matches_when_blocked_by_inert_tiles()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 4, 0, 6, 1, 0, 0, 0, 6 },
+                { 0, 3, 0, 7, 9, 3, 4, 0, 7 },
+                { 4, 5, 5, 5, 2, 3, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
+            });
+            board[1, 1].MakeInert();
+            board[5, 1].MakeInert();
+
+            var simulator = new Simulator(board, 9);
+
+            Assert.That(simulator.FurtherMatchesPossible(), Is.False);
+        }
+
+        [Test]
+        public void Check_for_possible_matches_with_horizontal_match()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 4, 0, 6, 1, 0, 0, 0, 6 },
+                { 0, 3, 0, 7, 9, 3, 4, 0, 7 },
+                { 4, 5, 5, 5, 2, 3, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 5, 2, 5, 6 },
+            });
+
+            var simulator = new Simulator(board, 9);
+
+            Assert.That(simulator.FurtherMatchesPossible(), Is.True);
+        }
+
+        [Test]
+        public void Check_for_possible_matches_with_vertical_match()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 4, 0, 6, 1, 0, 0, 0, 6 },
+                { 0, 3, 0, 7, 9, 3, 4, 0, 7 },
+                { 4, 5, 5, 6, 2, 3, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
+            });
+
+            var simulator = new Simulator(board, 9);
+
+            Assert.That(simulator.FurtherMatchesPossible(), Is.True);
+        }
+
         private static Board IntGridToBoard(int[,] intGrid)
         {
             int width = intGrid.GetLength(0);

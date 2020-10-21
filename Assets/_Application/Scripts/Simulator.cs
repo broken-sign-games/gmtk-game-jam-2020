@@ -1,4 +1,5 @@
 ﻿using GMTK2020.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -124,6 +125,61 @@ namespace GMTK2020
                 board[tile.Position] = null;
 
             return matchedTiles;
+        }
+
+        public bool FurtherMatchesPossible()
+        {
+            foreach (int x in board.GetXs())
+            {
+                int matchStart = 0;
+                foreach (int y in board.GetYs())
+                {
+                    Tile tile = board[x, y];
+                    if (tile is null || tile.Inert)
+                    {
+                        matchStart = y + 1;
+                        continue;
+                    }
+
+                    if (tile.Color != board[x, matchStart].Color)
+                    {
+                        matchStart = y;
+                        continue;
+                    }
+
+                    if (y - matchStart == 2)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            foreach (int y in board.GetYs())
+            {
+                int matchStart = 0;
+                foreach (int x in board.GetXs())
+                {
+                    Tile tile = board[x, y];
+                    if (tile is null || tile.Inert)
+                    {
+                        matchStart = x + 1;
+                        continue;
+                    }
+
+                    if (tile.Color != board[matchStart, y].Color)
+                    {
+                        matchStart = x;
+                        continue;
+                    }
+
+                    if (x - matchStart == 2)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public List<MovedTile> MoveTilesDown()

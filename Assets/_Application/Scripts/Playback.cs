@@ -1,9 +1,9 @@
 ﻿using GMTK2020.Audio;
 using GMTK2020.Data;
 using GMTK2020.Rendering;
-using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GMTK2020
 {
@@ -12,6 +12,8 @@ namespace GMTK2020
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private PredictionEditor predictionEditor = null;
         [SerializeField] private LevelLoader levelLoader = null;
+        [SerializeField] private Button runButton = null;
+        [SerializeField] private Button retryButton = null;
 
         private Board board;
         private int colorCount;
@@ -32,6 +34,8 @@ namespace GMTK2020
 
         private async Task RunPlaybackAsync()
         {
+            runButton.interactable = false;
+
             var simulator = new Simulator(board, colorCount);
             
             while (true)
@@ -43,6 +47,11 @@ namespace GMTK2020
                 if (step.FinalStep)
                     break;
             }
+
+            if (simulator.FurtherMatchesPossible())
+                runButton.interactable = true;
+            else
+                retryButton.ActivateObject();
         }
     }
 }
