@@ -9,7 +9,6 @@ namespace GMTK2020
     {
         [SerializeField] private Playback playback = null;
         [SerializeField] private BoardRenderer boardRenderer = null;
-        [SerializeField] private TextMeshProUGUI levelLabel = null;
         [SerializeField] private PredictionEditor predictionEditor = null;
         [SerializeField] private LevelSequence levelSequence = null;
 
@@ -27,7 +26,6 @@ namespace GMTK2020
 
             Level = new LevelGenerator(levelSpec).GenerateValidLevel();
 
-            levelLabel.text = $"Level {levelIndex + 1}";
             predictionEditor.Initialize(Level.Board);
             boardRenderer.RenderInitial(Level.Board);
             playback.Initialize(Level.Board, levelSpec.ColorCount);
