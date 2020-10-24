@@ -29,6 +29,7 @@ namespace GMTK2020
             this.colorCount = colorCount;
 
             scoreKeeper = new ScoreKeeper(baseScore);
+            scoreRenderer.SetScoreKeeper(scoreKeeper);
         }
 
         public async void KickOffPlayback()
@@ -52,7 +53,7 @@ namespace GMTK2020
                 scoreKeeper.ScoreStep(step);
                 // We might need to tie this into the board renderer 
                 // to sync the update with the match animation.
-                scoreRenderer.UpdateScore(scoreKeeper.TotalScore);
+                scoreRenderer.UpdateScore();
 
                 await boardRenderer.AnimateSimulationStepAsync(step);
 
@@ -63,7 +64,11 @@ namespace GMTK2020
             if (simulator.FurtherMatchesPossible())
                 runButton.interactable = true;
             else
+            {
+                scoreKeeper.UpdateHighscore();
+                scoreRenderer.UpdateHighscore();
                 retryButton.ActivateObject();
+            }
         }
     }
 }

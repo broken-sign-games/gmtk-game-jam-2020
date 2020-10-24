@@ -6,10 +6,30 @@ namespace GMTK2020.UI
     public class ScoreRenderer : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI scoreText = null;
+        [SerializeField] private TextMeshProUGUI highscoreText = null;
+        [SerializeField] private Color newHighscoreColor = Color.green;
 
-        public void UpdateScore(int score)
+        private ScoreKeeper scoreKeeper;
+
+        public void SetScoreKeeper(ScoreKeeper scoreKeeper)
         {
-            scoreText.text = score.ToString();
+            this.scoreKeeper = scoreKeeper;
+
+            UpdateScore();
+            UpdateHighscore();
+        }
+
+        public void UpdateScore()
+        {
+            scoreText.text = scoreKeeper.Score.ToString();
+
+            if (scoreKeeper.Score > scoreKeeper.Highscore)
+                scoreText.color = newHighscoreColor;
+        }
+
+        public void UpdateHighscore()
+        {
+            highscoreText.text = scoreKeeper.Highscore.ToString();
         }
     }
 }

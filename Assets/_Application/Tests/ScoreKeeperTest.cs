@@ -100,7 +100,7 @@ namespace Tests
 
             scoreKeeper.ScoreStep(CreateMatchStep(1)); // 1 * 10 * 1 = 10
 
-            Assert.That(scoreKeeper.TotalScore, Is.EqualTo(210));
+            Assert.That(scoreKeeper.Score, Is.EqualTo(210));
         }
 
         private MatchStep CreateMatchStep(int nMatchedTiles)
