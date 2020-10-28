@@ -248,5 +248,20 @@ namespace GMTK2020
 
             return newTiles;
         }
+
+        public RemovalStep RemoveTile(Vector2Int pos)
+        {
+            var removedTiles = new HashSet<Tile>()
+            {
+                board[pos]
+            };
+
+            board[pos] = null;
+
+            List<MovedTile> movedTiles = MoveTilesDown();
+            List<MovedTile> newTiles = FillBoardWithTiles();
+
+            return new RemovalStep(removedTiles, movedTiles, newTiles);
+        }
     }
 }

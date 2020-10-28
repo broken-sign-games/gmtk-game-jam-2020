@@ -35,4 +35,20 @@ namespace GMTK2020.Data
             InertTiles = inertTiles;
         }
     }
+
+    public class RemovalStep : SimulationStep
+    {
+        public override bool FinalStep => true;
+
+        public HashSet<Tile> RemovedTiles { get; }
+        public List<MovedTile> MovedTiles { get; }
+        public List<MovedTile> NewTiles { get; }
+
+        public RemovalStep(HashSet<Tile> removedTiles, List<MovedTile> movedTiles, List<MovedTile> newTiles)
+        {
+            RemovedTiles = removedTiles;
+            MovedTiles = movedTiles;
+            NewTiles = newTiles;
+        }
+    }
 }
