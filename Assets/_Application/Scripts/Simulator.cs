@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.XR.WSA;
 using Random = System.Random;
 
 namespace GMTK2020
@@ -267,6 +268,13 @@ namespace GMTK2020
                     if (board.IsInBounds(pos))
                         positions.Add(pos);
                 }
+
+            return RemoveTiles(positions);
+        }
+
+        public RemovalStep RemoveRow(int y)
+        {
+            List<Vector2Int> positions = board.GetXs().Select(x => new Vector2Int(x, y)).ToList();
 
             return RemoveTiles(positions);
         }
