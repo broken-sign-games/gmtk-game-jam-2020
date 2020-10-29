@@ -263,5 +263,16 @@ namespace GMTK2020
 
             return new RemovalStep(removedTiles, movedTiles, newTiles);
         }
+
+        public bool RefillTile(Vector2Int pos)
+        {
+            Tile tile = board[pos];
+
+            bool wasInert = tile.Inert;
+            if (wasInert)
+                tile.Refill();
+
+            return wasInert;
+        }
     }
 }

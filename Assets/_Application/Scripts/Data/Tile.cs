@@ -45,6 +45,11 @@ namespace GMTK2020.Data
             Marked = false;
         }
 
+        public void Refill()
+        {
+            Inert = false;
+        }
+
         public override string ToString()
             => $"Tile: {Color} at {Position} ({(Inert ? "Inert" : Marked ? "Marked" : "Unmarked")})";
 

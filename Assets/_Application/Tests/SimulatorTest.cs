@@ -453,6 +453,51 @@ namespace Tests
             Assert.That(step.NewTiles[0].To, Is.EqualTo(new Vector2Int(2, 8)));
         }
 
+        [Test]
+        public void Test_refill_tool()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 1, 5, 9, 2, 1, 1, 2, 3, 5 },
+                { 2, 6, 1, 6, 4, 3, 5, 3, 4 },
+                { 1, 5, 2, 7, 2, 4, 4, 4, 9 },
+                { 1, 3, 2, 2, 5, 1, 3, 3, 3 },
+                { 7, 1, 3, 4, 3, 1, 2, 2, 1 },
+                { 8, 4, 7, 6, 1, 1, 2, 3, 6 },
+                { 2, 3, 1, 7, 9, 3, 4, 8, 7 },
+                { 4, 5, 5, 6, 2, 2, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
+            });
+
+            Board expected = IntGridToBoard(new int[,]
+            {
+                { 1, 5, 9, 2, 1, 1, 2, 3, 5 },
+                { 2, 6, 1, 6, 4, 3, 5, 3, 4 },
+                { 1, 5, 2, 7, 2, 4, 4, 4, 9 },
+                { 1, 3, 2, 2, 5, 1, 3, 3, 3 },
+                { 7, 1, 3, 4, 3, 1, 2, 2, 1 },
+                { 8, 4, 7, 6, 1, 1, 2, 3, 6 },
+                { 2, 3, 1, 7, 9, 3, 4, 8, 7 },
+                { 4, 5, 5, 6, 2, 2, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
+            });
+
+            Vector2Int pos = new Vector2Int(2, 3);
+            board[pos].Marked = true;
+            board[pos].MakeInert();
+
+            var simulator = new Simulator(board, 9);
+
+            bool wasInert = simulator.RefillTile(pos);
+
+            Assert.That(wasInert, Is.True);
+
+            AssertThatBoardsAreEqual(board, expected);
+
+            Assert.That(board[pos].Marked, Is.False);
+            Assert.That(board[pos].Inert, Is.False);
+        }
+
         private static Board IntGridToBoard(int[,] intGrid)
         {
             int width = intGrid.GetLength(0);

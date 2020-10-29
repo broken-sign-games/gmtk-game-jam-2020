@@ -113,6 +113,19 @@ namespace Tests
         }
 
         [Test]
+        public void Refill_tile()
+        {
+
+            Tile tile = new Tile(3, Vector2Int.zero);
+            tile.Marked = true;
+            tile.MakeInert();
+            tile.Refill();
+
+            Assert.That(tile.Marked, Is.False);
+            Assert.That(tile.Inert, Is.False);
+        }
+
+        [Test]
         public void Equality_is_value_equality()
         {
             int color = 3;
