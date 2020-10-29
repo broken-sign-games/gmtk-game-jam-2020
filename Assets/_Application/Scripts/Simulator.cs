@@ -279,6 +279,16 @@ namespace GMTK2020
             return RemoveTiles(positions);
         }
 
+        public RemovalStep RemoveColor(int color)
+        {
+            List<Vector2Int> positions = board
+                .Where(t => t.Color == color)
+                .Select(t => t.Position)
+                .ToList();
+
+            return RemoveTiles(positions);
+        }
+
         private RemovalStep RemoveTiles(List<Vector2Int> positions)
         {
             var removedTiles = new HashSet<Tile>();
