@@ -251,12 +251,35 @@ namespace GMTK2020
 
         public RemovalStep RemoveTile(Vector2Int pos)
         {
-            var removedTiles = new HashSet<Tile>()
-            {
-                board[pos]
-            };
+            var positions = new List<Vector2Int>() { pos };
 
-            board[pos] = null;
+            return RemoveTiles(positions);
+        }
+
+        public RemovalStep RemoveBlock(Vector2Int center)
+        {
+            var positions = new List<Vector2Int>();
+
+            for (int y = -1; y <= 1; ++y)
+                for (int x = -1; x <= 1; ++x)
+                {
+                    Vector2Int pos = center + new Vector2Int(x, y);
+                    if (board.IsInBounds(pos))
+                        positions.Add(pos);
+                }
+
+            return RemoveTiles(positions);
+        }
+
+        private RemovalStep RemoveTiles(List<Vector2Int> positions)
+        {
+            var removedTiles = new HashSet<Tile>();
+
+            foreach (Vector2Int pos in positions)
+            {
+                removedTiles.Add(board[pos]);
+                board[pos] = null;
+            }
 
             List<MovedTile> movedTiles = MoveTilesDown();
             List<MovedTile> newTiles = FillBoardWithTiles();
