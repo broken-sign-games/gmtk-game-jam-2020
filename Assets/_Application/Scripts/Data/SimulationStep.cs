@@ -51,4 +51,16 @@ namespace GMTK2020.Data
             NewTiles = newTiles;
         }
     }
+
+    public class PermutationStep : SimulationStep
+    {
+        public override bool FinalStep => true;
+
+        public List<MovedTile> MovedTiles { get; }
+
+        public PermutationStep(List<MovedTile> movedTiles)
+        {
+            MovedTiles = movedTiles;
+        }
+    }
 }

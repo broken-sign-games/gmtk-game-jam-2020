@@ -315,5 +315,30 @@ namespace GMTK2020
 
             return wasInert;
         }
+
+        public PermutationStep ShuffleBoard()
+        {
+            var movedTiles = new List<MovedTile>();
+
+            List<Tile> shuffledTiles = board.ToList().Shuffle(rng);
+
+            int i = 0;
+
+            foreach (int y in board.GetYs())
+                foreach (int x in board.GetXs())
+                {
+                    Tile tile = shuffledTiles[i];
+                    Vector2Int from = tile.Position;
+
+                    // Can't use MoveTile because the source position might have
+                    // already been overwritten.
+                    board[x, y] = tile;
+
+                    movedTiles.Add(new MovedTile(tile, from));
+                    ++i;
+                }
+
+            return new PermutationStep(movedTiles);
+        }
     }
 }
