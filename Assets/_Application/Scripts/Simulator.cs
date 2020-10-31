@@ -453,5 +453,37 @@ namespace GMTK2020
 
             return new PermutationStep(movedTiles);
         }
+
+        public PermutationStep SwapRows(int y1, int y2)
+        {
+            List<Tile> row1 = board.GetRow(y1).ToList();
+            List<Tile> row2 = board.GetRow(y2).ToList();
+
+            var movedTiles = new List<MovedTile>();
+
+            foreach (Tile tile in row1)
+                movedTiles.Add(board.MoveTile(tile, tile.Position.x, y2));
+
+            foreach (Tile tile in row2)
+                movedTiles.Add(board.MoveTile(tile, tile.Position.x, y1));
+
+            return new PermutationStep(movedTiles);
+        }
+
+        public PermutationStep SwapColumns(int x1, int x2)
+        {
+            List<Tile> column1 = board.GetColumn(x1).ToList();
+            List<Tile> column2 = board.GetColumn(x2).ToList();
+
+            var movedTiles = new List<MovedTile>();
+
+            foreach (Tile tile in column1)
+                movedTiles.Add(board.MoveTile(tile, x2, tile.Position.y));
+
+            foreach (Tile tile in column2)
+                movedTiles.Add(board.MoveTile(tile, x1, tile.Position.y));
+
+            return new PermutationStep(movedTiles);
+        }
     }
 }
