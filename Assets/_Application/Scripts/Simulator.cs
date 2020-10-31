@@ -58,68 +58,47 @@ namespace GMTK2020
 
         public HashSet<Tile> RemoveMatchedTiles()
         {
-            var matchedTiles = new HashSet<Tile>();
+            var potentialMatches = new List<IEnumerable<Tile>>();
 
             foreach (int x in board.GetXs())
             {
-                int matchStart = 0;
-                foreach (int y in board.GetYs())
+                foreach (int yMax in board.GetYs().Skip(2))
                 {
-                    Tile tile = board[x, y];
-                    if (tile is null || tile.Inert || !tile.Marked)
-                    {
-                        matchStart = y + 1;
-                        continue;
-                    }
-
-                    if (tile.Color != board[x, matchStart].Color)
-                    {
-                        matchStart = y;
-                        continue;
-                    }
-
-                    if (y - matchStart == 2)
-                    {
-                        matchedTiles.Add(board[x, matchStart]);
-                        matchedTiles.Add(board[x, matchStart + 1]);
-                    }
-
-                    if (y - matchStart >= 2)
-                    {
-                        matchedTiles.Add(board[x, y]);
-                    }
+                    potentialMatches.Add(Enumerable
+                        .Range(yMax - 2, 3)
+                        .Select(y => board[x, y]));
                 }
             }
 
+
             foreach (int y in board.GetYs())
             {
-                int matchStart = 0;
-                foreach (int x in board.GetXs())
+                foreach (int xMax in board.GetXs().Skip(2))
                 {
-                    Tile tile = board[x, y];
-                    if (tile is null || tile.Inert || !tile.Marked)
-                    {
-                        matchStart = x + 1;
-                        continue;
-                    }
-
-                    if (tile.Color != board[matchStart, y].Color)
-                    {
-                        matchStart = x;
-                        continue;
-                    }
-
-                    if (x - matchStart == 2)
-                    {
-                        matchedTiles.Add(board[matchStart, y]);
-                        matchedTiles.Add(board[matchStart + 1, y]);
-                    }
-
-                    if (x - matchStart >= 2)
-                    {
-                        matchedTiles.Add(board[x, y]);
-                    }
+                    potentialMatches.Add(Enumerable
+                        .Range(xMax - 2, 3)
+                        .Select(x => board[x, y]));
                 }
+            }
+
+            var matchedTiles = new HashSet<Tile>();
+
+            foreach (IEnumerable<Tile> tiles in potentialMatches)
+            { 
+                if (tiles.Any(tile => tile is null || tile.Inert || !tile.Marked))
+                    continue;
+
+                int nColors = tiles
+                    .Select(tile => tile.Wildcard ? -1 : tile.Color)
+                    .Distinct()
+                    .Where(color => color != -1)
+                    .Count();
+
+                if (nColors >= 2)
+                    continue;
+
+                foreach (Tile tile in tiles)
+                    matchedTiles.Add(tile);
             }
 
             foreach (Tile tile in matchedTiles)
@@ -142,7 +121,7 @@ namespace GMTK2020
                         continue;
                     }
 
-                    if (tile.Color != board[x, matchStart].Color)
+                    if (!tile.Wildcard && !board[x, matchStart].Wildcard && tile.Color != board[x, matchStart].Color)
                     {
                         matchStart = y;
                         continue;
@@ -167,7 +146,7 @@ namespace GMTK2020
                         continue;
                     }
 
-                    if (tile.Color != board[matchStart, y].Color)
+                    if (!tile.Wildcard && !board[matchStart, y].Wildcard && tile.Color != board[matchStart, y].Color)
                     {
                         matchStart = x;
                         continue;
@@ -484,6 +463,17 @@ namespace GMTK2020
                 movedTiles.Add(board.MoveTile(tile, x1, tile.Position.y));
 
             return new PermutationStep(movedTiles);
+        }
+
+        public bool CreateWildcard(Vector2Int pos)
+        {
+            Tile tile = board[pos];
+
+            bool wasWildcard = tile.Wildcard;
+            if (!wasWildcard)
+                tile.MakeWildcard();
+
+            return wasWildcard;
         }
     }
 }

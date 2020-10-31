@@ -138,6 +138,7 @@ namespace Tests
 
             AssertThatBoardsAreEqual(board, expected);
         }
+
         [Test]
         public void Matches_can_overlap()
         {
@@ -176,6 +177,125 @@ namespace Tests
             MatchStep matchStep = step as MatchStep;
 
             Assert.That(matchStep.MatchedTiles.Count, Is.EqualTo(10));
+            Assert.That(matchStep.MovedTiles.Count, Is.EqualTo(7));
+
+            AssertThatBoardsAreEqual(board, expected);
+        }
+
+        [Test]
+        public void Wildcards_match_regardless_of_color()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 4, 5, 6, 0, 0, 0, 0, 0 },
+                { 0, 3,-1, 7, 1, 3, 4, 5, 6 },
+                { 0, 2,-1, 8, 9,-8,-2,-2, 7 },
+                { 4, 5,-3, 6, 2, 3, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 4, 2, 5, 6 },
+            });
+            board[2, 1].MakeWildcard();
+            board[5, 2].MakeWildcard();
+
+            Board expected = IntGridToBoard(new int[,]
+            {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 4, 0, 6, 0, 0, 0, 0, 0 },
+                { 0, 3, 0, 7, 1, 0, 0, 0, 6 },
+                { 0, 2, 0, 8, 9, 3, 4, 5, 7 },
+                { 4, 5, 5, 6, 2, 3, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 4, 2, 5, 6 },
+            });
+
+            var simulator = new Simulator(board, 9);
+
+            SimulationStep step = simulator.SimulateNextStep();
+
+            Assert.That(step, Is.TypeOf<MatchStep>());
+
+            MatchStep matchStep = step as MatchStep;
+
+            Assert.That(matchStep.MatchedTiles.Count, Is.EqualTo(6));
+            Assert.That(matchStep.MovedTiles.Count, Is.EqualTo(4));
+
+            AssertThatBoardsAreEqual(board, expected);
+        }
+
+        [Test]
+        public void Check_against_false_positives_when_wildcard_is_first()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 4, 5, 6, 0, 0, 0, 0, 0 },
+                { 0, 3,-2, 7, 1, 3, 4, 5, 6 },
+                { 0, 2,-1, 8, 9,-8,-2,-4, 7 },
+                { 4, 5,-3, 6, 2, 3, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 4, 2, 5, 6 },
+            });
+            board[2, 1].MakeWildcard();
+            board[5, 2].MakeWildcard();
+
+            var simulator = new Simulator(board, 9);
+
+            SimulationStep step = simulator.SimulateNextStep();
+
+            Assert.That(step, Is.TypeOf<CleanUpStep>());
+
+            CleanUpStep cleanUpStep = step as CleanUpStep;
+
+            Assert.That(cleanUpStep.InertTiles.Count, Is.EqualTo(6));
+        }
+
+        [Test]
+        public void Wildcard_can_be_several_colors_in_overlap()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 4, 5, 6, 0, 0, 0,-2, 0 },
+                { 0, 3,-1, 7, 1, 3, 4,-2, 6 },
+                { 0,-2,-3,-2, 9,-1,-1,-3, 7 },
+                { 4, 5,-1, 6, 2, 3, 5,-4, 1 },
+                { 1, 2, 3, 2, 1, 4, 2,-4, 6 },
+            });
+            board[2, 2].MakeWildcard();
+            board[7, 2].MakeWildcard();
+
+            Board expected = IntGridToBoard(new int[,]
+            {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 4, 0, 6, 1, 0, 0, 0, 6 },
+                { 0, 3, 0, 7, 9, 3, 4, 0, 7 },
+                { 4, 5, 5, 6, 2, 3, 5, 0, 1 },
+                { 1, 2, 3, 2, 1, 4, 2, 0, 6 },
+            });
+
+            var simulator = new Simulator(board, 9);
+
+            SimulationStep step = simulator.SimulateNextStep();
+
+            Assert.That(step, Is.TypeOf<MatchStep>());
+
+            MatchStep matchStep = step as MatchStep;
+
+            Assert.That(matchStep.MatchedTiles.Count, Is.EqualTo(12));
             Assert.That(matchStep.MovedTiles.Count, Is.EqualTo(7));
 
             AssertThatBoardsAreEqual(board, expected);
@@ -1043,6 +1163,49 @@ namespace Tests
             AssertThatBoardsAreEqual(board, expected);
 
             Assert.That(step.MovedTiles.Count, Is.EqualTo(18));
+        }
+
+        [Test]
+        public void Test_wildcard_tool()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 1, 5, 9, 2, 1, 1, 2, 3, 5 },
+                { 2, 6, 1, 6, 4, 3, 5, 3, 4 },
+                { 1, 5, 2, 7, 2, 4, 4, 4, 9 },
+                { 1, 3, 2, 2, 5, 1, 3, 3, 3 },
+                { 7, 1, 3, 4, 3, 1, 2, 2, 1 },
+                { 8, 4, 7, 6, 1, 1, 2, 3, 6 },
+                { 2, 3, 1, 7, 9, 3, 4, 8, 7 },
+                { 4, 5, 5, 6, 2, 2, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
+            });
+
+            Board expected = IntGridToBoard(new int[,]
+            {
+                { 1, 5, 9, 2, 1, 1, 2, 3, 5 },
+                { 2, 6, 1, 6, 4, 3, 5, 3, 4 },
+                { 1, 5, 2, 7, 2, 4, 4, 4, 9 },
+                { 1, 3, 2, 2, 5, 1, 3, 3, 3 },
+                { 7, 1, 3, 4, 3, 1, 2, 2, 1 },
+                { 8, 4, 7, 6, 1, 1, 2, 3, 6 },
+                { 2, 3, 1, 7, 9, 3, 4, 8, 7 },
+                { 4, 5, 5, 6, 2, 2, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
+            });
+
+            Vector2Int pos = new Vector2Int(2, 3);
+            expected[pos].MakeWildcard();
+
+            var simulator = new Simulator(board, 9);
+
+            bool wasWildcard = simulator.CreateWildcard(pos);
+
+            Assert.That(wasWildcard, Is.False);
+
+            AssertThatBoardsAreEqual(board, expected);
+
+            Assert.That(board[pos].Wildcard, Is.True);
         }
 
         private static Board IntGridToBoard(int[,] intGrid)

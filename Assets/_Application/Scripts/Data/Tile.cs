@@ -20,6 +20,8 @@ namespace GMTK2020.Data
             }
         }
 
+        public bool Wildcard { get; private set; } = false;
+
         public Vector2Int Position { get; set; }
 
         public Tile(int color)
@@ -37,6 +39,7 @@ namespace GMTK2020.Data
             Inert = other.Inert;
             Marked = other.Marked;
             Position = other.Position;
+            Wildcard = other.Wildcard;
         }
 
         public void MakeInert()
@@ -45,13 +48,18 @@ namespace GMTK2020.Data
             Marked = false;
         }
 
+        public void MakeWildcard()
+        {
+            Wildcard = true;
+        }
+
         public void Refill()
         {
             Inert = false;
         }
 
         public override string ToString()
-            => $"Tile: {Color} at {Position} ({(Inert ? "Inert" : Marked ? "Marked" : "Unmarked")})";
+            => $"Tile: {Color} at {Position} ({(Inert ? "Inert" : Marked ? "Marked" : "Unmarked")}{(Wildcard ? ", Wildcard" : "")})";
 
         #region Equality pattern
         public override bool Equals(object other)
@@ -85,6 +93,7 @@ namespace GMTK2020.Data
             return Color == other.Color
                 && Position == other.Position
                 && Marked == other.Marked
+                && Wildcard == other.Wildcard
                 && Inert == other.Inert;
         }
 
@@ -95,6 +104,7 @@ namespace GMTK2020.Data
             hash = hash * 7 + Position.GetHashCode();
             hash = hash * 7 + Marked.GetHashCode();
             hash = hash * 7 + Inert.GetHashCode();
+            hash = hash * 7 + Wildcard.GetHashCode();
             return hash;
         }
 

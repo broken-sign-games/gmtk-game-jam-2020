@@ -30,6 +30,7 @@ namespace Tests
             Assert.That(copy.Position, Is.EqualTo(pos));
             Assert.That(copy.Marked, Is.EqualTo(false));
             Assert.That(copy.Inert, Is.EqualTo(true));
+            Assert.That(copy.Wildcard, Is.EqualTo(false));
         }
 
         [Test]
@@ -42,12 +43,14 @@ namespace Tests
 
             var copy = new Tile(tile);
             tile.MakeInert();
+            tile.MakeWildcard();
             tile.Position = new Vector2Int(4, 2);
 
             Assert.That(copy.Color, Is.EqualTo(color));
             Assert.That(copy.Position, Is.EqualTo(pos));
             Assert.That(copy.Marked, Is.EqualTo(true));
             Assert.That(copy.Inert, Is.EqualTo(false));
+            Assert.That(copy.Wildcard, Is.EqualTo(false));
         }
 
         [Test]
@@ -113,6 +116,15 @@ namespace Tests
         }
 
         [Test]
+        public void Make_wildcard()
+        {
+            Tile tile = new Tile(3, Vector2Int.zero);
+            tile.MakeWildcard();
+
+            Assert.That(tile.Wildcard, Is.True);
+        }
+
+        [Test]
         public void Refill_tile()
         {
 
@@ -133,9 +145,11 @@ namespace Tests
 
             var tile1 = new Tile(color, position);
             tile1.MakeInert();
+            tile1.MakeWildcard();
 
             var tile2 = new Tile(color, position);
             tile2.MakeInert();
+            tile2.MakeWildcard();
 
             Assert.That(tile1, Is.EqualTo(tile2));
             Assert.That(tile1 == tile2, Is.True);
@@ -202,6 +216,22 @@ namespace Tests
             {
                 Marked = true
             };
+
+            var tile2 = new Tile(color, position);
+
+            Assert.That(tile1, Is.Not.EqualTo(tile2));
+            Assert.That(tile1 == tile2, Is.False);
+            Assert.That(tile1 != tile2, Is.True);
+        }
+
+        [Test]
+        public void Inequality_by_wildcard()
+        {
+            int color = 3;
+            var position = new Vector2Int(3, 4);
+
+            var tile1 = new Tile(color, position);
+            tile1.MakeWildcard();
 
             var tile2 = new Tile(color, position);
 
