@@ -12,10 +12,10 @@ namespace GMTK2020
     {
         public const int MAX_SIMULATION_STEPS = 5;
 
-        private Board board;
+        private readonly Board board;
 
-        private Random rng;
-        private int colorCount;
+        private readonly Random rng;
+        private readonly int colorCount;
 
         public Simulator(Board initialBoard, int colorCount)
         {
@@ -332,6 +332,35 @@ namespace GMTK2020
                 }
 
             return new PermutationStep(movedTiles);
+        }
+
+        public RotationStep RotateBoard(RotationSense rotSense)
+        {
+            var movedTiles = new List<MovedTile>();
+
+            List<Tile> tiles = board.GetRows(HorizontalOrder.LeftToRight, VerticalOrder.TopToBottom).SelectMany(x => x).ToList();
+
+            HorizontalOrder horizontalOrder = rotSense == RotationSense.CW 
+                ? HorizontalOrder.RightToLeft 
+                : HorizontalOrder.LeftToRight;
+
+            VerticalOrder verticalOrder = rotSense == RotationSense.CW
+                ? VerticalOrder.TopToBottom
+                : VerticalOrder.BottomToTop;
+
+            int i = 0;
+            foreach (int x in board.GetXs(horizontalOrder))
+                foreach (int y in board.GetYs(verticalOrder))
+                {
+                    Tile tile = tiles[i];
+                    if (tile.Position != new Vector2Int(x, y))
+                        movedTiles.Add(board.MoveTile(tile, x, y));
+
+                    ++i;
+                }
+
+            Vector2 pivot = new Vector2(board.Width - 1, board.Height - 1) / 2f;
+            return new RotationStep(pivot, rotSense, movedTiles);
         }
     }
 }

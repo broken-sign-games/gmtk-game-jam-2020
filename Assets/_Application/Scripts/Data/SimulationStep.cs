@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace GMTK2020.Data
 {
@@ -60,6 +61,22 @@ namespace GMTK2020.Data
 
         public PermutationStep(List<MovedTile> movedTiles)
         {
+            MovedTiles = movedTiles;
+        }
+    }
+
+    public class RotationStep : SimulationStep
+    {
+        public override bool FinalStep => true;
+
+        public Vector2 Pivot { get; }
+        public RotationSense RotationSense { get; }
+        public List<MovedTile> MovedTiles { get; }
+
+        public RotationStep(Vector2 pivot, RotationSense rotationSense, List<MovedTile> movedTiles)
+        {
+            Pivot = pivot;
+            RotationSense = rotationSense;
             MovedTiles = movedTiles;
         }
     }

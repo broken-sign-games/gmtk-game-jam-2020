@@ -691,6 +691,86 @@ namespace Tests
             Assert.That(step.MovedTiles.Count, Is.EqualTo(81));
         }
 
+        [Test]
+        public void Test_clockwise_board_rotation()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 1, 5, 9, 2, 1, 1, 2, 3, 5 },
+                { 2, 6, 1, 6, 4, 3, 5, 3, 4 },
+                { 1, 5, 2, 7, 2, 4, 4, 4, 9 },
+                { 1, 3, 2, 2, 5, 1, 3, 3, 3 },
+                { 7, 1, 3, 4, 3, 1, 2, 2, 1 },
+                { 8, 4, 7, 6, 1, 1, 2, 3, 6 },
+                { 2, 3, 1, 7, 9, 3, 4, 8, 7 },
+                { 4, 5, 5, 6, 2, 2, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
+            });
+
+            Board expected = IntGridToBoard(new int[,]
+            {
+                { 1, 4, 2, 8, 7, 1, 1, 2, 1 },
+                { 2, 5, 3, 4, 1, 3, 5, 6, 5 },
+                { 3, 5, 1, 7, 3, 2, 2, 1, 9 },
+                { 2, 6, 7, 6, 4, 2, 7, 6, 2 },
+                { 1, 2, 9, 1, 3, 5, 2, 4, 1 },
+                { 3, 2, 3, 1, 1, 1, 4, 3, 1 },
+                { 2, 5, 4, 2, 2, 3, 4, 5, 2 },
+                { 5, 4, 8, 3, 2, 3, 4, 3, 3 },
+                { 6, 1, 7, 6, 1, 3, 9, 4, 5 }
+            });
+
+            var simulator = new Simulator(board, 9);
+
+            RotationStep step = simulator.RotateBoard(RotationSense.CW);
+
+            AssertThatBoardsAreEqual(board, expected);
+
+            Assert.That(step.Pivot, Is.EqualTo(new Vector2(4, 4)));
+            Assert.That(step.RotationSense, Is.EqualTo(RotationSense.CW));
+            Assert.That(step.MovedTiles.Count, Is.EqualTo(80));
+        }
+
+        [Test]
+        public void Test_counterclockwise_board_rotation()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 1, 5, 9, 2, 1, 1, 2, 3, 5 },
+                { 2, 6, 1, 6, 4, 3, 5, 3, 4 },
+                { 1, 5, 2, 7, 2, 4, 4, 4, 9 },
+                { 1, 3, 2, 2, 5, 1, 3, 3, 3 },
+                { 7, 1, 3, 4, 3, 1, 2, 2, 1 },
+                { 8, 4, 7, 6, 1, 1, 2, 3, 6 },
+                { 2, 3, 1, 7, 9, 3, 4, 8, 7 },
+                { 4, 5, 5, 6, 2, 2, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
+            });
+
+            Board expected = IntGridToBoard(new int[,]
+            {
+                { 5, 4, 9, 3, 1, 6, 7, 1, 6 },
+                { 3, 3, 4, 3, 2, 3, 8, 4, 5 },
+                { 2, 5, 4, 3, 2, 2, 4, 5, 2 },
+                { 1, 3, 4, 1, 1, 1, 3, 2, 3 },
+                { 1, 4, 2, 5, 3, 1, 9, 2, 1 },
+                { 2, 6, 7, 2, 4, 6, 7, 6, 2 },
+                { 9, 1, 2, 2, 3, 7, 1, 5, 3 },
+                { 5, 6, 5, 3, 1, 4, 3, 5, 2 },
+                { 1, 2, 1, 1, 7, 8, 2, 4, 1 }
+            });
+
+            var simulator = new Simulator(board, 9);
+
+            RotationStep step = simulator.RotateBoard(RotationSense.CCW);
+
+            AssertThatBoardsAreEqual(board, expected);
+
+            Assert.That(step.Pivot, Is.EqualTo(new Vector2(4, 4)));
+            Assert.That(step.RotationSense, Is.EqualTo(RotationSense.CCW));
+            Assert.That(step.MovedTiles.Count, Is.EqualTo(80));
+        }
+
         private static Board IntGridToBoard(int[,] intGrid)
         {
             int width = intGrid.GetLength(0);
