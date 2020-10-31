@@ -297,19 +297,21 @@ namespace Tests
         }
 
         [Test]
-        public void Cannot_move_tile_that_doesnt_exist_in_starting_position()
+        public void Moving_tile_that_doesnt_exist_in_starting_position_doesnt_create_null()
         {
             var board = new Board(5, 5);
             var from = new Vector2Int(3, 4);
             var to = new Vector2Int(1, 2);
-            var tile = new Tile(3);
+            var movingTile = new Tile(3);
+            var otherTile = new Tile(4);
 
-            board[from] = tile;
+            board[from] = movingTile;
+            board[from] = otherTile;
 
-            tile.Position = new Vector2Int(2, 3);
+            board.MoveTile(movingTile, to);
 
-            Assert.Throws<InvalidOperationException>(
-                () => board.MoveTile(tile, to));
+            Assert.That(board[from], Is.SameAs(otherTile));
+            Assert.That(board[to], Is.SameAs(movingTile));
         }
 
         [Test]

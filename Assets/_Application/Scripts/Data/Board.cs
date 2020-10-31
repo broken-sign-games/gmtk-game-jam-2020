@@ -150,13 +150,8 @@ namespace GMTK2020.Data
 
             Vector2Int from = tile.Position;
 
-            if (IsInBounds(from))
-            {
-                if (!ReferenceEquals(this[from], tile))
-                    throw new InvalidOperationException("Found another tile at tile.Position");
-
+            if (IsInBounds(from) && ReferenceEquals(this[from], tile))
                 this[from] = null;
-            }
 
             this[to] = tile;
 
