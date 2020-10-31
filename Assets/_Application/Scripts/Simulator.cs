@@ -439,5 +439,19 @@ namespace GMTK2020
 
             return new RotationStep(pivot, rotSense, movedTiles);
         }
+
+        public PermutationStep SwapTiles(Vector2Int pos1, Vector2Int pos2)
+        {
+            Tile tile1 = board[pos1];
+            Tile tile2 = board[pos2];
+
+            var movedTiles = new List<MovedTile>
+            {
+                board.MoveTile(tile1, pos2),
+                board.MoveTile(tile2, pos1),
+            };
+
+            return new PermutationStep(movedTiles);
+        }
     }
 }
