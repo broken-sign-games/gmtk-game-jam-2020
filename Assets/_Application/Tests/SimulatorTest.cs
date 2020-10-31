@@ -531,6 +531,75 @@ namespace Tests
         }
 
         [Test]
+        public void Check_for_possible_matches_with_wildcard()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 4, 0, 6, 1, 0, 0, 0, 6 },
+                { 0, 3, 0, 7, 9, 3, 4, 0, 7 },
+                { 4, 5, 5, 6, 2, 3, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 5, 2, 5, 6 },
+            });
+            board[5, 0].MakeWildcard();
+
+            var simulator = new Simulator(board, 9);
+
+            Assert.That(simulator.FurtherMatchesPossible(), Is.True);
+        }
+
+        [Test]
+        public void Check_for_possible_matches_with_two_wildcard()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 4, 0, 6, 1, 0, 0, 0, 6 },
+                { 0, 3, 0, 7, 9, 1, 4, 0, 7 },
+                { 4, 5, 5, 6, 2, 3, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 5, 2, 5, 6 },
+            });
+            board[5, 0].MakeWildcard();
+            board[5, 2].MakeWildcard();
+
+            var simulator = new Simulator(board, 9);
+
+            Assert.That(simulator.FurtherMatchesPossible(), Is.True);
+        }
+
+        [Test]
+        public void Check_for_possible_matches_with_three_wildcard()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 4, 0, 6, 1, 0, 0, 0, 6 },
+                { 0, 3, 0, 7, 9, 1, 4, 0, 7 },
+                { 4, 5, 5, 6, 2, 3, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 5, 2, 5, 6 },
+            });
+            board[5, 0].MakeWildcard();
+            board[5, 1].MakeWildcard();
+            board[5, 2].MakeWildcard();
+
+            var simulator = new Simulator(board, 9);
+
+            Assert.That(simulator.FurtherMatchesPossible(), Is.True);
+        }
+
+        [Test]
         public void Test_remove_tool()
         {
             Board board = IntGridToBoard(new int[,]

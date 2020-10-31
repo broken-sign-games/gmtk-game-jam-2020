@@ -58,6 +58,30 @@ namespace GMTK2020
 
         public HashSet<Tile> RemoveMatchedTiles()
         {
+            var matchedTiles = new HashSet<Tile>();
+
+            foreach (IEnumerable<Tile> tiles in GetPotentialMatches())
+            {
+                if (!IsMatch(tiles))
+                    continue;
+
+                foreach (Tile tile in tiles)
+                    matchedTiles.Add(tile);
+            }
+
+            foreach (Tile tile in matchedTiles)
+                board[tile.Position] = null;
+
+            return matchedTiles;
+        }
+
+        public bool FurtherMatchesPossible()
+        {
+            return GetPotentialMatches().Any(tiles => IsMatch(tiles, false));
+        }
+
+        private List<IEnumerable<Tile>> GetPotentialMatches()
+        {
             var potentialMatches = new List<IEnumerable<Tile>>();
 
             foreach (int x in board.GetXs())
@@ -81,85 +105,21 @@ namespace GMTK2020
                 }
             }
 
-            var matchedTiles = new HashSet<Tile>();
-
-            foreach (IEnumerable<Tile> tiles in potentialMatches)
-            { 
-                if (tiles.Any(tile => tile is null || tile.Inert || !tile.Marked))
-                    continue;
-
-                int nColors = tiles
-                    .Select(tile => tile.Wildcard ? -1 : tile.Color)
-                    .Distinct()
-                    .Where(color => color != -1)
-                    .Count();
-
-                if (nColors >= 2)
-                    continue;
-
-                foreach (Tile tile in tiles)
-                    matchedTiles.Add(tile);
-            }
-
-            foreach (Tile tile in matchedTiles)
-                board[tile.Position] = null;
-
-            return matchedTiles;
+            return potentialMatches;
         }
 
-        public bool FurtherMatchesPossible()
+        private bool IsMatch(IEnumerable<Tile> tiles, bool requiredMarked = true)
         {
-            foreach (int x in board.GetXs())
-            {
-                int matchStart = 0;
-                foreach (int y in board.GetYs())
-                {
-                    Tile tile = board[x, y];
-                    if (tile is null || tile.Inert)
-                    {
-                        matchStart = y + 1;
-                        continue;
-                    }
+            if (tiles.Any(tile => tile is null || tile.Inert || requiredMarked && !tile.Marked))
+                return false;
 
-                    if (!tile.Wildcard && !board[x, matchStart].Wildcard && tile.Color != board[x, matchStart].Color)
-                    {
-                        matchStart = y;
-                        continue;
-                    }
+            int nDistinctColors = tiles
+                .Select(tile => tile.Wildcard ? -1 : tile.Color)
+                .Distinct()
+                .Where(color => color != -1)
+                .Count();
 
-                    if (y - matchStart == 2)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            foreach (int y in board.GetYs())
-            {
-                int matchStart = 0;
-                foreach (int x in board.GetXs())
-                {
-                    Tile tile = board[x, y];
-                    if (tile is null || tile.Inert)
-                    {
-                        matchStart = x + 1;
-                        continue;
-                    }
-
-                    if (!tile.Wildcard && !board[matchStart, y].Wildcard && tile.Color != board[matchStart, y].Color)
-                    {
-                        matchStart = x;
-                        continue;
-                    }
-
-                    if (x - matchStart == 2)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            return nDistinctColors <= 1;
         }
 
         public List<MovedTile> MoveTilesDown()
