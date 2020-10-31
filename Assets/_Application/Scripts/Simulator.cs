@@ -338,11 +338,11 @@ namespace GMTK2020
         {
             var movedTiles = new List<MovedTile>();
 
-            List<Tile> tiles = board.GetRows(HorizontalOrder.LeftToRight, VerticalOrder.TopToBottom).SelectMany(x => x).ToList();
+            List<Tile> tiles = board.GetRows(HorizontalOrder.LeftToRight, VerticalOrder.BottomToTop).SelectMany(x => x).ToList();
 
             HorizontalOrder horizontalOrder = rotSense == RotationSense.CW 
-                ? HorizontalOrder.RightToLeft 
-                : HorizontalOrder.LeftToRight;
+                ? HorizontalOrder.LeftToRight
+                : HorizontalOrder.RightToLeft;
 
             VerticalOrder verticalOrder = rotSense == RotationSense.CW
                 ? VerticalOrder.TopToBottom
@@ -360,6 +360,83 @@ namespace GMTK2020
                 }
 
             Vector2 pivot = new Vector2(board.Width - 1, board.Height - 1) / 2f;
+            return new RotationStep(pivot, rotSense, movedTiles);
+        }
+
+        public RotationStep Rotate2x2Block(Vector2Int bottomLeft, RotationSense rotSense)
+        {
+            if (!board.IsInBounds(bottomLeft) || !board.IsInBounds(bottomLeft + Vector2Int.one))
+                throw new InvalidOperationException("2x2 block partially or fully out of bounds");
+
+
+            var movedTiles = new List<MovedTile>();
+
+            List<Tile> tiles = board.GetRows(HorizontalOrder.LeftToRight, VerticalOrder.BottomToTop)
+                .Skip(bottomLeft.y)
+                .Take(2)
+                .SelectMany(row => row.Skip(bottomLeft.x).Take(2))
+                .ToList();
+
+            HorizontalOrder horizontalOrder = rotSense == RotationSense.CW
+                ? HorizontalOrder.LeftToRight
+                : HorizontalOrder.RightToLeft;
+
+            VerticalOrder verticalOrder = rotSense == RotationSense.CW
+                ? VerticalOrder.TopToBottom
+                : VerticalOrder.BottomToTop;
+
+            int i = 0;
+            foreach (int x in board.GetXs(horizontalOrder))
+                foreach (int y in board.GetYs(verticalOrder))
+                {
+                    if (x < bottomLeft.x || x > bottomLeft.x + 1 || y < bottomLeft.y || y > bottomLeft.y + 1)
+                        continue;
+
+                    movedTiles.Add(board.MoveTile(tiles[i], x, y));
+
+                    ++i;
+                }
+
+            Vector2 pivot = bottomLeft + 0.5f * Vector2.one;
+            return new RotationStep(pivot, rotSense, movedTiles);
+        }
+
+        public RotationStep Rotate3x3Block(Vector2Int pivot, RotationSense rotSense)
+        {
+            if (!board.IsInBounds(pivot - Vector2Int.one) || !board.IsInBounds(pivot + Vector2Int.one))
+                throw new InvalidOperationException("3x3 block partially or fully out of bounds");
+
+
+            var movedTiles = new List<MovedTile>();
+
+            List<Tile> tiles = board.GetRows(HorizontalOrder.LeftToRight, VerticalOrder.BottomToTop)
+                .Skip(pivot.y - 1)
+                .Take(3)
+                .SelectMany(row => row.Skip(pivot.x - 1).Take(3))
+                .ToList();
+
+            HorizontalOrder horizontalOrder = rotSense == RotationSense.CW
+                ? HorizontalOrder.LeftToRight
+                : HorizontalOrder.RightToLeft;
+
+            VerticalOrder verticalOrder = rotSense == RotationSense.CW
+                ? VerticalOrder.TopToBottom
+                : VerticalOrder.BottomToTop;
+
+            int i = 0;
+            foreach (int x in board.GetXs(horizontalOrder))
+                foreach (int y in board.GetYs(verticalOrder))
+                {
+                    if (x < pivot.x - 1 || x > pivot.x + 1 || y < pivot.y - 1 || y > pivot.y + 1)
+                        continue;
+
+                    Tile tile = tiles[i];
+                    if (tile.Position != new Vector2Int(x, y))
+                        movedTiles.Add(board.MoveTile(tile, x, y));
+
+                    ++i;
+                }
+
             return new RotationStep(pivot, rotSense, movedTiles);
         }
     }
