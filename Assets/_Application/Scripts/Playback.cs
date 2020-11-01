@@ -10,6 +10,7 @@ namespace GMTK2020
 {
     public class Playback : MonoBehaviour
     {
+        [SerializeField] private ToolManager toolManager = null;
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private ScoreRenderer scoreRenderer = null;
         [SerializeField] private PredictionEditor predictionEditor = null;
@@ -20,16 +21,19 @@ namespace GMTK2020
         [SerializeField] private int baseScore = 100;
 
         private Board board;
-        private int colorCount;
         private ScoreKeeper scoreKeeper;
+
+        private Simulator simulator;
 
         public void Initialize(Board initialBoard, int colorCount)
         {
             board = initialBoard;
-            this.colorCount = colorCount;
 
             scoreKeeper = new ScoreKeeper(baseScore);
             scoreRenderer.SetScoreKeeper(scoreKeeper);
+
+            simulator = new Simulator(board, colorCount);
+            toolManager.SetSimulator(simulator);
         }
 
         public async void KickOffPlayback()
@@ -43,8 +47,6 @@ namespace GMTK2020
         private async Task RunPlaybackAsync()
         {
             runButton.interactable = false;
-
-            var simulator = new Simulator(board, colorCount);
             
             while (true)
             {
@@ -61,7 +63,7 @@ namespace GMTK2020
                     break;
             }
 
-            if (simulator.FurtherMatchesPossible())
+            if (true) // (simulator.FurtherMatchesPossible())
                 runButton.interactable = true;
             else
             {

@@ -72,7 +72,8 @@ namespace GMTK2020.Rendering
             switch (step)
             {
             case MatchStep matchStep: await AnimateMatchStepAsync(matchStep); break;
-            case CleanUpStep cleanUpStep: await RenderCleanUpStepAsync(cleanUpStep); break;
+            case CleanUpStep cleanUpStep: await AnimateCleanUpStepAsync(cleanUpStep); break;
+            case RemovalStep removalStep: await AnimateRemovalStepAsync(removalStep); break;
             }
         }
 
@@ -82,10 +83,16 @@ namespace GMTK2020.Rendering
             await AnimateMovingTilesAsync(step.MovedTiles);
         }
 
-        private async Task RenderCleanUpStepAsync(CleanUpStep step)
+        private async Task AnimateCleanUpStepAsync(CleanUpStep step)
         {
             await AnimateInertTilesAsync(step.InertTiles);
             await AnimateNewTilesAsync(step.NewTiles);
+        }
+
+        private async Task AnimateRemovalStepAsync(RemovalStep step)
+        {
+            await AnimateRemovedTilesAsync(step.RemovedTiles);
+            await AnimateNewAndMovingTilesAsync(step.NewTiles, step.MovedTiles);
         }
 
         private async Task AnimateMatchedTilesAsync(HashSet<Tile> matchedTiles)
@@ -123,6 +130,24 @@ namespace GMTK2020.Rendering
             await new WaitForSeconds(postFallDelay);
         }
 
+        private async Task AnimateRemovedTilesAsync(HashSet<Tile> removedTiles)
+        {
+            Sequence seq = DOTween.Sequence();
+
+            foreach (Tile tile in removedTiles)
+            {
+                TileRenderer tileRenderer = tileDictionary[tile.ID];
+
+                seq.Insert(0, tileRenderer.Destroy());
+
+                tileDictionary.Remove(tile.ID);
+            }
+
+            await CompletionOf(seq);
+
+            await new WaitForSeconds(postMatchDelay);
+        }
+
         private async Task AnimateInertTilesAsync(HashSet<Tile> inertTiles)
         {
             Sequence seq = DOTween.Sequence();
@@ -149,6 +174,33 @@ namespace GMTK2020.Rendering
 
                 tileRenderer.SetTile(movedTile.Tile, movedTile.From);
                 tileDictionary[movedTile.Tile.ID] = tileRenderer;
+
+                seq.Insert(0, tileRenderer.FallToCurrentPosition(movedTile.From));
+            }
+
+            await CompletionOf(seq);
+
+            await new WaitForSeconds(postFallDelay);
+        }
+
+        private async Task AnimateNewAndMovingTilesAsync(List<MovedTile> newTiles, List<MovedTile> movedTiles)
+        {
+            Sequence seq = DOTween.Sequence();
+
+            foreach (MovedTile movedTile in newTiles)
+            {
+                TileRenderer tileRenderer = Instantiate(tileRendererPrefab, transform);
+
+                tileRenderer.SetTile(movedTile.Tile, movedTile.From);
+                tileDictionary[movedTile.Tile.ID] = tileRenderer;
+
+                seq.Insert(0, tileRenderer.FallToCurrentPosition(movedTile.From));
+            }
+
+            foreach (MovedTile movedTile in movedTiles)
+            {
+                Tile tile = movedTile.Tile;
+                TileRenderer tileRenderer = tileDictionary[tile.ID];
 
                 seq.Insert(0, tileRenderer.FallToCurrentPosition(movedTile.From));
             }

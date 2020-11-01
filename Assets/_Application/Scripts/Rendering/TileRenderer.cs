@@ -171,6 +171,19 @@ namespace GMTK2020.Rendering
             return seq;
         }
 
+        public Tween Destroy()
+        {
+            puff.Play();
+            Sequence seq = DOTween.Sequence();
+
+            seq.Append(vialTransform.DOScale(0, matchShrinkDuration).SetEase(Ease.OutBack));
+            seq.Join(tileHighlight.DOFade(0, matchShrinkDuration));
+            seq.InsertCallback(matchShrinkDuration / 2, () => corkSprite.enabled = false);
+            seq.AppendCallback(() => Destroy(gameObject));
+
+            return seq;
+        }
+
         public Tween ShowCorrectPrediction()
         {
             Sequence seq = DOTween.Sequence();

@@ -9,6 +9,7 @@ namespace GMTK2020
     public class PredictionEditor : MonoBehaviour
     {
         [SerializeField] private BoardRenderer boardRenderer = null;
+        [SerializeField] private ToolManager toolManager = null;
 
         private InputActions inputs;
 
@@ -40,7 +41,7 @@ namespace GMTK2020
 
         private void OnSelect(InputAction.CallbackContext obj)
         {
-            if (!initialized || predictionsFinalised)
+            if (!initialized || predictionsFinalised || toolManager.ActiveTool.HasValue || toolManager.InputHandledThisFrame)
                 return;
 
             Vector2 pointerPos = inputs.Gameplay.Point.ReadValue<Vector2>();
