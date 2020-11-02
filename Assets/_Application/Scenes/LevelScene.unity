@@ -705,8 +705,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 847431504}
-        m_TargetAssemblyTypeName: GMTK2020.ToolManager, GMTK2020
+      - m_Target: {fileID: 1689814306}
+        m_TargetAssemblyTypeName: GMTK2020.BoardManipulator, GMTK2020
         m_MethodName: ToggleTool
         m_Mode: 2
         m_Arguments:
@@ -767,7 +767,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db613c27d4b8b944be429faf9c52ce2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Tool: 0
+  Tool: 1
 --- !u!1 &634321284
 GameObject:
   m_ObjectHideFlags: 0
@@ -1038,51 +1038,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705948580}
   m_CullTransparentMesh: 0
---- !u!1 &847431502
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 847431503}
-  - component: {fileID: 847431504}
-  m_Layer: 0
-  m_Name: Toolbox
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &847431503
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 847431502}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &847431504
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 847431502}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f4c2b304a4c7b243b0b08793b142e1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boardRenderer: {fileID: 2077407154}
-  removeTileButton: {fileID: 362697598}
 --- !u!1 &1050045834
 GameObject:
   m_ObjectHideFlags: 0
@@ -1404,7 +1359,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e41cdbf3c96b2b443873270e518d883e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toolManager: {fileID: 847431504}
   boardRenderer: {fileID: 2077407154}
   scoreRenderer: {fileID: 1277534815}
   predictionEditor: {fileID: 1689814306}
@@ -1580,7 +1534,7 @@ GameObject:
   - component: {fileID: 1689814307}
   - component: {fileID: 1689814306}
   m_Layer: 0
-  m_Name: Prediction Editor
+  m_Name: Board Manipulator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1599,7 +1553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardRenderer: {fileID: 2077407154}
-  toolManager: {fileID: 847431504}
+  removeTileButton: {fileID: 362697598}
 --- !u!4 &1689814307
 Transform:
   m_ObjectHideFlags: 0

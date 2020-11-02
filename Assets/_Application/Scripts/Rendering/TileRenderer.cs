@@ -177,8 +177,8 @@ namespace GMTK2020.Rendering
             Sequence seq = DOTween.Sequence();
 
             seq.Append(vialTransform.DOScale(0, matchShrinkDuration).SetEase(Ease.OutBack));
+            seq.Join(corkSprite.transform.DOScale(0, matchShrinkDuration).SetEase(Ease.OutBack));
             seq.Join(tileHighlight.DOFade(0, matchShrinkDuration));
-            seq.InsertCallback(matchShrinkDuration / 2, () => corkSprite.enabled = false);
             seq.AppendCallback(() => Destroy(gameObject));
 
             return seq;

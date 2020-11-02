@@ -9,7 +9,7 @@ namespace GMTK2020
     {
         [SerializeField] private Playback playback = null;
         [SerializeField] private BoardRenderer boardRenderer = null;
-        [SerializeField] private PredictionEditor predictionEditor = null;
+        [SerializeField] private BoardManipulator predictionEditor = null;
         [SerializeField] private LevelSequence levelSequence = null;
 
         public Level Level { get; private set; }
@@ -26,9 +26,11 @@ namespace GMTK2020
 
             Level = new LevelGenerator(levelSpec).GenerateValidLevel();
 
-            predictionEditor.Initialize(Level.Board);
+            Simulator simulator = new Simulator(Level.Board, levelSpec.ColorCount);
+
+            predictionEditor.Initialize(Level.Board, simulator);
             boardRenderer.RenderInitial(Level.Board);
-            playback.Initialize(Level.Board, levelSpec.ColorCount);
+            playback.Initialize(Level.Board, simulator);
         }
     }
 }

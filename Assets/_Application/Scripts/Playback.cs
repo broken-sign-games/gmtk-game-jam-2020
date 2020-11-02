@@ -10,10 +10,9 @@ namespace GMTK2020
 {
     public class Playback : MonoBehaviour
     {
-        [SerializeField] private ToolManager toolManager = null;
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private ScoreRenderer scoreRenderer = null;
-        [SerializeField] private PredictionEditor predictionEditor = null;
+        [SerializeField] private BoardManipulator predictionEditor = null;
         [SerializeField] private Button runButton = null;
         [SerializeField] private Button retryButton = null;
 
@@ -25,15 +24,14 @@ namespace GMTK2020
 
         private Simulator simulator;
 
-        public void Initialize(Board initialBoard, int colorCount)
+        public void Initialize(Board initialBoard, Simulator simulator)
         {
             board = initialBoard;
+            this.simulator = simulator;
 
             scoreKeeper = new ScoreKeeper(baseScore);
             scoreRenderer.SetScoreKeeper(scoreKeeper);
 
-            simulator = new Simulator(board, colorCount);
-            toolManager.SetSimulator(simulator);
         }
 
         public async void KickOffPlayback()

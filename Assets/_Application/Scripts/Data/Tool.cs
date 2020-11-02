@@ -2,6 +2,7 @@
 {
     public enum Tool
     {
+        ToggleMarked,
         RemoveTile,
         RefillInert,
         Bomb,
