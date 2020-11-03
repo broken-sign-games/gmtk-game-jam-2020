@@ -3,6 +3,7 @@ using GMTK2020.Rendering;
 using GMTKJam2020.Input;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
 
 namespace GMTK2020
@@ -11,6 +12,9 @@ namespace GMTK2020
     {
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private Button removeTileButton = null;
+        [SerializeField] private Button removeRowButton = null;
+        [SerializeField] private Button removeBlockButton = null;
+        [SerializeField] private Button removeColorButton = null;
 
         private InputActions inputs;
 
@@ -94,22 +98,26 @@ namespace GMTK2020
 
         private void UseActiveTool(Vector2Int gridPos)
         {
+            SimulationStep step = null;
+
             switch (activeTool)
             {
             case Tool.ToggleMarked:
                 TogglePrediction(gridPos);
                 break;
             case Tool.RemoveTile:
-                RemovalStep step = simulator.RemoveTile(gridPos);
-                KickOffAnimation(step);
+                step = simulator.RemoveTile(gridPos);
                 break;
             case Tool.RefillInert:
                 break;
             case Tool.Bomb:
+                step = simulator.RemoveBlock(gridPos);
                 break;
             case Tool.RemoveRow:
+                step = simulator.RemoveRow(gridPos.y);
                 break;
             case Tool.RemoveColor:
+                step = simulator.RemoveColor(board[gridPos].Color);
                 break;
             case Tool.ShuffleBoard:
                 break;
@@ -129,6 +137,9 @@ namespace GMTK2020
                 break;
             }
 
+            if (step != null)
+                KickOffAnimation(step);
+
             activeTool = Tool.ToggleMarked;
             UpdateUI();
         }
@@ -140,11 +151,19 @@ namespace GMTK2020
 
         private void UpdateUI()
         {
-            ColorBlock colors = removeTileButton.colors;
-            Color color = activeTool == Tool.RemoveTile ? Color.grey : Color.white;
+            UpdateButtonColor(removeTileButton, Tool.RemoveTile);
+            UpdateButtonColor(removeBlockButton, Tool.Bomb);
+            UpdateButtonColor(removeRowButton, Tool.RemoveRow);
+            UpdateButtonColor(removeColorButton, Tool.RemoveColor);
+        }
+
+        private void UpdateButtonColor(Button button, Tool tool)
+        {
+            ColorBlock colors = button.colors;
+            Color color = activeTool == tool ? Color.grey : Color.white;
             colors.normalColor = color;
             colors.selectedColor = color;
-            removeTileButton.colors = colors;
+            button.colors = colors;
         }
 
         private void TogglePrediction(Vector2Int pos)
