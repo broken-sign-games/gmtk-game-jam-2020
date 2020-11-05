@@ -1,9 +1,9 @@
 ﻿using GMTK2020.Data;
 using GMTK2020.Rendering;
 using GMTKJam2020.Input;
+using RotaryHeart.Lib.SerializableDictionary;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
 
 namespace GMTK2020
@@ -11,10 +11,7 @@ namespace GMTK2020
     public class BoardManipulator : MonoBehaviour
     {
         [SerializeField] private BoardRenderer boardRenderer = null;
-        [SerializeField] private Button removeTileButton = null;
-        [SerializeField] private Button removeRowButton = null;
-        [SerializeField] private Button removeBlockButton = null;
-        [SerializeField] private Button removeColorButton = null;
+        [SerializeField] private SerializableDictionaryBase<Tool, Button> toolButtons = null;
 
         private InputActions inputs;
 
@@ -151,10 +148,8 @@ namespace GMTK2020
 
         private void UpdateUI()
         {
-            UpdateButtonColor(removeTileButton, Tool.RemoveTile);
-            UpdateButtonColor(removeBlockButton, Tool.Bomb);
-            UpdateButtonColor(removeRowButton, Tool.RemoveRow);
-            UpdateButtonColor(removeColorButton, Tool.RemoveColor);
+            foreach ((Tool tool, Button button) in toolButtons)
+                UpdateButtonColor(button, tool);
         }
 
         private void UpdateButtonColor(Button button, Tool tool)
