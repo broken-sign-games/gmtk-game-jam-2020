@@ -74,13 +74,14 @@ namespace GMTK2020.Rendering
             case MatchStep matchStep: await AnimateMatchStepAsync(matchStep); break;
             case CleanUpStep cleanUpStep: await AnimateCleanUpStepAsync(cleanUpStep); break;
             case RemovalStep removalStep: await AnimateRemovalStepAsync(removalStep); break;
+            case PermutationStep permutationStep: await AnimatePermutationStepAsync(permutationStep); break;
             }
         }
 
         private async Task AnimateMatchStepAsync(MatchStep step)
         {
             await AnimateMatchedTilesAsync(step.MatchedTiles);
-            await AnimateMovingTilesAsync(step.MovedTiles);
+            await AnimateFallingTilesAsync(step.MovedTiles);
         }
 
         private async Task AnimateCleanUpStepAsync(CleanUpStep step)
@@ -92,7 +93,12 @@ namespace GMTK2020.Rendering
         private async Task AnimateRemovalStepAsync(RemovalStep step)
         {
             await AnimateRemovedTilesAsync(step.RemovedTiles);
-            await AnimateNewAndMovingTilesAsync(step.NewTiles, step.MovedTiles);
+            await AnimateNewAndFallingTilesAsync(step.NewTiles, step.MovedTiles);
+        }
+
+        private async Task AnimatePermutationStepAsync(PermutationStep step)
+        {
+            await AnimateMovingTilesAsync(step.MovedTiles);
         }
 
         private async Task AnimateMatchedTilesAsync(HashSet<Tile> matchedTiles)
@@ -113,7 +119,7 @@ namespace GMTK2020.Rendering
             await new WaitForSeconds(postMatchDelay);
         }
 
-        private async Task AnimateMovingTilesAsync(List<MovedTile> movedTiles)
+        private async Task AnimateFallingTilesAsync(List<MovedTile> movedTiles)
         { 
             Sequence seq = DOTween.Sequence();
 
@@ -183,7 +189,7 @@ namespace GMTK2020.Rendering
             await new WaitForSeconds(postFallDelay);
         }
 
-        private async Task AnimateNewAndMovingTilesAsync(List<MovedTile> newTiles, List<MovedTile> movedTiles)
+        private async Task AnimateNewAndFallingTilesAsync(List<MovedTile> newTiles, List<MovedTile> movedTiles)
         {
             Sequence seq = DOTween.Sequence();
 
@@ -203,6 +209,23 @@ namespace GMTK2020.Rendering
                 TileRenderer tileRenderer = tileDictionary[tile.ID];
 
                 seq.Insert(0, tileRenderer.FallToCurrentPosition(movedTile.From));
+            }
+
+            await CompletionOf(seq);
+
+            await new WaitForSeconds(postFallDelay);
+        }
+
+        private async Task AnimateMovingTilesAsync(List<MovedTile> movedTiles)
+        {
+            Sequence seq = DOTween.Sequence();
+
+            foreach (MovedTile movedTile in movedTiles)
+            {
+                Tile tile = movedTile.Tile;
+                TileRenderer tileRenderer = tileDictionary[tile.ID];
+
+                seq.Insert(0, tileRenderer.MoveToCurrentPosition(movedTile.From));
             }
 
             await CompletionOf(seq);

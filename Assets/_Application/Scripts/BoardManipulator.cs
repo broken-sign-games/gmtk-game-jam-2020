@@ -52,6 +52,24 @@ namespace GMTK2020
             initialized = true;
         }
 
+        public void UseTool(ToolHolder toolHolder)
+        {
+            SimulationStep step = null;
+
+            switch (toolHolder.Tool)
+            {
+            case Tool.ShuffleBoard:
+                step = simulator.ShuffleBoard();
+                break;
+            }
+
+            if (step != null)
+                KickOffAnimation(step);
+
+            activeTool = Tool.ToggleMarked;
+            UpdateUI();
+        }
+
         public void ToggleTool(ToolHolder toolHolder)
         {
             Tool tool = toolHolder.Tool;
@@ -116,8 +134,6 @@ namespace GMTK2020
             case Tool.RemoveColor:
                 step = simulator.RemoveColor(board[gridPos].Color);
                 break;
-            case Tool.ShuffleBoard:
-                break;
             case Tool.RotateBoard:
                 break;
             case Tool.Rotate2x2:
@@ -129,8 +145,6 @@ namespace GMTK2020
             case Tool.SwapTiles:
                 break;
             case Tool.SwapLines:
-                break;
-            default:
                 break;
             }
 
