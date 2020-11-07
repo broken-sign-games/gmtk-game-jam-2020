@@ -169,6 +169,16 @@ namespace GMTK2020.Rendering
             return seq;
         }
 
+        public Tween RotateToCurrentPosition(Vector2Int from, Vector2 pivot, RotationSense rotSense)
+        {
+            Sequence seq = DOTween.Sequence();
+            seq.Append(transform
+                .DOLocalMove((Vector3Int)tile.Position, Mathf.Sqrt(2f * (from - tile.Position).magnitude / fallingSpeed))
+                .SetEase(Ease.InOutQuad));
+
+            return seq;
+        }
+
         public Tween MatchAndDestroy()
         {
             puff.Play();

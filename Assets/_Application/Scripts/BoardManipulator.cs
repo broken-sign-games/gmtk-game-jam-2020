@@ -12,6 +12,8 @@ namespace GMTK2020
     {
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private SerializableDictionaryBase<Tool, Button> toolButtons = null;
+        [SerializeField] private Button rotCWButton = null;
+        [SerializeField] private Button rotCCWButton = null;
 
         private InputActions inputs;
 
@@ -155,6 +157,19 @@ namespace GMTK2020
             UpdateUI();
         }
 
+        public void UseBoardRotation(RotationSenseHolder rotSenseHolder)
+        {
+            if (activeTool != Tool.RotateBoard)
+                return;
+
+            SimulationStep step = simulator.RotateBoard(rotSenseHolder.RotationSense);
+
+            KickOffAnimation(step);
+
+            activeTool = Tool.ToggleMarked;
+            UpdateUI();
+        }
+
         private async void KickOffAnimation(SimulationStep step)
         {
             await boardRenderer.AnimateSimulationStepAsync(step);
@@ -168,11 +183,19 @@ namespace GMTK2020
 
         private void UpdateButtonColor(Button button, Tool tool)
         {
+            // TODO: Move this to a polymorphic component on the button?
+
             ColorBlock colors = button.colors;
             Color color = activeTool == tool ? Color.grey : Color.white;
             colors.normalColor = color;
             colors.selectedColor = color;
             button.colors = colors;
+
+            if (tool == Tool.RotateBoard)
+            {
+                rotCWButton.gameObject.SetActive(activeTool == tool);
+                rotCCWButton.gameObject.SetActive(activeTool == tool);
+            }
         }
 
         private void TogglePrediction(Vector2Int pos)
