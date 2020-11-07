@@ -172,10 +172,17 @@ namespace GMTK2020.Rendering
         public Tween RotateToCurrentPosition(Vector2Int from, Vector2 pivot, RotationSense rotSense)
         {
             Sequence seq = DOTween.Sequence();
+
+            #region Direct rotation
+
             //seq.Append(transform
             //    //.DOLocalMove((Vector3Int)tile.Position, Mathf.Sqrt(2f * (from - tile.Position).magnitude / fallingSpeed))
             //    .DOLocalMove((Vector3Int)tile.Position, 1f)
-            //    .SetEase(Ease.OutQuad));
+            //    .SetEase(Ease.InOutQuad));
+
+            #endregion
+
+            #region Manhattan rotation
 
             //Vector2Int to = tile.Position;
             //Vector2Int corner = Vector2Int.zero;
@@ -251,6 +258,9 @@ namespace GMTK2020.Rendering
             //    .DOLocalPath(new Vector3[] { (Vector2)corner, (Vector2)to }, 2f * fullDistance / fallingSpeed, PathType.Linear, PathMode.Ignore)
             //    .SetEase(Ease.Linear));
 
+            #endregion
+
+            #region Arc rotation
             Transform originalParent = transform.parent;
 
             Transform parent = new GameObject().transform;
@@ -267,6 +277,7 @@ namespace GMTK2020.Rendering
                 transform.parent = originalParent;
                 transform.localRotation = Quaternion.identity;
             });
+            #endregion
 
             return seq;
         }

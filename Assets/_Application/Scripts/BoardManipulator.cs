@@ -1,5 +1,6 @@
 ﻿using GMTK2020.Data;
 using GMTK2020.Rendering;
+using GMTK2020.UI;
 using GMTKJam2020.Input;
 using RotaryHeart.Lib.SerializableDictionary;
 using UnityEngine;
@@ -14,11 +15,13 @@ namespace GMTK2020
         [SerializeField] private SerializableDictionaryBase<Tool, Button> toolButtons = null;
         [SerializeField] private Button rotCWButton = null;
         [SerializeField] private Button rotCCWButton = null;
+        [SerializeField] private RotationButton rotate3x3Button = null;
+
+        public Tool ActiveTool { get; private set; }
 
         private InputActions inputs;
 
         private Simulator simulator;
-        private Tool activeTool;
         private Board board;
         private bool initialized = false;
         private bool predictionsFinalised = false;
@@ -28,7 +31,7 @@ namespace GMTK2020
             inputs = new InputActions();
 
             inputs.Gameplay.Select.performed += OnSelect;
-            activeTool = Tool.ToggleMarked;
+            ActiveTool = Tool.ToggleMarked;
         }
 
         private void OnEnable()
@@ -68,17 +71,19 @@ namespace GMTK2020
             if (step != null)
                 KickOffAnimation(step);
 
-            activeTool = Tool.ToggleMarked;
+            ActiveTool = Tool.ToggleMarked;
             UpdateUI();
         }
 
         public void ToggleTool(ToolHolder toolHolder)
+            => ToggleTool(toolHolder.Tool);
+
+        public void ToggleTool(Tool tool)
         {
-            Tool tool = toolHolder.Tool;
-            if (tool == activeTool)
-                activeTool = Tool.ToggleMarked;
+            if (tool == ActiveTool)
+                ActiveTool = Tool.ToggleMarked;
             else
-                activeTool = tool;
+                ActiveTool = tool;
 
             UpdateUI();
         }
@@ -117,7 +122,7 @@ namespace GMTK2020
         {
             SimulationStep step = null;
 
-            switch (activeTool)
+            switch (ActiveTool)
             {
             case Tool.ToggleMarked:
                 TogglePrediction(gridPos);
@@ -136,11 +141,13 @@ namespace GMTK2020
             case Tool.RemoveColor:
                 step = simulator.RemoveColor(board[gridPos].Color);
                 break;
-            case Tool.RotateBoard:
-                break;
             case Tool.Rotate2x2:
                 break;
             case Tool.Rotate3x3:
+                if (!board.IsInBounds(gridPos - Vector2Int.one) || !board.IsInBounds(gridPos + Vector2Int.one))
+                    return;
+
+                step = simulator.Rotate3x3Block(gridPos, rotate3x3Button.RotationSense);
                 break;
             case Tool.CreateWildcard:
                 break;
@@ -153,20 +160,20 @@ namespace GMTK2020
             if (step != null)
                 KickOffAnimation(step);
 
-            activeTool = Tool.ToggleMarked;
+            ActiveTool = Tool.ToggleMarked;
             UpdateUI();
         }
 
         public void UseBoardRotation(RotationSenseHolder rotSenseHolder)
         {
-            if (activeTool != Tool.RotateBoard)
+            if (ActiveTool != Tool.RotateBoard)
                 return;
 
             SimulationStep step = simulator.RotateBoard(rotSenseHolder.RotationSense);
 
             KickOffAnimation(step);
 
-            activeTool = Tool.ToggleMarked;
+            ActiveTool = Tool.ToggleMarked;
             UpdateUI();
         }
 
@@ -186,15 +193,15 @@ namespace GMTK2020
             // TODO: Move this to a polymorphic component on the button?
 
             ColorBlock colors = button.colors;
-            Color color = activeTool == tool ? Color.grey : Color.white;
+            Color color = ActiveTool == tool ? Color.grey : Color.white;
             colors.normalColor = color;
             colors.selectedColor = color;
             button.colors = colors;
 
             if (tool == Tool.RotateBoard)
             {
-                rotCWButton.gameObject.SetActive(activeTool == tool);
-                rotCCWButton.gameObject.SetActive(activeTool == tool);
+                rotCWButton.gameObject.SetActive(ActiveTool == tool);
+                rotCCWButton.gameObject.SetActive(ActiveTool == tool);
             }
         }
 

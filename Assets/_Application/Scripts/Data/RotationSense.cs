@@ -5,4 +5,10 @@
         CW,
         CCW,
     } 
+
+    public static class RotationSenseExtensions
+    {
+        public static RotationSense Other(this RotationSense rotSense)
+            => rotSense == RotationSense.CW ? RotationSense.CCW : RotationSense.CW;
+    }
 }
