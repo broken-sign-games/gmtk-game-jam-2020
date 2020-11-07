@@ -279,6 +279,19 @@ namespace GMTK2020.Rendering
             return gridPos;
         }
 
+        public Vector2Int? PixelSpaceToHalfGridCoordinates(Vector2 mousePosition)
+        {
+            Vector3 worldPos = mainCamera.ScreenToWorldPoint(mousePosition);
+            Vector3 localPos = worldPos - transform.position;
+
+            var gridPos = new Vector2Int(Mathf.RoundToInt(localPos.x - 0.5f), Mathf.RoundToInt(localPos.y - 0.5f));
+
+            if (gridPos.x < 0 || gridPos.y < 0 || gridPos.x >= width - 1 || gridPos.y >= height - 1)
+                return null;
+
+            return gridPos;
+        }
+
         public void UpdatePrediction(Vector2Int pos)
         {
             Tile tile = initialBoard[pos];

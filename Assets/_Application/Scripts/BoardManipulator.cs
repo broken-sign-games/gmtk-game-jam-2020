@@ -15,6 +15,7 @@ namespace GMTK2020
         [SerializeField] private SerializableDictionaryBase<Tool, Button> toolButtons = null;
         [SerializeField] private Button rotCWButton = null;
         [SerializeField] private Button rotCCWButton = null;
+        [SerializeField] private RotationButton rotate2x2Button = null;
         [SerializeField] private RotationButton rotate3x3Button = null;
 
         public Tool ActiveTool { get; private set; }
@@ -108,7 +109,10 @@ namespace GMTK2020
                 return;
 
             Vector2 pointerPos = inputs.Gameplay.Point.ReadValue<Vector2>();
-            Vector2Int? gridPosOrNull = boardRenderer.PixelSpaceToGridCoordinates(pointerPos);
+            
+            Vector2Int? gridPosOrNull = ActiveTool == Tool.Rotate2x2
+                ? boardRenderer.PixelSpaceToHalfGridCoordinates(pointerPos)
+                : boardRenderer.PixelSpaceToGridCoordinates(pointerPos);
 
             if (gridPosOrNull is null)
                 return;
@@ -142,6 +146,7 @@ namespace GMTK2020
                 step = simulator.RemoveColor(board[gridPos].Color);
                 break;
             case Tool.Rotate2x2:
+                step = simulator.Rotate2x2Block(gridPos, rotate2x2Button.RotationSense);
                 break;
             case Tool.Rotate3x3:
                 if (!board.IsInBounds(gridPos - Vector2Int.one) || !board.IsInBounds(gridPos + Vector2Int.one))
