@@ -172,9 +172,101 @@ namespace GMTK2020.Rendering
         public Tween RotateToCurrentPosition(Vector2Int from, Vector2 pivot, RotationSense rotSense)
         {
             Sequence seq = DOTween.Sequence();
-            seq.Append(transform
-                .DOLocalMove((Vector3Int)tile.Position, Mathf.Sqrt(2f * (from - tile.Position).magnitude / fallingSpeed))
-                .SetEase(Ease.InOutQuad));
+            //seq.Append(transform
+            //    //.DOLocalMove((Vector3Int)tile.Position, Mathf.Sqrt(2f * (from - tile.Position).magnitude / fallingSpeed))
+            //    .DOLocalMove((Vector3Int)tile.Position, 1f)
+            //    .SetEase(Ease.OutQuad));
+
+            //Vector2Int to = tile.Position;
+            //Vector2Int corner = Vector2Int.zero;
+            //int cornerDistance = 0;
+            //int fullDistance = 0;
+
+            //if (rotSense == RotationSense.CW)
+            //{
+            //    // bottom to left
+            //    if (to.x <= from.x && to.y >= from.y)
+            //    {
+            //        corner = new Vector2Int(to.x, from.y);
+            //        cornerDistance = from.x - to.x;
+            //        fullDistance = cornerDistance + to.y - from.y;
+            //    }
+            //    // left to top
+            //    else if (to.x >= from.x && to.y >= from.y)
+            //    {
+            //        corner = new Vector2Int(from.x, to.y);
+            //        cornerDistance = to.y - from.y;
+            //        fullDistance = cornerDistance + to.x - from.x;
+            //    }
+            //    // top to right
+            //    else if (to.x >= from.x && to.y <= from.y)
+            //    {
+            //        corner = new Vector2Int(to.x, from.y);
+            //        cornerDistance = to.x - from.x;
+            //        fullDistance = cornerDistance + from.y - to.y;
+            //    }
+            //    // right to bottom
+            //    else
+            //    {
+            //        corner = new Vector2Int(from.x, to.y);
+            //        cornerDistance = from.y - to.y;
+            //        fullDistance = cornerDistance + from.x - to.x;
+            //    }
+            //}
+            //else
+            //{
+            //    // right to top
+            //    if (to.x <= from.x && to.y >= from.y)
+            //    {
+            //        corner = new Vector2Int(from.x, to.y);
+            //        cornerDistance = to.y - from.y;
+            //        fullDistance = cornerDistance + from.x - to.x;
+            //    }
+            //    // bottom to right
+            //    else if (to.x >= from.x && to.y >= from.y)
+            //    {
+            //        corner = new Vector2Int(to.x, from.y);
+            //        cornerDistance = to.x - from.x;
+            //        fullDistance = cornerDistance + to.y - from.y;
+            //    }
+            //    // left to bottom
+            //    else if (to.x >= from.x && to.y <= from.y)
+            //    {
+            //        corner = new Vector2Int(from.x, to.y);
+            //        cornerDistance = from.y - to.y;
+            //        fullDistance = cornerDistance + to.x - from.x;
+            //    }
+            //    // top to left
+            //    else
+            //    {
+            //        corner = new Vector2Int(to.x, from.y);
+            //        cornerDistance = from.x - to.x;
+            //        fullDistance = cornerDistance + from.y - to.y;
+            //    }
+            //}
+
+            //seq.Append(transform
+            //    //.DOLocalPath(new Vector3[] { (Vector2)corner, (Vector2)to }, 1f, PathType.Linear, PathMode.Ignore)
+            //    //.DOLocalPath(new Vector3[] { (Vector2)corner, (Vector2)to }, Mathf.Sqrt(2f * fullDistance / fallingSpeed), PathType.Linear, PathMode.Ignore)
+            //    .DOLocalPath(new Vector3[] { (Vector2)corner, (Vector2)to }, 2f * fullDistance / fallingSpeed, PathType.Linear, PathMode.Ignore)
+            //    .SetEase(Ease.Linear));
+
+            Transform originalParent = transform.parent;
+
+            Transform parent = new GameObject().transform;
+            parent.parent = originalParent;
+            parent.localPosition = pivot;
+            transform.parent = parent;
+
+            float targetAngle = Vector2.SignedAngle(from - pivot, tile.Position - pivot);
+
+            seq.Join(parent.DOLocalRotate(new Vector3(0, 0, targetAngle), 1f).SetEase(Ease.InOutQuad));
+            seq.Join(transform.DOLocalRotate(new Vector3(0, 0, -targetAngle), 1f).SetEase(Ease.InOutQuad));
+            seq.AppendCallback(() =>
+            {
+                transform.parent = originalParent;
+                transform.localRotation = Quaternion.identity;
+            });
 
             return seq;
         }
