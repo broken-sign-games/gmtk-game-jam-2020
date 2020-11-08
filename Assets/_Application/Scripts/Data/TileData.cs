@@ -7,6 +7,7 @@ namespace GMTK2020.Data
     public class TileData : ScriptableObject
     {
         public Sprite[] VialSpriteMap;
+        public Sprite[] VialMaskMap;
         public Sprite[] LiquidSpriteMap;
         public Sprite[] CorkSpriteMap;
         public Sprite[] GlowSpriteMap;
