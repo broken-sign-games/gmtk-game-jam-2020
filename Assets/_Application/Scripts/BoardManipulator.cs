@@ -241,7 +241,10 @@ namespace GMTK2020
                 step = simulator.SwapTiles(from, to);
                 break;
             case Tool.SwapLines:
-                step = null;
+                if (from.x == to.x)
+                    step = simulator.SwapRows(from.y, to.y);
+                else
+                    step = simulator.SwapColumns(from.x, to.x);
                 break;
             default:
                 return;
