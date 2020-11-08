@@ -14768,6 +14768,7 @@ MonoBehaviour:
   corkSprite: {fileID: 7884741616787689440}
   glowSprite: {fileID: 1051843049364174320}
   tileHighlight: {fileID: 3400347702178789769}
+  vialMask: {fileID: 2128988002411456059}
   liquidMask: {fileID: 6303465340729924876}
   incorrectBackground: {fileID: 4645700776652071065}
   missingPredictionIndicator: {fileID: 637144989252294456}
@@ -14775,6 +14776,7 @@ MonoBehaviour:
   pop: {fileID: 4745967582937362059}
   popRing: {fileID: 3357469189694209765}
   puff: {fileID: 8057212409864261959}
+  liquidEvap: {fileID: 4820452213419651554}
   tileFadeDuration: 0.25
   clickPulseScale: 0.2
   clickPulseDuration: 0.25

@@ -14,6 +14,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private SpriteRenderer corkSprite = null;
         [SerializeField] private SpriteRenderer glowSprite = null;
         [SerializeField] private SpriteRenderer tileHighlight = null;
+        [SerializeField] private SpriteMask vialMask = null;
         [SerializeField] private SpriteMask liquidMask = null;
 
         [SerializeField] private SpriteRenderer incorrectBackground = null;
@@ -22,6 +23,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private ParticleSystem pop = null;
         [SerializeField] private ParticleSystem popRing = null;
         [SerializeField] private ParticleSystem puff = null;
+        [SerializeField] private ParticleSystem liquidEvap = null;
 
         [SerializeField] private float tileFadeDuration = 0.25f;
 
@@ -72,6 +74,7 @@ namespace GMTK2020.Rendering
             transform.localPosition = (Vector2)initialPosition;
 
             glassSprite.sprite = tileData.VialSpriteMap[tile.Color];
+            vialMask.sprite = tileData.VialMaskMap[tile.Color];
             corkSprite.sprite = tileData.CorkSpriteMap[tile.Color];
             liquidSprite.sprite = tileData.LiquidSpriteMap[tile.Color];
             liquidMask.sprite = tileData.LiquidSpriteMap[tile.Color];
@@ -88,6 +91,8 @@ namespace GMTK2020.Rendering
             mainPopRing.startColor = tileData.PopDropletColor[tile.Color];
             ParticleSystem.MainModule mainPuff = puff.main;
             mainPuff.startColor = tileData.PopDropletColor[tile.Color];
+            ParticleSystem.MainModule mainLiquidEvap = liquidEvap.main;
+            mainLiquidEvap.startColor = tileData.PopDropletColor[tile.Color];
         }
 
         public Tween UpdatePrediction()
@@ -133,6 +138,7 @@ namespace GMTK2020.Rendering
 
         public Tween TransitionToInert()
         {
+            liquidEvap.Play();
             bubbles.Stop();
             vialTransform.localRotation = Quaternion.identity;
 
