@@ -166,9 +166,9 @@ namespace GMTK2020.Rendering
             seq.Append(transform
                 .DOLocalMove((Vector3Int)tile.Position, Mathf.Sqrt((from.y - tile.Position.y) / fallingSpeed))
                 .SetEase(fallingEase)
-                .SetDelay(fallDelay))
-                .InsertCallback(fallDelay + dustEffectDelay, () => dust.Play());
+                .SetDelay(fallDelay));
 
+            seq.AppendCallback(() => dust.Play());
             seq.Append(vialTransform.DOShakePosition(landingShakeDuration, landingShakeStrength * (from.y - tile.Position.y) / 9, landingShakeVibrato, landingShakeRandomness));
 
             return seq;
