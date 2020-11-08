@@ -13,9 +13,6 @@ namespace GMTK2020.Rendering
     public class BoardRenderer : MonoBehaviour
     {
         [SerializeField] private Camera mainCamera = null;
-        [SerializeField] private TileData tileData = null;
-        [SerializeField] private Button retryButton = null;
-        [SerializeField] private Button nextButton = null;
         [SerializeField] private SpriteRenderer border = null;
         [SerializeField] private SpriteRenderer gridLines = null;
         [SerializeField] private TileRenderer tileRendererPrefab = null;

@@ -7,10 +7,10 @@ namespace GMTK2020.UI
     [RequireComponent(typeof(ToolHolder))]
     public class RotationButton : MonoBehaviour
     {
-        [SerializeField] private BoardManipulator boardManipulator;
-        [SerializeField] private Image rotationSenseIndicator;
-        [SerializeField] private Sprite cwSprite;
-        [SerializeField] private Sprite ccwSprite;
+        [SerializeField] private BoardManipulator boardManipulator = null;
+        [SerializeField] private Image rotationSenseIndicator = null;
+        [SerializeField] private Sprite cwSprite = null;
+        [SerializeField] private Sprite ccwSprite = null;
         
         private Tool rotationTool;
 

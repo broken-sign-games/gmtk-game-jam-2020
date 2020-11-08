@@ -12,7 +12,6 @@ namespace GMTK2020
     {
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private ScoreRenderer scoreRenderer = null;
-        [SerializeField] private BoardManipulator predictionEditor = null;
         [SerializeField] private Button runButton = null;
         [SerializeField] private Button retryButton = null;
 

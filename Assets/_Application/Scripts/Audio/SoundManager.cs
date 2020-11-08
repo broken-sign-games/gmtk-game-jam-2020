@@ -9,7 +9,7 @@ namespace GMTK2020.Audio
     {
         public static SoundManager Instance { get; private set; }
 
-        [SerializeField] private SoundEffectData soundEffects;
+        [SerializeField] private SoundEffectData soundEffects = null;
 
         private AudioSource audioSource;
 

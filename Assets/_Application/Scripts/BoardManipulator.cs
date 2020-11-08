@@ -3,8 +3,10 @@ using GMTK2020.Rendering;
 using GMTK2020.UI;
 using GMTKJam2020.Input;
 using RotaryHeart.Lib.SerializableDictionary;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
 
 namespace GMTK2020
@@ -27,11 +29,16 @@ namespace GMTK2020
         private bool initialized = false;
         private bool predictionsFinalised = false;
 
+        private bool isDragging = false;
+        private Vector2Int draggingFrom;
+
         private void Awake()
         {
             inputs = new InputActions();
 
             inputs.Gameplay.Select.performed += OnSelect;
+            inputs.Gameplay.Select.canceled += OnRelease;
+
             ActiveTool = Tool.ToggleMarked;
         }
 
@@ -48,6 +55,12 @@ namespace GMTK2020
         private void OnDestroy()
         {
             inputs.Gameplay.Select.performed -= OnSelect;
+        }
+
+        private void Update()
+        {
+            if (isDragging)
+                OnDrag();
         }
 
         public void Initialize(Board initialBoard, Simulator simulator)
@@ -119,7 +132,48 @@ namespace GMTK2020
 
             Vector2Int gridPos = gridPosOrNull.Value;
 
-            UseActiveTool(gridPos);
+            if (ActiveTool == Tool.SwapTiles || ActiveTool == Tool.SwapLines)
+            {
+                isDragging = true;
+                draggingFrom = gridPos;
+            }
+            else
+                UseActiveTool(gridPos);
+        }
+
+        private void OnDrag()
+        {
+            Vector2 pointerPos = inputs.Gameplay.Point.ReadValue<Vector2>();
+
+            Vector2Int? gridPosOrNull = boardRenderer.PixelSpaceToGridCoordinates(pointerPos);
+
+            if (gridPosOrNull is null)
+            {
+                isDragging = false;
+                return;
+            }
+
+            Vector2Int gridPos = gridPosOrNull.Value;
+
+            int delta = (gridPos - draggingFrom).sqrMagnitude;
+
+            if (delta == 0)
+                return;
+
+            isDragging = false;
+
+            if (delta > 1)
+                return;
+
+            UseSwapTool(draggingFrom, gridPos);
+        }
+
+        private void OnRelease(InputAction.CallbackContext obj)
+        {
+            if (!initialized || predictionsFinalised)
+                return;
+
+            isDragging = false;
         }
 
         private void UseActiveTool(Vector2Int gridPos)
@@ -156,10 +210,6 @@ namespace GMTK2020
                 break;
             case Tool.CreateWildcard:
                 break;
-            case Tool.SwapTiles:
-                break;
-            case Tool.SwapLines:
-                break;
             }
 
             if (step != null)
@@ -175,6 +225,27 @@ namespace GMTK2020
                 return;
 
             SimulationStep step = simulator.RotateBoard(rotSenseHolder.RotationSense);
+
+            KickOffAnimation(step);
+
+            ActiveTool = Tool.ToggleMarked;
+            UpdateUI();
+        }
+
+        private void UseSwapTool(Vector2Int from, Vector2Int to)
+        {
+            SimulationStep step;
+            switch (ActiveTool)
+            {
+            case Tool.SwapTiles:
+                step = simulator.SwapTiles(from, to);
+                break;
+            case Tool.SwapLines:
+                step = null;
+                break;
+            default:
+                return;
+            }
 
             KickOffAnimation(step);
 
