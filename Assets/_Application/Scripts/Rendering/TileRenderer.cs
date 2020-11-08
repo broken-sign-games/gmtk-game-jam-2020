@@ -25,6 +25,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private ParticleSystem puff = null;
         [SerializeField] private ParticleSystem liquidEvap = null;
         [SerializeField] private ParticleSystem neckEvap = null;
+        [SerializeField] private ParticleSystem dust = null;
 
         [SerializeField] private float tileFadeDuration = 0.25f;
 
@@ -48,6 +49,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private float staggeredFallingDelay = 0.1f;
         [SerializeField] private Ease fallingEase = Ease.OutBounce;
 
+        [SerializeField] private float dustEffectDelay = 0.3f;
         [SerializeField] private float landingShakeDuration = 0.2f;
         [SerializeField] private Vector3 landingShakeStrength = new Vector3(1f, 1f, 0f);
         [SerializeField] private int landingShakeVibrato = 10;
@@ -158,11 +160,14 @@ namespace GMTK2020.Rendering
 
         public Tween FallToCurrentPosition(Vector2Int from)
         {
+            float fallDelay = tile.Position.y * staggeredFallingDelay;
+
             Sequence seq = DOTween.Sequence();
             seq.Append(transform
                 .DOLocalMove((Vector3Int)tile.Position, Mathf.Sqrt((from.y - tile.Position.y) / fallingSpeed))
                 .SetEase(fallingEase)
-                .SetDelay(tile.Position.y * staggeredFallingDelay));
+                .SetDelay(fallDelay))
+                .InsertCallback(fallDelay + dustEffectDelay, () => dust.Play());
 
             seq.Append(vialTransform.DOShakePosition(landingShakeDuration, landingShakeStrength * (from.y - tile.Position.y) / 9, landingShakeVibrato, landingShakeRandomness));
 
