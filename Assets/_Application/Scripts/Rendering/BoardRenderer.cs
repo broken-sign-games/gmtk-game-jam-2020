@@ -310,5 +310,16 @@ namespace GMTK2020.Rendering
         {
             tileDictionary[tile.ID].Refill();
         }
+
+        public void MakeWildcard(Vector2Int pos)
+        {
+            Tile tile = initialBoard[pos];
+            MakeWildcard(tile);
+        }
+
+        private void MakeWildcard(Tile tile)
+        {
+            tileDictionary[tile.ID].MakeWildcard();
+        }
     }
 }

@@ -16,6 +16,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private SpriteRenderer tileHighlight = null;
         [SerializeField] private SpriteMask vialMask = null;
         [SerializeField] private SpriteMask liquidMask = null;
+        [SerializeField] private GameObject wildcardIndicator = null;
 
         [SerializeField] private SpriteRenderer incorrectBackground = null;
         [SerializeField] private SpriteRenderer missingPredictionIndicator = null;
@@ -154,6 +155,7 @@ namespace GMTK2020.Rendering
             seq.Join(tileHighlight.DOFade(0, glowFadeDuration));
 
             liquidSprite.enabled = false;
+            wildcardIndicator.SetActive(false);
 
             return seq;
         }
@@ -161,6 +163,11 @@ namespace GMTK2020.Rendering
         public void Refill()
         {
             liquidSprite.enabled = true;
+        }
+
+        public void MakeWildcard()
+        {
+            wildcardIndicator.SetActive(true);
         }
 
         public Tween FallToCurrentPosition(Vector2Int from)

@@ -213,6 +213,10 @@ namespace GMTK2020
                 step = simulator.Rotate3x3Block(gridPos, rotate3x3Button.RotationSense);
                 break;
             case Tool.CreateWildcard:
+                bool wasWildcardOrInert = simulator.CreateWildcard(gridPos);
+                if (wasWildcardOrInert)
+                    return;
+                boardRenderer.MakeWildcard(gridPos);
                 break;
             }
 

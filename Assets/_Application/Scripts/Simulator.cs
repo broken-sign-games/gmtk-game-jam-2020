@@ -429,11 +429,11 @@ namespace GMTK2020
         {
             Tile tile = board[pos];
 
-            bool wasWildcard = tile.Wildcard;
-            if (!wasWildcard)
+            bool wasWildcardOrInert = tile.Wildcard || tile.Inert;
+            if (!wasWildcardOrInert)
                 tile.MakeWildcard();
 
-            return wasWildcard;
+            return wasWildcardOrInert;
         }
     }
 }

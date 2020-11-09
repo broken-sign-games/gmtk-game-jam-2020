@@ -46,6 +46,7 @@ namespace GMTK2020.Data
         {
             Inert = true;
             Marked = false;
+            Wildcard = false;
         }
 
         public void MakeWildcard()
