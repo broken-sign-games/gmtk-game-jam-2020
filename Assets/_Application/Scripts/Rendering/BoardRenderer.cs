@@ -299,5 +299,16 @@ namespace GMTK2020.Rendering
         {
             tileDictionary[tile.ID].UpdatePrediction();
         }
+
+        public void RefillTile(Vector2Int pos)
+        {
+            Tile tile = initialBoard[pos];
+            RefillTile(tile);
+        }
+
+        private void RefillTile(Tile tile)
+        {
+            tileDictionary[tile.ID].Refill();
+        }
     }
 }

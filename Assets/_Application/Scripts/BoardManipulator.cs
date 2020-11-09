@@ -189,6 +189,10 @@ namespace GMTK2020
                 step = simulator.RemoveTile(gridPos);
                 break;
             case Tool.RefillInert:
+                bool wasInert = simulator.RefillTile(gridPos);
+                if (!wasInert)
+                    return;
+                boardRenderer.RefillTile(gridPos);
                 break;
             case Tool.Bomb:
                 step = simulator.RemoveBlock(gridPos);

@@ -158,6 +158,11 @@ namespace GMTK2020.Rendering
             return seq;
         }
 
+        public void Refill()
+        {
+            liquidSprite.enabled = true;
+        }
+
         public Tween FallToCurrentPosition(Vector2Int from)
         {
             float fallDelay = tile.Position.y * staggeredFallingDelay;
