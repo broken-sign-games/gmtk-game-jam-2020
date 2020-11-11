@@ -3,24 +3,21 @@ using GMTK2020.Rendering;
 using GMTK2020.UI;
 using GMTKJam2020.Input;
 using RotaryHeart.Lib.SerializableDictionary;
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.LowLevel;
-using UnityEngine.UI;
 
 namespace GMTK2020
 {
     public class BoardManipulator : MonoBehaviour
     {
         [SerializeField] private BoardRenderer boardRenderer = null;
-        [SerializeField] private SerializableDictionaryBase<Tool, Button> toolButtons = null;
-        [SerializeField] private Button rotCWButton = null;
-        [SerializeField] private Button rotCCWButton = null;
-        [SerializeField] private RotationButton rotate2x2Button = null;
+        [SerializeField] private SerializableDictionaryBase<Tool, ToolButton> toolButtons = null;
         [SerializeField] private RotationButton rotate3x3Button = null;
 
         public Tool ActiveTool { get; private set; }
+
+        private Dictionary<Tool, int> availableToolUses;
 
         private InputActions inputs;
 
@@ -38,6 +35,12 @@ namespace GMTK2020
 
             inputs.Gameplay.Select.performed += OnSelect;
             inputs.Gameplay.Select.canceled += OnRelease;
+
+            availableToolUses = new Dictionary<Tool, int>();
+            foreach (var type in Utility.GetEnumValues<Tool>())
+                availableToolUses[type] = 0;
+
+            availableToolUses[Tool.ToggleMarked] = -1;
 
             ActiveTool = Tool.ToggleMarked;
         }
@@ -71,26 +74,8 @@ namespace GMTK2020
             initialized = true;
         }
 
-        public void UseTool(ToolHolder toolHolder)
-        {
-            SimulationStep step = null;
-
-            switch (toolHolder.Tool)
-            {
-            case Tool.ShuffleBoard:
-                step = simulator.ShuffleBoard();
-                break;
-            }
-
-            if (step != null)
-                KickOffAnimation(step);
-
-            ActiveTool = Tool.ToggleMarked;
-            UpdateUI();
-        }
-
-        public void ToggleTool(ToolHolder toolHolder)
-            => ToggleTool(toolHolder.Tool);
+        public void ToggleTool(ToolButton toolButton)
+            => ToggleTool(toolButton.Tool);
 
         public void ToggleTool(Tool tool)
         {
@@ -180,6 +165,9 @@ namespace GMTK2020
         {
             SimulationStep step = null;
 
+            if (availableToolUses[ActiveTool] == 0)
+                return;
+
             switch (ActiveTool)
             {
             case Tool.ToggleMarked:
@@ -203,9 +191,6 @@ namespace GMTK2020
             case Tool.RemoveColor:
                 step = simulator.RemoveColor(board[gridPos].Color);
                 break;
-            case Tool.Rotate2x2:
-                step = simulator.Rotate2x2Block(gridPos, rotate2x2Button.RotationSense);
-                break;
             case Tool.Rotate3x3:
                 if (!board.IsInBounds(gridPos - Vector2Int.one) || !board.IsInBounds(gridPos + Vector2Int.one))
                     return;
@@ -223,18 +208,8 @@ namespace GMTK2020
             if (step != null)
                 KickOffAnimation(step);
 
-            ActiveTool = Tool.ToggleMarked;
-            UpdateUI();
-        }
-
-        public void UseBoardRotation(RotationSenseHolder rotSenseHolder)
-        {
-            if (ActiveTool != Tool.RotateBoard)
-                return;
-
-            SimulationStep step = simulator.RotateBoard(rotSenseHolder.RotationSense);
-
-            KickOffAnimation(step);
+            if (availableToolUses[ActiveTool] > 0)
+                --availableToolUses[ActiveTool];
 
             ActiveTool = Tool.ToggleMarked;
             UpdateUI();
@@ -243,6 +218,10 @@ namespace GMTK2020
         private void UseSwapTool(Vector2Int from, Vector2Int to)
         {
             SimulationStep step;
+
+            if (availableToolUses[ActiveTool] == 0)
+                return;
+
             switch (ActiveTool)
             {
             case Tool.SwapTiles:
@@ -260,6 +239,9 @@ namespace GMTK2020
 
             KickOffAnimation(step);
 
+            if (availableToolUses[ActiveTool] > 0)
+                --availableToolUses[ActiveTool];
+
             ActiveTool = Tool.ToggleMarked;
             UpdateUI();
         }
@@ -271,24 +253,10 @@ namespace GMTK2020
 
         private void UpdateUI()
         {
-            foreach ((Tool tool, Button button) in toolButtons)
-                UpdateButtonColor(button, tool);
-        }
-
-        private void UpdateButtonColor(Button button, Tool tool)
-        {
-            // TODO: Move this to a polymorphic component on the button?
-
-            ColorBlock colors = button.colors;
-            Color color = ActiveTool == tool ? Color.grey : Color.white;
-            colors.normalColor = color;
-            colors.selectedColor = color;
-            button.colors = colors;
-
-            if (tool == Tool.RotateBoard)
+            foreach ((Tool tool, ToolButton button) in toolButtons)
             {
-                rotCWButton.gameObject.SetActive(ActiveTool == tool);
-                rotCCWButton.gameObject.SetActive(ActiveTool == tool);
+                button.UpdateUses(availableToolUses[tool]);
+                button.UpdateActive(tool == ActiveTool);
             }
         }
 
