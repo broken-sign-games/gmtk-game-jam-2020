@@ -41,6 +41,7 @@ namespace GMTK2020
                 availableToolUses[type] = 0;
 
             availableToolUses[Tool.ToggleMarked] = -1;
+            availableToolUses[Tool.PlusBomb] = -1;
 
             ActiveTool = Tool.ToggleMarked;
         }
@@ -184,6 +185,9 @@ namespace GMTK2020
                 break;
             case Tool.Bomb:
                 step = simulator.RemoveBlock(gridPos);
+                break;
+            case Tool.PlusBomb:
+                step = simulator.RemovePlus(gridPos);
                 break;
             case Tool.RemoveRow:
                 step = simulator.RemoveRow(gridPos.y);

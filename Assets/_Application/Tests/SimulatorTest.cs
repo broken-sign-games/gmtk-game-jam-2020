@@ -774,6 +774,92 @@ namespace Tests
         }
 
         [Test]
+        public void Test_plus_bomb_tool()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 1, 5, 9, 2, 1, 1, 2, 3, 5 },
+                { 2, 6, 1, 6, 4, 3, 5, 3, 4 },
+                { 1, 5, 2, 7, 2, 4, 4, 4, 9 },
+                { 1, 3, 2, 2, 5, 1, 3, 3, 3 },
+                { 7, 1, 3, 4, 3, 1, 2, 2, 1 },
+                { 8, 4, 7, 6, 1, 1, 2, 3, 6 },
+                { 2, 3, 1, 7, 9, 3, 4, 8, 7 },
+                { 4, 5, 5, 6, 2, 2, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
+            });
+
+            Board expected = IntGridToBoard(new int[,]
+            {
+                { 1, 0, 0, 0, 1, 1, 2, 3, 5 },
+                { 2, 5, 0, 2, 4, 3, 5, 3, 4 },
+                { 1, 6, 0, 6, 2, 4, 4, 4, 9 },
+                { 1, 5, 9, 7, 5, 1, 3, 3, 3 },
+                { 7, 3, 1, 2, 3, 1, 2, 2, 1 },
+                { 8, 1, 2, 4, 1, 1, 2, 3, 6 },
+                { 2, 3, 2, 7, 9, 3, 4, 8, 7 },
+                { 4, 5, 5, 6, 2, 2, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
+            });
+
+            var simulator = new Simulator(board, 9);
+
+            RemovalStep step = simulator.RemovePlus(new Vector2Int(2, 3));
+
+            AssertThatBoardsAreEqualUpToNulls(board, expected);
+
+            Assert.That(step.RemovedTiles.Count, Is.EqualTo(5));
+            Assert.That(step.MovedTiles.Count, Is.EqualTo(14));
+            Assert.That(step.NewTiles.Count, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void Test_plus_bomb_tool_at_boundary()
+        {
+            Board board = IntGridToBoard(new int[,]
+            {
+                { 1, 5, 9, 2, 1, 1, 2, 3, 5 },
+                { 2, 6, 1, 6, 4, 3, 5, 3, 4 },
+                { 1, 5, 2, 7, 2, 4, 4, 4, 9 },
+                { 1, 3, 2, 2, 5, 1, 3, 3, 3 },
+                { 7, 1, 3, 4, 3, 1, 2, 2, 1 },
+                { 8, 4, 7, 6, 1, 1, 2, 3, 6 },
+                { 2, 3, 1, 7, 9, 3, 4, 8, 7 },
+                { 4, 5, 5, 6, 2, 2, 5, 4, 1 },
+                { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
+            });
+
+            Board expected = IntGridToBoard(new int[,]
+            {
+                { 0, 0, 9, 2, 1, 1, 2, 0, 0 },
+                { 0, 6, 1, 6, 4, 3, 5, 3, 0 },
+                { 1, 5, 2, 7, 2, 4, 4, 3, 5 },
+                { 1, 3, 2, 2, 5, 1, 3, 4, 4 },
+                { 7, 1, 3, 4, 3, 1, 2, 3, 9 },
+                { 8, 4, 7, 6, 1, 1, 2, 2, 3 },
+                { 2, 3, 1, 7, 9, 3, 4, 3, 1 },
+                { 4, 5, 5, 6, 2, 2, 5, 8, 6 },
+                { 1, 2, 3, 2, 1, 3, 2, 4, 7 },
+            });
+
+            var simulator = new Simulator(board, 9);
+
+            RemovalStep step = simulator.RemovePlus(new Vector2Int(0, 8));
+
+            Assert.That(step.RemovedTiles.Count, Is.EqualTo(3));
+            Assert.That(step.MovedTiles.Count, Is.EqualTo(0));
+            Assert.That(step.NewTiles.Count, Is.EqualTo(3));
+
+            step = simulator.RemovePlus(new Vector2Int(8, 0));
+
+            AssertThatBoardsAreEqualUpToNulls(board, expected);
+
+            Assert.That(step.RemovedTiles.Count, Is.EqualTo(3));
+            Assert.That(step.MovedTiles.Count, Is.EqualTo(15));
+            Assert.That(step.NewTiles.Count, Is.EqualTo(3));
+        }
+
+        [Test]
         public void Test_clear_row_tool()
         {
             Board board = IntGridToBoard(new int[,]

@@ -15,5 +15,6 @@
         CreateWildcard,
         SwapTiles,
         SwapLines,
+        PlusBomb,
     }
 }
