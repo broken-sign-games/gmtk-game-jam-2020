@@ -28,19 +28,51 @@ namespace GMTK2020
 
         public SimulationStep SimulateNextStep()
         {
-            HashSet<Tile> matchedTiles = RemoveMatchedTiles();
+            List<IEnumerable<Tile>> matches = GetRawMatches();
+
+            (HashSet<Vector2Int> horizontalMatches, HashSet<Vector2Int> verticalMatches) = GetMatchPositions(matches);
+
+            HashSet<Tile> matchedTiles = RemoveMatchedTiles(matches);
 
             if (matchedTiles.Count > 0)
             {
                 List<MovedTile> movedTiles = MoveTilesDown();
 
-                return new MatchStep(matchedTiles, movedTiles);
+                return new MatchStep(matchedTiles, movedTiles, horizontalMatches, verticalMatches);
             }
 
             HashSet<Tile> inertTiles = MakeMarkedTilesInert();
             List<MovedTile> newTiles = FillBoardWithTiles();
 
             return new CleanUpStep(newTiles, inertTiles);
+        }
+
+        private List<IEnumerable<Tile>> GetRawMatches()
+        {
+            var matches = new List<IEnumerable<Tile>>();
+
+            foreach (IEnumerable<Tile> tiles in GetPotentialMatches())
+                if (IsMatch(tiles))
+                    matches.Add(tiles);
+
+            return matches;
+        }
+
+        private (HashSet<Vector2Int> horizontalMatches, HashSet<Vector2Int> verticalMatches) GetMatchPositions(IEnumerable<IEnumerable<Tile>> matches)
+        {
+            var horizontalMatches = new HashSet<Vector2Int>();
+            var verticalMatches = new HashSet<Vector2Int>();
+
+            foreach (IEnumerable<Tile> tiles in matches)
+            {
+                Vector2Int startOfMatch = tiles.First().Position;
+                if (IsHorizontal(tiles))
+                    horizontalMatches.Add(startOfMatch);
+                else
+                    verticalMatches.Add(startOfMatch);
+            }
+
+            return (horizontalMatches, verticalMatches);
         }
 
         public List<SimulationStep> SimulateToStop()
@@ -56,18 +88,13 @@ namespace GMTK2020
             return steps;
         }
 
-        public HashSet<Tile> RemoveMatchedTiles()
+        private HashSet<Tile> RemoveMatchedTiles(List<IEnumerable<Tile>> matches)
         {
             var matchedTiles = new HashSet<Tile>();
 
-            foreach (IEnumerable<Tile> tiles in GetPotentialMatches())
-            {
-                if (!IsMatch(tiles))
-                    continue;
-
+            foreach (IEnumerable<Tile> tiles in matches)
                 foreach (Tile tile in tiles)
                     matchedTiles.Add(tile);
-            }
 
             foreach (Tile tile in matchedTiles)
                 board[tile.Position] = null;
@@ -121,6 +148,9 @@ namespace GMTK2020
 
             return nDistinctColors <= 1;
         }
+
+        private bool IsHorizontal(IEnumerable<Tile> tiles)
+            => tiles.Select(t => t.Position.y).Distinct().Count() == 1;
 
         public List<MovedTile> MoveTilesDown()
         {

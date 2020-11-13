@@ -109,7 +109,7 @@ namespace Tests
             for (int x = 0; x < nMatchedTiles; ++x)
                 matchedTiles.Add(new Tile(0, new Vector2Int(x, 0)));
 
-            return new MatchStep(matchedTiles, new List<MovedTile>());
+            return new MatchStep(matchedTiles, new List<MovedTile>(), new HashSet<Vector2Int>(), new HashSet<Vector2Int>());
         }
 
         private CleanUpStep CreateCleanUpStep()

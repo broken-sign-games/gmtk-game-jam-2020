@@ -16,10 +16,15 @@ namespace GMTK2020.Data
         public HashSet<Tile> MatchedTiles { get; }
         public List<MovedTile> MovedTiles { get; }
 
-        public MatchStep(HashSet<Tile> matchedTiles, List<MovedTile> movingTiles)
+        public HashSet<Vector2Int> LeftEndsOfHorizontalMatches { get; }
+        public HashSet<Vector2Int> BottomEndsOfVerticalMatches { get; }
+
+        public MatchStep(HashSet<Tile> matchedTiles, List<MovedTile> movingTiles, HashSet<Vector2Int> leftEndsOfHorizontalMatches, HashSet<Vector2Int> bottomEndsOfVerticalMatches)
         {
             MatchedTiles = matchedTiles;
             MovedTiles = movingTiles;
+            LeftEndsOfHorizontalMatches = leftEndsOfHorizontalMatches;
+            BottomEndsOfVerticalMatches = bottomEndsOfVerticalMatches;
         }
     }
 
