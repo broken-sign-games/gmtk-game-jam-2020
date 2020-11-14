@@ -49,6 +49,8 @@ namespace Tests
 
             Assert.That(matchStep.MatchedTiles.Count, Is.EqualTo(6));
             Assert.That(matchStep.MovedTiles.Count, Is.EqualTo(4));
+            Assert.That(matchStep.LeftEndsOfHorizontalMatches, Is.EquivalentTo(new[] { new Vector2Int(5, 2) }));
+            Assert.That(matchStep.BottomEndsOfVerticalMatches, Is.EquivalentTo(new[] { new Vector2Int(2, 1) }));
 
             AssertThatBoardsAreEqual(board, expected);
         }
@@ -92,6 +94,8 @@ namespace Tests
 
             Assert.That(matchStep.MatchedTiles.Count, Is.EqualTo(3));
             Assert.That(matchStep.MovedTiles.Count, Is.EqualTo(3));
+            Assert.That(matchStep.LeftEndsOfHorizontalMatches, Is.EquivalentTo(new[] { new Vector2Int(5, 2) }));
+            Assert.That(matchStep.BottomEndsOfVerticalMatches, Is.Empty);
 
             AssertThatBoardsAreEqual(board, expected);
         }
@@ -135,6 +139,8 @@ namespace Tests
 
             Assert.That(matchStep.MatchedTiles.Count, Is.EqualTo(9));
             Assert.That(matchStep.MovedTiles.Count, Is.EqualTo(6));
+            Assert.That(matchStep.LeftEndsOfHorizontalMatches, Is.EquivalentTo(new[] { new Vector2Int(4, 2), new Vector2Int(5, 2), new Vector2Int(6, 2) }));
+            Assert.That(matchStep.BottomEndsOfVerticalMatches, Is.EquivalentTo(new[] { new Vector2Int(2, 1), new Vector2Int(2, 0) }));
 
             AssertThatBoardsAreEqual(board, expected);
         }
@@ -178,6 +184,8 @@ namespace Tests
 
             Assert.That(matchStep.MatchedTiles.Count, Is.EqualTo(10));
             Assert.That(matchStep.MovedTiles.Count, Is.EqualTo(7));
+            Assert.That(matchStep.LeftEndsOfHorizontalMatches, Is.EquivalentTo(new[] { new Vector2Int(1, 2), new Vector2Int(5, 2) }));
+            Assert.That(matchStep.BottomEndsOfVerticalMatches, Is.EquivalentTo(new[] { new Vector2Int(2, 1), new Vector2Int(7, 2) }));
 
             AssertThatBoardsAreEqual(board, expected);
         }
@@ -223,6 +231,8 @@ namespace Tests
 
             Assert.That(matchStep.MatchedTiles.Count, Is.EqualTo(6));
             Assert.That(matchStep.MovedTiles.Count, Is.EqualTo(4));
+            Assert.That(matchStep.LeftEndsOfHorizontalMatches, Is.EquivalentTo(new[] { new Vector2Int(5, 2) }));
+            Assert.That(matchStep.BottomEndsOfVerticalMatches, Is.EquivalentTo(new[] { new Vector2Int(2, 1) }));
 
             AssertThatBoardsAreEqual(board, expected);
         }
@@ -297,6 +307,8 @@ namespace Tests
 
             Assert.That(matchStep.MatchedTiles.Count, Is.EqualTo(12));
             Assert.That(matchStep.MovedTiles.Count, Is.EqualTo(7));
+            Assert.That(matchStep.LeftEndsOfHorizontalMatches, Is.EquivalentTo(new[] { new Vector2Int(1, 2), new Vector2Int(5, 2) }));
+            Assert.That(matchStep.BottomEndsOfVerticalMatches, Is.EquivalentTo(new[] { new Vector2Int(2, 1), new Vector2Int(7, 0), new Vector2Int(7, 2) }));
 
             AssertThatBoardsAreEqual(board, expected);
         }
@@ -553,7 +565,7 @@ namespace Tests
         }
 
         [Test]
-        public void Check_for_possible_matches_with_two_wildcard()
+        public void Check_for_possible_matches_with_two_wildcards()
         {
             Board board = IntGridToBoard(new int[,]
             {
@@ -576,7 +588,7 @@ namespace Tests
         }
 
         [Test]
-        public void Check_for_possible_matches_with_three_wildcard()
+        public void Check_for_possible_matches_with_three_wildcards()
         {
             Board board = IntGridToBoard(new int[,]
             {
