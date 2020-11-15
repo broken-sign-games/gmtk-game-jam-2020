@@ -173,7 +173,7 @@ namespace Tests
         public void Match_shape_grants_one_copy_of_corresponding_tool(Vector2Int[] horizontalMatches, Vector2Int[] verticalMatches, Tool awardedTool)
         {
             Toolbox toolbox = CreateToolbox();
-            MatchStep step = MatchStepFromMatches(horizontalMatches, verticalMatches);
+            MatchStep step = MatchStepFromMatches(1, horizontalMatches, verticalMatches);
 
             toolbox.RewardMatches(step);
 
@@ -200,8 +200,9 @@ namespace Tests
             return new Toolbox(toolData, simulator);
         }
 
-        private MatchStep MatchStepFromMatches(Vector2Int[] horizontalMatches, Vector2Int[] verticalMatches)
+        private MatchStep MatchStepFromMatches(int chainLength, Vector2Int[] horizontalMatches, Vector2Int[] verticalMatches)
             => new MatchStep(
+                chainLength,
                 new HashSet<Tile>(), 
                 new List<MovedTile>(), 
                 new HashSet<Vector2Int>(horizontalMatches), 

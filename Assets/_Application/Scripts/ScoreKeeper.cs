@@ -11,14 +11,11 @@ namespace GMTK2020
 
         private int baseScore;
 
-        private int chainLength;
-
         private const string HIGHSCORE_KEY = "highscore";
 
         public ScoreKeeper(int baseScore)
         {
             this.baseScore = baseScore;
-            chainLength = 0;
 
             Score = 0;
             LoadHighscore();
@@ -56,13 +53,11 @@ namespace GMTK2020
 
         private int ScoreMatchStep(MatchStep matchStep)
         {
-            ++chainLength;
-            return matchStep.MatchedTiles.Count * baseScore * chainLength;
+            return matchStep.MatchedTiles.Count * baseScore * matchStep.ChainLength;
         }
 
         private int ScoreCleanUpStep(CleanUpStep _)
         {
-            chainLength = 0;
             return 0;
         }
     }

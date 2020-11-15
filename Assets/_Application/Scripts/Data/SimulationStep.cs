@@ -13,14 +13,17 @@ namespace GMTK2020.Data
     {
         public override bool FinalStep => false;
 
+        public int ChainLength { get; }
+
         public HashSet<Tile> MatchedTiles { get; }
         public List<MovedTile> MovedTiles { get; }
 
         public HashSet<Vector2Int> LeftEndsOfHorizontalMatches { get; }
         public HashSet<Vector2Int> BottomEndsOfVerticalMatches { get; }
 
-        public MatchStep(HashSet<Tile> matchedTiles, List<MovedTile> movingTiles, HashSet<Vector2Int> leftEndsOfHorizontalMatches, HashSet<Vector2Int> bottomEndsOfVerticalMatches)
+        public MatchStep(int chainLength, HashSet<Tile> matchedTiles, List<MovedTile> movingTiles, HashSet<Vector2Int> leftEndsOfHorizontalMatches, HashSet<Vector2Int> bottomEndsOfVerticalMatches)
         {
+            ChainLength = chainLength;
             MatchedTiles = matchedTiles;
             MovedTiles = movingTiles;
             LeftEndsOfHorizontalMatches = leftEndsOfHorizontalMatches;

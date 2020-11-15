@@ -17,6 +17,8 @@ namespace GMTK2020
         private readonly Random rng;
         private readonly int colorCount;
 
+        private int chainLength;
+
         public Simulator(Board initialBoard, int colorCount)
         {
             board = initialBoard;
@@ -24,6 +26,8 @@ namespace GMTK2020
 
             // TODO: We probably want more control over the seed...
             rng = new Random(Time.frameCount);
+
+            chainLength = 0;
         }
 
         public SimulationStep SimulateNextStep()
@@ -38,8 +42,12 @@ namespace GMTK2020
             {
                 List<MovedTile> movedTiles = MoveTilesDown();
 
-                return new MatchStep(matchedTiles, movedTiles, horizontalMatches, verticalMatches);
+                ++chainLength;
+
+                return new MatchStep(chainLength, matchedTiles, movedTiles, horizontalMatches, verticalMatches);
             }
+
+            chainLength = 0;
 
             HashSet<Tile> inertTiles = MakeMarkedTilesInert();
             List<MovedTile> newTiles = FillBoardWithTiles();

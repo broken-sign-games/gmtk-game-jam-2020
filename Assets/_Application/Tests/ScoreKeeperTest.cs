@@ -16,7 +16,7 @@ namespace Tests
         {
             var scoreKeeper = new ScoreKeeper(baseScore);
 
-            var step = CreateMatchStep(nTiles);
+            var step = CreateMatchStep(1, nTiles);
             int matchScore = scoreKeeper.ScoreStep(step);
 
             return matchScore;
@@ -30,9 +30,9 @@ namespace Tests
             var scoreKeeper = new ScoreKeeper(baseScore);
 
             for (int i = 0; i < nSteps - 1; ++i)
-                scoreKeeper.ScoreStep(CreateMatchStep(0));
+                scoreKeeper.ScoreStep(CreateMatchStep(i+1, 0));
 
-            var step = CreateMatchStep(nTiles);
+            var step = CreateMatchStep(nSteps, nTiles);
             int matchScore = scoreKeeper.ScoreStep(step);
 
             return matchScore;
@@ -69,15 +69,15 @@ namespace Tests
         {
             var scoreKeeper = new ScoreKeeper(baseScore);
 
-            scoreKeeper.ScoreStep(CreateMatchStep(2));
-            scoreKeeper.ScoreStep(CreateMatchStep(3));
+            scoreKeeper.ScoreStep(CreateMatchStep(1, 2));
+            scoreKeeper.ScoreStep(CreateMatchStep(2, 3));
 
             scoreKeeper.ScoreStep(new CleanUpStep(new List<MovedTile>(), new HashSet<Tile>()));
 
             for (int i = 0; i < nSteps - 1; ++i)
-                scoreKeeper.ScoreStep(CreateMatchStep(0));
+                scoreKeeper.ScoreStep(CreateMatchStep(i + 1, 0));
 
-            var step = CreateMatchStep(nTiles);
+            var step = CreateMatchStep(nSteps, nTiles);
             int matchScore = scoreKeeper.ScoreStep(step);
 
             return matchScore;
@@ -88,28 +88,28 @@ namespace Tests
         {
             var scoreKeeper = new ScoreKeeper(10);
 
-            scoreKeeper.ScoreStep(CreateMatchStep(3)); // 3 * 10 * 1 = 30
-            scoreKeeper.ScoreStep(CreateMatchStep(4)); // 4 * 10 * 2 = 80
+            scoreKeeper.ScoreStep(CreateMatchStep(1, 3)); // 3 * 10 * 1 = 30
+            scoreKeeper.ScoreStep(CreateMatchStep(2, 4)); // 4 * 10 * 2 = 80
 
             scoreKeeper.ScoreStep(CreateCleanUpStep());
 
-            scoreKeeper.ScoreStep(CreateMatchStep(5)); // 5 * 10 * 1 = 50
-            scoreKeeper.ScoreStep(CreateMatchStep(2)); // 2 * 10 * 2 = 40
+            scoreKeeper.ScoreStep(CreateMatchStep(1, 5)); // 5 * 10 * 1 = 50
+            scoreKeeper.ScoreStep(CreateMatchStep(2, 2)); // 2 * 10 * 2 = 40
 
             scoreKeeper.ScoreStep(CreateCleanUpStep());
 
-            scoreKeeper.ScoreStep(CreateMatchStep(1)); // 1 * 10 * 1 = 10
+            scoreKeeper.ScoreStep(CreateMatchStep(1, 1)); // 1 * 10 * 1 = 10
 
             Assert.That(scoreKeeper.Score, Is.EqualTo(210));
         }
 
-        private MatchStep CreateMatchStep(int nMatchedTiles)
+        private MatchStep CreateMatchStep(int chainLength, int nMatchedTiles)
         {
             var matchedTiles = new HashSet<Tile>();
             for (int x = 0; x < nMatchedTiles; ++x)
                 matchedTiles.Add(new Tile(0, new Vector2Int(x, 0)));
 
-            return new MatchStep(matchedTiles, new List<MovedTile>(), new HashSet<Vector2Int>(), new HashSet<Vector2Int>());
+            return new MatchStep(chainLength, matchedTiles, new List<MovedTile>(), new HashSet<Vector2Int>(), new HashSet<Vector2Int>());
         }
 
         private CleanUpStep CreateCleanUpStep()
