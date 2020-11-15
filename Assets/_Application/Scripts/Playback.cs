@@ -64,7 +64,7 @@ namespace GMTK2020
                     break;
             }
 
-            if (true) // (simulator.FurtherMatchesPossible())
+            if (simulator.FurtherMatchesPossible())
                 runButton.interactable = true;
             else
             {
