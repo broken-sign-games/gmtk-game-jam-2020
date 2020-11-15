@@ -1966,6 +1966,7 @@ MonoBehaviour:
   scoreRenderer: {fileID: 1277534815}
   runButton: {fileID: 2729287367561108023}
   retryButton: {fileID: 1144954186}
+  boardManipulator: {fileID: 1689814306}
   baseScore: 100
 --- !u!4 &1284230306
 Transform:

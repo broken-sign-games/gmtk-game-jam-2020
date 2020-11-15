@@ -14,6 +14,7 @@ namespace GMTK2020
         [SerializeField] private ScoreRenderer scoreRenderer = null;
         [SerializeField] private Button runButton = null;
         [SerializeField] private Button retryButton = null;
+        [SerializeField] private BoardManipulator boardManipulator = null;
 
         // TODO: This is probably not the best place to put this data.
         [SerializeField] private int baseScore = 100;
@@ -53,6 +54,9 @@ namespace GMTK2020
                 // We might need to tie this into the board renderer 
                 // to sync the update with the match animation.
                 scoreRenderer.UpdateScore();
+
+                if (step is MatchStep matchStep)
+                    boardManipulator.RewardMatch(matchStep);
 
                 await boardRenderer.AnimateSimulationStepAsync(step);
 

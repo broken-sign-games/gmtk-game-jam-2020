@@ -86,6 +86,13 @@ namespace GMTK2020
             UpdateUI();
         }
 
+        public void RewardMatch(MatchStep matchStep)
+        {
+            toolbox.RewardMatches(matchStep);
+
+            UpdateUI();
+        }
+
         public void LockPredictions()
         {
             predictionsFinalised = true;

@@ -2,6 +2,7 @@
 using GMTK2020.Data;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tests
@@ -168,6 +169,17 @@ namespace Tests
             Assert.That(step, Is.TypeOf(stepType));
         }
 
+        [TestCaseSource(nameof(singleShapeTestCases))]
+        public void Match_shape_grants_one_copy_of_corresponding_tool(Vector2Int[] horizontalMatches, Vector2Int[] verticalMatches, Tool awardedTool)
+        {
+            Toolbox toolbox = CreateToolbox();
+            MatchStep step = MatchStepFromMatches(horizontalMatches, verticalMatches);
+
+            toolbox.RewardMatches(step);
+
+            Assert.That(toolbox.GetAvailableUses(awardedTool), Is.EqualTo(1));
+        }
+
         private Toolbox CreateToolbox()
         {
             Board board = IntGridToBoard(new int[,]
@@ -187,6 +199,13 @@ namespace Tests
 
             return new Toolbox(toolData, simulator);
         }
+
+        private MatchStep MatchStepFromMatches(Vector2Int[] horizontalMatches, Vector2Int[] verticalMatches)
+            => new MatchStep(
+                new HashSet<Tile>(), 
+                new List<MovedTile>(), 
+                new HashSet<Vector2Int>(horizontalMatches), 
+                new HashSet<Vector2Int>(verticalMatches));
 
         private static Board IntGridToBoard(int[,] intGrid)
         {
@@ -210,5 +229,113 @@ namespace Tests
 
             return board;
         }
+
+        private static readonly object[] singleShapeTestCases = {
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2) },
+                new Vector2Int[] { },
+                Tool.RemoveTile
+            },
+            new object[] {
+                new Vector2Int[] { },
+                new Vector2Int[] { new Vector2Int(3, 2) },
+                Tool.RemoveTile
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2), new Vector2Int(4, 2) },
+                new Vector2Int[] { },
+                Tool.RemoveRow
+            },
+            new object[] {
+                new Vector2Int[] { },
+                new Vector2Int[] { new Vector2Int(3, 2), new Vector2Int(3, 3) },
+                Tool.RemoveRow
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2), new Vector2Int(5, 2) },
+                new Vector2Int[] { },
+                Tool.CreateWildcard
+            },
+            new object[] {
+                new Vector2Int[] { },
+                new Vector2Int[] { new Vector2Int(3, 2), new Vector2Int(3, 4) },
+                Tool.CreateWildcard
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2) },
+                new Vector2Int[] { new Vector2Int(3, 2) },
+                Tool.Rotate3x3
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2) },
+                new Vector2Int[] { new Vector2Int(5, 2) },
+                Tool.Rotate3x3
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2) },
+                new Vector2Int[] { new Vector2Int(3, 0) },
+                Tool.Rotate3x3
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2) },
+                new Vector2Int[] { new Vector2Int(5, 0) },
+                Tool.Rotate3x3
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2) },
+                new Vector2Int[] { new Vector2Int(4, 1) },
+                Tool.PlusBomb
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2) },
+                new Vector2Int[] { new Vector2Int(4, 2) },
+                Tool.RemoveColor
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2) },
+                new Vector2Int[] { new Vector2Int(4, 0) },
+                Tool.RemoveColor
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2) },
+                new Vector2Int[] { new Vector2Int(3, 1) },
+                Tool.RemoveColor
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2) },
+                new Vector2Int[] { new Vector2Int(5, 1) },
+                Tool.RemoveColor
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2), new Vector2Int(3, 4) },
+                new Vector2Int[] { new Vector2Int(4, 2) },
+                Tool.SwapTiles
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 3) },
+                new Vector2Int[] { new Vector2Int(3, 2), new Vector2Int(5, 2) },
+                Tool.SwapTiles
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2), new Vector2Int(3, 4) },
+                new Vector2Int[] { new Vector2Int(3, 2) },
+                Tool.SwapLines
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2), new Vector2Int(3, 4) },
+                new Vector2Int[] { new Vector2Int(5, 2) },
+                Tool.SwapLines
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 2) },
+                new Vector2Int[] { new Vector2Int(3, 2), new Vector2Int(5, 2) },
+                Tool.SwapLines
+            },
+            new object[] {
+                new Vector2Int[] { new Vector2Int(3, 4) },
+                new Vector2Int[] { new Vector2Int(3, 2), new Vector2Int(5, 2) },
+                Tool.SwapLines
+            },
+        };
     }
 }
