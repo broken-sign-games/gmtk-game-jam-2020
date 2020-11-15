@@ -73,6 +73,9 @@ namespace GMTK2020.Rendering
             case RemovalStep removalStep: await AnimateRemovalStepAsync(removalStep); break;
             case PermutationStep permutationStep: await AnimatePermutationStepAsync(permutationStep); break;
             case RotationStep rotationStep: await AnimateRotationStepAsync(rotationStep); break;
+            case PredictionStep predictionStep: await AnimatePredictionStepAsync(predictionStep); break;
+            case RefillStep refillStep: await AnimateRefillStepAsync(refillStep); break;
+            case WildcardStep wildcardStep: await AnimateWildcardStepAsync(wildcardStep); break;
             }
         }
 
@@ -102,6 +105,33 @@ namespace GMTK2020.Rendering
         private async Task AnimateRotationStepAsync(RotationStep step)
         {
             await AnimateRotatingTilesAsync(step.MovedTiles, step.Pivot, step.RotationSense);
+        }
+
+        private async Task AnimatePredictionStepAsync(PredictionStep predictionStep)
+        {
+            Sequence seq = DOTween.Sequence();
+            foreach (Tile tile in predictionStep.AffectedTiles)
+                seq.Join(UpdatePrediction(tile));
+
+            await CompletionOf(seq);
+        }
+
+        private async Task AnimateRefillStepAsync(RefillStep refillStep)
+        {
+            Sequence seq = DOTween.Sequence();
+            foreach (Tile tile in refillStep.AffectedTiles)
+                seq.Join(RefillTile(tile));
+
+            await CompletionOf(seq);
+        }
+
+        private async Task AnimateWildcardStepAsync(WildcardStep wildcardStep)
+        {
+            Sequence seq = DOTween.Sequence();
+            foreach (Tile tile in wildcardStep.AffectedTiles)
+                seq.Join(MakeWildcard(tile));
+
+            await CompletionOf(seq);
         }
 
         private async Task AnimateMatchedTilesAsync(HashSet<Tile> matchedTiles)
@@ -289,37 +319,19 @@ namespace GMTK2020.Rendering
             return gridPos;
         }
 
-        public void UpdatePrediction(Vector2Int pos)
+        private Tween UpdatePrediction(Tile tile)
         {
-            Tile tile = initialBoard[pos];
-            UpdatePrediction(tile);
+            return tileDictionary[tile.ID].UpdatePrediction();
         }
 
-        public void UpdatePrediction(Tile tile)
+        private Tween RefillTile(Tile tile)
         {
-            tileDictionary[tile.ID].UpdatePrediction();
+            return tileDictionary[tile.ID].Refill();
         }
 
-        public void RefillTile(Vector2Int pos)
+        private Tween MakeWildcard(Tile tile)
         {
-            Tile tile = initialBoard[pos];
-            RefillTile(tile);
-        }
-
-        private void RefillTile(Tile tile)
-        {
-            tileDictionary[tile.ID].Refill();
-        }
-
-        public void MakeWildcard(Vector2Int pos)
-        {
-            Tile tile = initialBoard[pos];
-            MakeWildcard(tile);
-        }
-
-        private void MakeWildcard(Tile tile)
-        {
-            tileDictionary[tile.ID].MakeWildcard();
+            return tileDictionary[tile.ID].MakeWildcard();
         }
     }
 }

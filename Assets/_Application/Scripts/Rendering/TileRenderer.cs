@@ -50,7 +50,6 @@ namespace GMTK2020.Rendering
         [SerializeField] private float staggeredFallingDelay = 0.1f;
         [SerializeField] private Ease fallingEase = Ease.OutBounce;
 
-        [SerializeField] private float dustEffectDelay = 0.3f;
         [SerializeField] private float landingShakeDuration = 0.2f;
         [SerializeField] private Vector3 landingShakeStrength = new Vector3(1f, 1f, 0f);
         [SerializeField] private int landingShakeVibrato = 10;
@@ -160,14 +159,18 @@ namespace GMTK2020.Rendering
             return seq;
         }
 
-        public void Refill()
+        public Tween Refill()
         {
             liquidSprite.enabled = true;
+
+            return DOTween.Sequence();
         }
 
-        public void MakeWildcard()
+        public Tween MakeWildcard()
         {
             wildcardIndicator.SetActive(true);
+
+            return DOTween.Sequence();
         }
 
         public Tween FallToCurrentPosition(Vector2Int from)

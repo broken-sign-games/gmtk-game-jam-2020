@@ -2752,6 +2752,7 @@ MonoBehaviour:
     - {fileID: 401800991}
     - {fileID: 627272588}
   rotate3x3Button: {fileID: 1570801440}
+  toolData: {fileID: 11400000, guid: 03367c26bc3432f4ca4936a0c2dd0cd0, type: 2}
 --- !u!4 &1689814307
 Transform:
   m_ObjectHideFlags: 0

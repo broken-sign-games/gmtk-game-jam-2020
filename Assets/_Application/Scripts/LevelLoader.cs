@@ -14,7 +14,7 @@ namespace GMTK2020
 
         public Level Level { get; private set; }
 
-        private void Awake()
+        private void Start()
         {
             LoadLevel();
         }

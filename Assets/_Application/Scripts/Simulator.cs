@@ -262,6 +262,9 @@ namespace GMTK2020
             return RemoveTiles(positions);
         }
 
+        public RemovalStep RemoveColor(Vector2Int gridPos)
+            => RemoveColor(board[gridPos].Color);
+
         public RemovalStep RemoveColor(int color)
         {
             List<Vector2Int> positions = board
@@ -288,15 +291,16 @@ namespace GMTK2020
             return new RemovalStep(removedTiles, movedTiles, newTiles);
         }
 
-        public bool RefillTile(Vector2Int pos)
+        public RefillStep RefillTile(Vector2Int pos)
         {
             Tile tile = board[pos];
 
-            bool wasInert = tile.Inert;
-            if (wasInert)
-                tile.Refill();
+            if (!tile.Inert)
+                throw new InvalidOperationException("Cannot refill full tile.");
 
-            return wasInert;
+            tile.Refill();
+
+            return new RefillStep(new List<Tile> { tile });
         }
 
         public PermutationStep ShuffleBoard()
@@ -389,7 +393,6 @@ namespace GMTK2020
             if (!board.IsInBounds(pivot - Vector2Int.one) || !board.IsInBounds(pivot + Vector2Int.one))
                 throw new InvalidOperationException("3x3 block partially or fully out of bounds");
 
-
             var movedTiles = new List<MovedTile>();
 
             List<Tile> tiles = board.GetRows(HorizontalOrder.LeftToRight, VerticalOrder.BottomToTop)
@@ -469,15 +472,31 @@ namespace GMTK2020
             return new PermutationStep(movedTiles);
         }
 
-        public bool CreateWildcard(Vector2Int pos)
+        public WildcardStep CreateWildcard(Vector2Int pos)
         {
             Tile tile = board[pos];
 
-            bool wasWildcardOrInert = tile.Wildcard || tile.Inert;
-            if (!wasWildcardOrInert)
-                tile.MakeWildcard();
+            if (tile.Inert)
+                throw new InvalidOperationException("Cannot create wildcard from inert tile");
 
-            return wasWildcardOrInert;
+            if (tile.Wildcard)
+                throw new InvalidOperationException("Tile was already a wildcard");
+            
+            tile.MakeWildcard();
+
+            return new WildcardStep(new List<Tile> { tile });
+        }
+
+        public PredictionStep TogglePrediction(Vector2Int pos)
+        {
+            Tile tile = board[pos];
+
+            if (tile.Inert)
+                throw new InvalidOperationException("Cannot mark inert tile for prediction");
+
+            tile.Marked = !tile.Marked;
+
+            return new PredictionStep(new List<Tile> { tile });
         }
     }
 }

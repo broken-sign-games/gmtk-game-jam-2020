@@ -689,9 +689,10 @@ namespace Tests
 
             var simulator = new Simulator(board, 9);
 
-            bool wasInert = simulator.RefillTile(pos);
+            RefillStep step = simulator.RefillTile(pos);
 
-            Assert.That(wasInert, Is.True);
+            Assert.That(step.AffectedTiles.Count, Is.EqualTo(1));
+            Assert.That(step.AffectedTiles[0], Is.SameAs(board[pos]));
 
             AssertThatBoardsAreEqual(board, expected);
 
@@ -1366,9 +1367,10 @@ namespace Tests
 
             var simulator = new Simulator(board, 9);
 
-            bool wasWildcard = simulator.CreateWildcard(pos);
+            WildcardStep step = simulator.CreateWildcard(pos);
 
-            Assert.That(wasWildcard, Is.False);
+            Assert.That(step.AffectedTiles.Count, Is.EqualTo(1));
+            Assert.That(step.AffectedTiles[0], Is.SameAs(board[pos]));
 
             AssertThatBoardsAreEqual(board, expected);
 

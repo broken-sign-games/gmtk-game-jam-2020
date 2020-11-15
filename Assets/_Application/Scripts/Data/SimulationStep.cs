@@ -85,4 +85,31 @@ namespace GMTK2020.Data
             MovedTiles = movedTiles;
         }
     }
+
+    public class TileStateChangeStep : SimulationStep
+    {
+        public override bool FinalStep => true;
+
+        public List<Tile> AffectedTiles { get; }
+
+        public TileStateChangeStep(List<Tile> affectedTiles)
+        {
+            AffectedTiles = affectedTiles;
+        }
+    }
+
+    public class PredictionStep : TileStateChangeStep
+    {
+        public PredictionStep(List<Tile> affectedTiles) : base(affectedTiles) { }
+    }
+
+    public class RefillStep : TileStateChangeStep
+    {
+        public RefillStep(List<Tile> affectedTiles) : base(affectedTiles) { }
+    }
+
+    public class WildcardStep : TileStateChangeStep
+    {
+        public WildcardStep(List<Tile> affectedTiles) : base(affectedTiles) { }
+    }
 }

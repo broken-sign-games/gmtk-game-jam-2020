@@ -3,7 +3,7 @@ using GMTK2020.Rendering;
 using GMTK2020.UI;
 using GMTKJam2020.Input;
 using RotaryHeart.Lib.SerializableDictionary;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,12 +14,13 @@ namespace GMTK2020
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private SerializableDictionaryBase<Tool, ToolButton> toolButtons = null;
         [SerializeField] private RotationButton rotate3x3Button = null;
+        [SerializeField] private ToolDataMap toolData = null;
 
         public Tool ActiveTool { get; private set; }
 
-        private Dictionary<Tool, int> availableToolUses;
-
         private InputActions inputs;
+
+        private Toolbox toolbox;
 
         private Simulator simulator;
         private Board board;
@@ -35,13 +36,6 @@ namespace GMTK2020
 
             inputs.Gameplay.Select.performed += OnSelect;
             inputs.Gameplay.Select.canceled += OnRelease;
-
-            availableToolUses = new Dictionary<Tool, int>();
-            foreach (var type in Utility.GetEnumValues<Tool>())
-                availableToolUses[type] = 0;
-
-            availableToolUses[Tool.ToggleMarked] = -1;
-            availableToolUses[Tool.PlusBomb] = -1;
 
             ActiveTool = Tool.ToggleMarked;
         }
@@ -72,7 +66,11 @@ namespace GMTK2020
             board = initialBoard;
             this.simulator = simulator;
 
+            toolbox = new Toolbox(toolData, simulator);
+
             initialized = true;
+
+            UpdateUI();
         }
 
         public void ToggleTool(ToolButton toolButton)
@@ -108,7 +106,7 @@ namespace GMTK2020
                 return;
 
             Vector2 pointerPos = inputs.Gameplay.Point.ReadValue<Vector2>();
-            
+
             Vector2Int? gridPosOrNull = ActiveTool == Tool.Rotate2x2
                 ? boardRenderer.PixelSpaceToHalfGridCoordinates(pointerPos)
                 : boardRenderer.PixelSpaceToGridCoordinates(pointerPos);
@@ -164,90 +162,48 @@ namespace GMTK2020
 
         private void UseActiveTool(Vector2Int gridPos)
         {
-            SimulationStep step = null;
-
-            if (availableToolUses[ActiveTool] == 0)
+            // TODO: Indicate this error to the user
+            if (toolbox.GetAvailableUses(ActiveTool) == 0)
                 return;
 
-            switch (ActiveTool)
+            try
             {
-            case Tool.ToggleMarked:
-                TogglePrediction(gridPos);
-                break;
-            case Tool.RemoveTile:
-                step = simulator.RemoveTile(gridPos);
-                break;
-            case Tool.RefillInert:
-                bool wasInert = simulator.RefillTile(gridPos);
-                if (!wasInert)
-                    return;
-                boardRenderer.RefillTile(gridPos);
-                break;
-            case Tool.Bomb:
-                step = simulator.RemoveBlock(gridPos);
-                break;
-            case Tool.PlusBomb:
-                step = simulator.RemovePlus(gridPos);
-                break;
-            case Tool.RemoveRow:
-                step = simulator.RemoveRow(gridPos.y);
-                break;
-            case Tool.RemoveColor:
-                step = simulator.RemoveColor(board[gridPos].Color);
-                break;
-            case Tool.Rotate3x3:
-                if (!board.IsInBounds(gridPos - Vector2Int.one) || !board.IsInBounds(gridPos + Vector2Int.one))
-                    return;
+                SimulationStep step;
+                if (ActiveTool == Tool.Rotate3x3)
+                    step = toolbox.UseTool(ActiveTool, gridPos, rotate3x3Button.RotationSense);
+                else
+                    step = toolbox.UseTool(ActiveTool, gridPos);
 
-                step = simulator.Rotate3x3Block(gridPos, rotate3x3Button.RotationSense);
-                break;
-            case Tool.CreateWildcard:
-                bool wasWildcardOrInert = simulator.CreateWildcard(gridPos);
-                if (wasWildcardOrInert)
-                    return;
-                boardRenderer.MakeWildcard(gridPos);
-                break;
-            }
-
-            if (step != null)
                 KickOffAnimation(step);
+                ActiveTool = Tool.ToggleMarked;
 
-            if (availableToolUses[ActiveTool] > 0)
-                --availableToolUses[ActiveTool];
-
-            ActiveTool = Tool.ToggleMarked;
-            UpdateUI();
+                UpdateUI();
+            }
+            catch (InvalidOperationException)
+            {
+                // TODO: Indicate error to the user
+            }
         }
 
         private void UseSwapTool(Vector2Int from, Vector2Int to)
         {
-            SimulationStep step;
-
-            if (availableToolUses[ActiveTool] == 0)
+            // TODO: Indicate this error to the user
+            if (toolbox.GetAvailableUses(ActiveTool) == 0)
                 return;
 
-            switch (ActiveTool)
+            try
             {
-            case Tool.SwapTiles:
-                step = simulator.SwapTiles(from, to);
-                break;
-            case Tool.SwapLines:
-                if (from.x == to.x)
-                    step = simulator.SwapRows(from.y, to.y);
-                else
-                    step = simulator.SwapColumns(from.x, to.x);
-                break;
-            default:
-                return;
+                SimulationStep step = toolbox.UseSwapTool(ActiveTool, from, to);
+
+                KickOffAnimation(step);
+                ActiveTool = Tool.ToggleMarked;
+
+                UpdateUI();
             }
-
-            KickOffAnimation(step);
-
-            if (availableToolUses[ActiveTool] > 0)
-                --availableToolUses[ActiveTool];
-
-            ActiveTool = Tool.ToggleMarked;
-            UpdateUI();
+            catch (InvalidOperationException)
+            {
+                // TODO: Indicate error to the user
+            }
         }
 
         private async void KickOffAnimation(SimulationStep step)
@@ -259,22 +215,9 @@ namespace GMTK2020
         {
             foreach ((Tool tool, ToolButton button) in toolButtons)
             {
-                button.UpdateUses(availableToolUses[tool]);
+                button.UpdateUses(toolbox.GetAvailableUses(tool));
                 button.UpdateActive(tool == ActiveTool);
             }
-        }
-
-        private void TogglePrediction(Vector2Int pos)
-        {
-            Tile tile = board[pos];
-
-            // TODO: Play a sound effect, maybe do a little animation on the vial
-            if (tile.Inert)
-                return;
-
-            tile.Marked = !tile.Marked;
-
-            boardRenderer.UpdatePrediction(tile);
         }
     }
 }
