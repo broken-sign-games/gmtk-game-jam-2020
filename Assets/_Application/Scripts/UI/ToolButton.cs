@@ -1,4 +1,5 @@
 ﻿using GMTK2020.Data;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ namespace GMTK2020.UI
     public class ToolButton : MonoBehaviour
     {
         [SerializeField] TextMeshProUGUI availableUsesText;
+        [SerializeField] TextMeshProUGUI requiredChainLengthText;
         [SerializeField] Tool tool;
 
         public Tool Tool => tool;
@@ -24,6 +26,11 @@ namespace GMTK2020.UI
         public void UpdateUses(int uses)
         {
             availableUsesText.text = uses.ToString();
+        }
+
+        public void UpdateChainLength(int chainLength)
+        {
+            requiredChainLengthText.text = $"[{chainLength}]";
         }
 
         public void UpdateActive(bool active)

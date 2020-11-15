@@ -12,6 +12,7 @@ namespace GMTK2020
 
         private Dictionary<Tool, int> availableToolUses;
         private Dictionary<MatchShape, Tool> shapeRewards;
+        private Dictionary<Tool, int> requiredChainLength;
 
         public Toolbox(ToolDataMap toolData, Simulator simulator)
         {
@@ -20,6 +21,7 @@ namespace GMTK2020
 
             availableToolUses = new Dictionary<Tool, int>();
             shapeRewards = new Dictionary<MatchShape, Tool>();
+            requiredChainLength= new Dictionary<Tool, int>();
 
             foreach ((Tool tool, ToolDataMap.ToolData data) in toolData.Map)
             {
@@ -32,11 +34,16 @@ namespace GMTK2020
 
                     shapeRewards[data.AwardedFor] = tool;
                 }
+
+                requiredChainLength[tool] = 1;
             }
         }
 
         public int GetAvailableUses(Tool tool)
             => availableToolUses[tool];
+
+        public int GetRequiredChainLength(Tool tool)
+            => requiredChainLength[tool];
 
         public SimulationStep UseTool(Tool tool, Vector2Int gridPos, RotationSense rotSense = RotationSense.CW)
         {
@@ -122,97 +129,103 @@ namespace GMTK2020
         {
             foreach (Vector2Int match in step.LeftEndsOfHorizontalMatches)
             {
-                RewardShape(MatchShape.Row3);
+                RewardShape(step.ChainLength, MatchShape.Row3);
 
                 if (step.LeftEndsOfHorizontalMatches.Contains(match + new Vector2Int(1, 0)))
-                    RewardShape(MatchShape.Row4);
+                    RewardShape(step.ChainLength, MatchShape.Row4);
 
                 if (step.LeftEndsOfHorizontalMatches.Contains(match + new Vector2Int(2, 0)))
-                    RewardShape(MatchShape.Row5);
+                    RewardShape(step.ChainLength, MatchShape.Row5);
 
                 if (step.BottomEndsOfVerticalMatches.Contains(match))
                 {
-                    RewardShape(MatchShape.L);
+                    RewardShape(step.ChainLength, MatchShape.L);
 
                     if (step.LeftEndsOfHorizontalMatches.Contains(match + new Vector2Int(0, 2)))
                     {
-                        RewardShape(MatchShape.U);
+                        RewardShape(step.ChainLength, MatchShape.U);
 
                         if (step.BottomEndsOfVerticalMatches.Contains(match + new Vector2Int(2, 0)))
-                            RewardShape(MatchShape.O);
+                            RewardShape(step.ChainLength, MatchShape.O);
                     }
 
                     if (step.BottomEndsOfVerticalMatches.Contains(match + new Vector2Int(2, 0)))
-                        RewardShape(MatchShape.U);
+                        RewardShape(step.ChainLength, MatchShape.U);
                 }
 
                 if (step.BottomEndsOfVerticalMatches.Contains(match + new Vector2Int(2, 0)))
                 {
-                    RewardShape(MatchShape.L);
+                    RewardShape(step.ChainLength, MatchShape.L);
 
                     if (step.LeftEndsOfHorizontalMatches.Contains(match + new Vector2Int(0, 2)))
-                        RewardShape(MatchShape.U);
+                        RewardShape(step.ChainLength, MatchShape.U);
                 }
 
                 if (step.BottomEndsOfVerticalMatches.Contains(match + new Vector2Int(0, -2)))
                 {
-                    RewardShape(MatchShape.L);
+                    RewardShape(step.ChainLength, MatchShape.L);
 
                     if (step.BottomEndsOfVerticalMatches.Contains(match + new Vector2Int(2, -2)))
-                        RewardShape(MatchShape.U);
+                        RewardShape(step.ChainLength, MatchShape.U);
                 }
 
                 if (step.BottomEndsOfVerticalMatches.Contains(match + new Vector2Int(2, -2)))
-                    RewardShape(MatchShape.L);
+                    RewardShape(step.ChainLength, MatchShape.L);
 
                 if (step.BottomEndsOfVerticalMatches.Contains(match + new Vector2Int(1, 0)))
                 {
-                    RewardShape(MatchShape.T);
+                    RewardShape(step.ChainLength, MatchShape.T);
 
                     if (step.LeftEndsOfHorizontalMatches.Contains(match + new Vector2Int(0, 2)))
-                        RewardShape(MatchShape.H);
+                        RewardShape(step.ChainLength, MatchShape.H);
                 }
 
                 if (step.BottomEndsOfVerticalMatches.Contains(match + new Vector2Int(1, -2)))
-                    RewardShape(MatchShape.T);
+                    RewardShape(step.ChainLength, MatchShape.T);
 
 
                 if (step.BottomEndsOfVerticalMatches.Contains(match + new Vector2Int(0, -1)))
                 {
-                    RewardShape(MatchShape.T);
+                    RewardShape(step.ChainLength, MatchShape.T);
 
                     if (step.BottomEndsOfVerticalMatches.Contains(match + new Vector2Int(2, -1)))
-                        RewardShape(MatchShape.H);
+                        RewardShape(step.ChainLength, MatchShape.H);
                 }
 
                 if (step.BottomEndsOfVerticalMatches.Contains(match + new Vector2Int(2, -1)))
-                    RewardShape(MatchShape.T);
+                    RewardShape(step.ChainLength, MatchShape.T);
 
                 if (step.BottomEndsOfVerticalMatches.Contains(match + new Vector2Int(1, -1)))
-                    RewardShape(MatchShape.Plus);
+                    RewardShape(step.ChainLength, MatchShape.Plus);
             }
 
             foreach (Vector2Int match in step.BottomEndsOfVerticalMatches)
             {
-                RewardShape(MatchShape.Row3);
+                RewardShape(step.ChainLength, MatchShape.Row3);
 
                 if (step.BottomEndsOfVerticalMatches.Contains(match + new Vector2Int(0, 1)))
-                    RewardShape(MatchShape.Row4);
+                    RewardShape(step.ChainLength, MatchShape.Row4);
 
                 if (step.BottomEndsOfVerticalMatches.Contains(match + new Vector2Int(0, 2)))
-                    RewardShape(MatchShape.Row5);
+                    RewardShape(step.ChainLength, MatchShape.Row5);
             }
         }
 
-        private void RewardShape(MatchShape shape)
+        private void RewardShape(int chainLength, MatchShape shape)
         {
             if (!shapeRewards.ContainsKey(shape))
                 return;
 
             Tool tool = shapeRewards[shape];
 
-            if (availableToolUses[tool] >= 0)
-                ++availableToolUses[tool];
+            if (availableToolUses[tool] < 0)
+                return;
+
+            if (chainLength < requiredChainLength[tool])
+                return;
+
+            ++requiredChainLength[tool];
+            ++availableToolUses[tool];
         }
     }
 }

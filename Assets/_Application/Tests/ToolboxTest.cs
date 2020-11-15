@@ -180,6 +180,51 @@ namespace Tests
             Assert.That(toolbox.GetAvailableUses(awardedTool), Is.EqualTo(1));
         }
 
+        [TestCaseSource(nameof(singleShapeTestCases))]
+        public void Chain_length_1_rewards_tools_only_once(Vector2Int[] horizontalMatches, Vector2Int[] verticalMatches, Tool awardedTool)
+        {
+            Toolbox toolbox = CreateToolbox();
+            MatchStep step = MatchStepFromMatches(1, horizontalMatches, verticalMatches);
+
+            toolbox.RewardMatches(step);
+
+            step = MatchStepFromMatches(1, horizontalMatches, verticalMatches);
+            toolbox.RewardMatches(step);
+
+            Assert.That(toolbox.GetAvailableUses(awardedTool), Is.EqualTo(1));
+        }
+
+        [TestCaseSource(nameof(singleShapeTestCases))]
+        public void Increasing_chain_length_still_rewards_tools(Vector2Int[] horizontalMatches, Vector2Int[] verticalMatches, Tool awardedTool)
+        {
+            Toolbox toolbox = CreateToolbox();
+            MatchStep step = MatchStepFromMatches(1, horizontalMatches, verticalMatches);
+
+            toolbox.RewardMatches(step);
+
+            step = MatchStepFromMatches(2, horizontalMatches, verticalMatches);
+            toolbox.RewardMatches(step);
+
+            Assert.That(toolbox.GetAvailableUses(awardedTool), Is.EqualTo(2));
+        }
+
+        [TestCaseSource(nameof(singleShapeTestCases))]
+        public void Higher_chain_lengths_can_award_tools(Vector2Int[] horizontalMatches, Vector2Int[] verticalMatches, Tool awardedTool)
+        {
+            Toolbox toolbox = CreateToolbox();
+            MatchStep step = MatchStepFromMatches(2, horizontalMatches, verticalMatches);
+
+            toolbox.RewardMatches(step);
+
+            step = MatchStepFromMatches(2, horizontalMatches, verticalMatches);
+            toolbox.RewardMatches(step);
+
+            step = MatchStepFromMatches(2, horizontalMatches, verticalMatches);
+            toolbox.RewardMatches(step);
+
+            Assert.That(toolbox.GetAvailableUses(awardedTool), Is.EqualTo(2));
+        }
+
         private Toolbox CreateToolbox()
         {
             Board board = IntGridToBoard(new int[,]

@@ -2309,6 +2309,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1506328415}
     m_Modifications:
+    - target: {fileID: 2364354112226868293, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4587820049073666767, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_RootOrder
@@ -2502,6 +2507,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   availableUsesText: {fileID: 1570801441}
+  requiredChainLengthText: {fileID: 1570801442}
   tool: 9
   boardManipulator: {fileID: 1689814306}
   rotationSenseIndicator: {fileID: 635027661}
@@ -2510,6 +2516,18 @@ MonoBehaviour:
 --- !u!114 &1570801441 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7410386414071070777, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1570801437}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1570801442 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2905844620339627282, guid: 7a1709738f09dfa41a33d8af3d3d425f,
     type: 3}
   m_PrefabInstance: {fileID: 1570801437}
   m_PrefabAsset: {fileID: 0}

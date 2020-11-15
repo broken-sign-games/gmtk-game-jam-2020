@@ -223,6 +223,7 @@ namespace GMTK2020
             foreach ((Tool tool, ToolButton button) in toolButtons)
             {
                 button.UpdateUses(toolbox.GetAvailableUses(tool));
+                button.UpdateChainLength(toolbox.GetRequiredChainLength(tool));
                 button.UpdateActive(tool == ActiveTool);
             }
         }
