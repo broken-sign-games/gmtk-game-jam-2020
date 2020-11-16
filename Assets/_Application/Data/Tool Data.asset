@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb5c9a41534844d42825e66295089670, type: 3}
   m_Name: Tool Data
   m_EditorClassIdentifier: 
+  RewardStrategy: 1
   Map:
     reorderableList:
       canAdd: 1

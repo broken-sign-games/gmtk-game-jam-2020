@@ -28,9 +28,10 @@ namespace GMTK2020.UI
             availableUsesText.text = uses.ToString();
         }
 
-        public void UpdateChainLength(int chainLength)
+        public void UpdateChainLength(int awarded, int available, int chainLength)
         {
-            requiredChainLengthText.text = $"[{chainLength}]";
+            
+            requiredChainLengthText.text = $"{awarded}/{available}; x{chainLength}";
         }
 
         public void UpdateActive(bool active)

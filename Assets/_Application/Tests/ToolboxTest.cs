@@ -9,12 +9,12 @@ namespace Tests
 {
     public class ToolboxTest
     {
-        private ToolDataMap toolData;
+        private ToolData toolData;
 
         [SetUp]
         public void InitializeTest()
         {
-            toolData = ScriptableObject.CreateInstance<ToolDataMap>();
+            toolData = ScriptableObject.CreateInstance<ToolData>();
             toolData.Map[Tool.ToggleMarked].InitialUses = -1;
             toolData.Map[Tool.RemoveTile].AwardedFor = MatchShape.Row3;
             toolData.Map[Tool.RemoveRow].AwardedFor = MatchShape.Row4;

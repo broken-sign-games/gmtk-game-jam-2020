@@ -14,7 +14,7 @@ namespace GMTK2020
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private SerializableDictionaryBase<Tool, ToolButton> toolButtons = null;
         [SerializeField] private RotationButton rotate3x3Button = null;
-        [SerializeField] private ToolDataMap toolData = null;
+        [SerializeField] private ToolData toolData = null;
 
         public Tool ActiveTool { get; private set; }
 
@@ -223,7 +223,13 @@ namespace GMTK2020
             foreach ((Tool tool, ToolButton button) in toolButtons)
             {
                 button.UpdateUses(toolbox.GetAvailableUses(tool));
-                button.UpdateChainLength(toolbox.GetRequiredChainLength(tool));
+                int awarded = toolbox.GetAwardedToolsForCurrentChainLength(tool);
+                int chainLength = toolbox.GetRequiredChainLength(tool);
+                int available = toolbox.GetAvailableToolUsesForChainLength(chainLength);
+                button.UpdateChainLength(
+                    awarded,
+                    available,
+                    chainLength);
                 button.UpdateActive(tool == ActiveTool);
             }
         }

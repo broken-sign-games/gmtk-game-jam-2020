@@ -8,22 +8,24 @@ namespace GMTK2020
     public class Toolbox
     {
         private Simulator simulator;
-        private ToolDataMap toolData;
+        private ToolData toolData;
 
         private Dictionary<Tool, int> availableToolUses;
         private Dictionary<MatchShape, Tool> shapeRewards;
         private Dictionary<Tool, int> requiredChainLength;
+        private Dictionary<Tool, int> awardedToolsForCurrentChainLength;
 
-        public Toolbox(ToolDataMap toolData, Simulator simulator)
+        public Toolbox(ToolData toolData, Simulator simulator)
         {
             this.toolData = toolData;
             this.simulator = simulator;
 
             availableToolUses = new Dictionary<Tool, int>();
             shapeRewards = new Dictionary<MatchShape, Tool>();
-            requiredChainLength= new Dictionary<Tool, int>();
+            requiredChainLength = new Dictionary<Tool, int>();
+            awardedToolsForCurrentChainLength = new Dictionary<Tool, int>();
 
-            foreach ((Tool tool, ToolDataMap.ToolData data) in toolData.Map)
+            foreach ((Tool tool, ToolData.SingleToolData data) in toolData.Map)
             {
                 availableToolUses[tool] = data.InitialUses;
 
@@ -36,6 +38,7 @@ namespace GMTK2020
                 }
 
                 requiredChainLength[tool] = 1;
+                awardedToolsForCurrentChainLength[tool] = 0;
             }
         }
 
@@ -44,6 +47,20 @@ namespace GMTK2020
 
         public int GetRequiredChainLength(Tool tool)
             => requiredChainLength[tool];
+
+        public int GetAwardedToolsForCurrentChainLength(Tool tool)
+            => awardedToolsForCurrentChainLength[tool];
+
+        public int GetAvailableToolUsesForChainLength(int chainLength)
+        {
+            switch (toolData.RewardStrategy)
+            {
+            case RewardStrategy.OnePerLength: return 1;
+            case RewardStrategy.NPerLength: return chainLength;
+            default:
+                throw new InvalidOperationException("Unknown reward strategy.");
+            }
+        }
 
         public SimulationStep UseTool(Tool tool, Vector2Int gridPos, RotationSense rotSense = RotationSense.CW)
         {
@@ -224,8 +241,14 @@ namespace GMTK2020
             if (chainLength < requiredChainLength[tool])
                 return;
 
-            ++requiredChainLength[tool];
             ++availableToolUses[tool];
+            ++awardedToolsForCurrentChainLength[tool];
+
+            if (awardedToolsForCurrentChainLength[tool] >= GetAvailableToolUsesForChainLength(chainLength))
+            {
+                ++requiredChainLength[tool];
+                awardedToolsForCurrentChainLength[tool] = 0;
+            }
         }
     }
 }

@@ -5,23 +5,24 @@ using UnityEngine;
 namespace GMTK2020.Data
 {
     [CreateAssetMenu]
-    public class ToolDataMap : ScriptableObject
+    public class ToolData : ScriptableObject
     {
         [Serializable]
-        public class ToolData
+        public class SingleToolData
         {
             public int InitialUses = 0;
             public MatchShape AwardedFor = MatchShape.None;
         }
 
-        public SerializableDictionaryBase<Tool, ToolData> Map;
+        public RewardStrategy RewardStrategy;
+        public SerializableDictionaryBase<Tool, SingleToolData> Map;
 
-        public ToolDataMap()
+        public ToolData()
         {
-            Map = new SerializableDictionaryBase<Tool, ToolData>();
+            Map = new SerializableDictionaryBase<Tool, SingleToolData>();
 
             foreach (var type in Utility.GetEnumValues<Tool>())
-                Map[type] = new ToolData();
+                Map[type] = new SingleToolData();
         }
     }
 }
