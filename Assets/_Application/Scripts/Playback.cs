@@ -32,6 +32,12 @@ namespace GMTK2020
             scoreKeeper = new ScoreKeeper(baseScore);
             scoreRenderer.SetScoreKeeper(scoreKeeper);
 
+            boardManipulator.LastToolUsed += OnLastToolUsed;
+        }
+
+        private void OnDestroy()
+        {
+            boardManipulator.LastToolUsed -= OnLastToolUsed;
         }
 
         public async void KickOffPlayback()
@@ -64,14 +70,24 @@ namespace GMTK2020
                     break;
             }
 
-            if (simulator.FurtherMatchesPossible())
+            if (simulator.FurtherMatchesPossible() || boardManipulator.AnyToolsAvailable())
                 runButton.interactable = true;
             else
-            {
-                scoreKeeper.UpdateHighscore();
-                scoreRenderer.UpdateHighscore();
-                retryButton.ActivateObject();
-            }
+                EndLevel();
+        }
+
+        public void OnLastToolUsed()
+        {
+            if (!simulator.FurtherMatchesPossible())
+                EndLevel();
+        }
+
+        private void EndLevel()
+        {
+            runButton.interactable = false;
+            scoreKeeper.UpdateHighscore();
+            scoreRenderer.UpdateHighscore();
+            retryButton.ActivateObject();
         }
     }
 }

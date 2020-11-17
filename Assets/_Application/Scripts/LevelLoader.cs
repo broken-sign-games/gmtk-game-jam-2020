@@ -28,7 +28,7 @@ namespace GMTK2020
 
             Simulator simulator = new Simulator(Level.Board, levelSpec.ColorCount);
 
-            predictionEditor.Initialize(Level.Board, simulator);
+            predictionEditor.Initialize(simulator);
             boardRenderer.RenderInitial(Level.Board);
             playback.Initialize(Level.Board, simulator);
         }

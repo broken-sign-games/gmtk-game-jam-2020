@@ -17,13 +17,12 @@ namespace GMTK2020
         [SerializeField] private ToolData toolData = null;
 
         public Tool ActiveTool { get; private set; }
+        public event Action LastToolUsed;
 
         private InputActions inputs;
 
         private Toolbox toolbox;
 
-        private Simulator simulator;
-        private Board board;
         private bool initialized = false;
         private bool predictionsFinalised = false;
 
@@ -61,11 +60,8 @@ namespace GMTK2020
                 OnDrag();
         }
 
-        public void Initialize(Board initialBoard, Simulator simulator)
+        public void Initialize(Simulator simulator)
         {
-            board = initialBoard;
-            this.simulator = simulator;
-
             toolbox = new Toolbox(toolData, simulator);
 
             initialized = true;
@@ -85,6 +81,9 @@ namespace GMTK2020
 
             UpdateUI();
         }
+
+        public bool AnyToolsAvailable() 
+            => toolbox.AnyToolsAvailable();
 
         public void RewardMatch(MatchStep matchStep)
         {
@@ -185,6 +184,9 @@ namespace GMTK2020
                 ActiveTool = Tool.ToggleMarked;
 
                 UpdateUI();
+
+                if (!AnyToolsAvailable())
+                    LastToolUsed?.Invoke();
             }
             catch (InvalidOperationException)
             {
@@ -206,6 +208,9 @@ namespace GMTK2020
                 ActiveTool = Tool.ToggleMarked;
 
                 UpdateUI();
+
+                if (!AnyToolsAvailable())
+                    LastToolUsed?.Invoke();
             }
             catch (InvalidOperationException)
             {

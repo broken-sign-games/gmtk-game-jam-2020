@@ -104,6 +104,15 @@ namespace GMTK2020
             return step;
         }
 
+        public bool AnyToolsAvailable()
+        {
+            foreach ((Tool _, int uses) in availableToolUses)
+                if (uses > 0)
+                    return true;
+
+            return false;
+        }
+
         public SimulationStep UseSwapTool(Tool tool, Vector2Int from, Vector2Int to)
         {
             switch (tool)
