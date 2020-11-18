@@ -253,7 +253,7 @@ namespace GMTK2020
             ++availableToolUses[tool];
             ++awardedToolsForCurrentChainLength[tool];
 
-            if (awardedToolsForCurrentChainLength[tool] >= GetAvailableToolUsesForChainLength(chainLength))
+            if (awardedToolsForCurrentChainLength[tool] >= GetAvailableToolUsesForChainLength(requiredChainLength[tool]))
             {
                 ++requiredChainLength[tool];
                 awardedToolsForCurrentChainLength[tool] = 0;
