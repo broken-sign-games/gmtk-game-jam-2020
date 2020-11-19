@@ -42,15 +42,15 @@ MonoBehaviour:
     - InitialUses: -1
       AwardedFor: 0
     - InitialUses: 0
-      AwardedFor: 1
-    - InitialUses: 0
-      AwardedFor: 0
-    - InitialUses: 0
-      AwardedFor: 0
-    - InitialUses: 0
-      AwardedFor: 2
-    - InitialUses: 0
       AwardedFor: 4
+    - InitialUses: 0
+      AwardedFor: 0
+    - InitialUses: 0
+      AwardedFor: 0
+    - InitialUses: 0
+      AwardedFor: 0
+    - InitialUses: 0
+      AwardedFor: 0
     - InitialUses: 0
       AwardedFor: 0
     - InitialUses: 0
@@ -62,8 +62,8 @@ MonoBehaviour:
     - InitialUses: 0
       AwardedFor: 3
     - InitialUses: 0
-      AwardedFor: 7
+      AwardedFor: 1
     - InitialUses: 0
-      AwardedFor: 8
+      AwardedFor: 2
     - InitialUses: 0
       AwardedFor: 6
