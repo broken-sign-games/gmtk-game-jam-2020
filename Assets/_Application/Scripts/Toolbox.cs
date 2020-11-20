@@ -57,6 +57,7 @@ namespace GMTK2020
             {
             case RewardStrategy.OnePerLength: return 1;
             case RewardStrategy.NPerLength: return chainLength;
+            case RewardStrategy.NAtOncePerLength: return chainLength;
             default:
                 throw new InvalidOperationException("Unknown reward strategy.");
             }
@@ -250,13 +251,24 @@ namespace GMTK2020
             if (chainLength < requiredChainLength[tool])
                 return;
 
-            ++availableToolUses[tool];
-            ++awardedToolsForCurrentChainLength[tool];
-
-            if (awardedToolsForCurrentChainLength[tool] >= GetAvailableToolUsesForChainLength(requiredChainLength[tool]))
+            if (toolData.RewardStrategy == RewardStrategy.NAtOncePerLength)
             {
-                ++requiredChainLength[tool];
-                awardedToolsForCurrentChainLength[tool] = 0;
+                while (requiredChainLength[tool] <= chainLength)
+                {
+                    availableToolUses[tool] += requiredChainLength[tool];
+                    ++requiredChainLength[tool];
+                }
+            }
+            else
+            {
+                ++availableToolUses[tool];
+                ++awardedToolsForCurrentChainLength[tool];
+
+                if (awardedToolsForCurrentChainLength[tool] >= GetAvailableToolUsesForChainLength(requiredChainLength[tool]))
+                {
+                    ++requiredChainLength[tool];
+                    awardedToolsForCurrentChainLength[tool] = 0;
+                }
             }
         }
     }

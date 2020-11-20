@@ -4,5 +4,6 @@
     {
         OnePerLength,
         NPerLength,
+        NAtOncePerLength,
     }
 }
