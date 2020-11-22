@@ -1,0 +1,33 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="uncork_data" version="1.3.0" audacityversion="2.2.2" sel0="7.6596825397" sel1="8.0776417234" vpos="0" h="2.2784580499" zoom="344.5312500000" rate="44100.0" snapto="off" selectionformat="samples" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags/>
+	<wavetrack name="Audio Track" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="360960">
+				<waveblock start="0">
+					<simpleblockfile filename="e08084bb.au" len="224256" min="-1.0" max="0.96844" rms="0.056087"/>
+				</waveblock>
+				<waveblock start="224256">
+					<simpleblockfile filename="e0808c53.au" len="136704" min="-0.954899" max="0.768653" rms="0.048545"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<labeltrack name="Label Track" numlabels="13" height="73" minimized="0" isSelected="1">
+		<label t="0.0000000000" t1="0.5021315193" title="uncork-0"/>
+		<label t="0.6762811791" t1="1.1813151927" title="uncork-1"/>
+		<label t="1.3206349206" t1="1.7502040816" title="uncork-2"/>
+		<label t="1.8024489796" t1="2.2697505669" title="uncork-3"/>
+		<label t="2.5251700680" t1="2.9692517007" title="uncork-4"/>
+		<label t="3.1608163265" t1="3.5903854875" title="uncork-5"/>
+		<label t="3.9502947846" t1="4.4030839002" title="uncork-6"/>
+		<label t="4.5714285714" t1="5.0097052154" title="uncork-7"/>
+		<label t="5.5640816327" t1="5.9704308390" title="uncork-8"/>
+		<label t="6.1300680272" t1="6.5596371882" title="uncork-9"/>
+		<label t="6.7105668934" t1="7.0995011338" title="uncork-10"/>
+		<label t="7.1459410431" t1="7.5697052154" title="uncork-11"/>
+		<label t="7.6596825397" t1="8.0776417234" title="uncork-12"/>
+	</labeltrack>
+</project>

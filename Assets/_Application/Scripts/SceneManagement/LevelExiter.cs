@@ -8,34 +8,22 @@ namespace GMTK2020.SceneManagement
     {
         [SerializeField] private LevelSequence levelSequence = null;
 
-        private SoundManager soundManager;
-
-        private void Start()
-        {
-            soundManager = FindObjectOfType<SoundManager>();
-        }
-
         public void RestartLevel()
         {
-            if (soundManager)
-                soundManager.PlayEffect(SoundManager.Effect.CLICK);
+            SoundManager.Instance.PlayEffect(SoundEffect.Click);
             SceneLoader.Instance.LoadLevelScene();
         }
 
         public void LoadNextLevel()
         {
-            if (soundManager)
-                soundManager.PlayEffect(SoundManager.Effect.CLICK);
+            SoundManager.Instance.PlayEffect(SoundEffect.Click);
 
             ++GameProgression.CurrentLevelIndex;
             if (GameProgression.CurrentLevelIndex >= levelSequence.Levels.Count)
                 SceneLoader.Instance.LoadWinScene();
             else
             {
-                if (levelSequence.Levels[GameProgression.CurrentLevelIndex].TutorialBoard != null)
-                    SceneLoader.Instance.LoadTutorialScene();
-                else
-                    SceneLoader.Instance.LoadLevelScene();
+                SceneLoader.Instance.LoadLevelScene();
             }
         }
     }

@@ -35,14 +35,6 @@ namespace GMTKJam2020.Input
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
-                },
-                {
-                    ""name"": ""Drag"",
-                    ""type"": ""Value"",
-                    ""id"": ""57eff983-b9ce-4826-9373-82d5b868043c"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -87,28 +79,6 @@ namespace GMTKJam2020.Input
                     ""processors"": """",
                     ""groups"": ""Touch"",
                     ""action"": ""Select"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""182bc42c-719b-44b6-b948-2bd9ff5d1854"",
-                    ""path"": ""<Mouse>/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Drag"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""5f2c3315-c042-4f9c-b5c4-a7fc0b081c2a"",
-                    ""path"": ""<Touchscreen>/touch*/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Touch"",
-                    ""action"": ""Drag"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -334,7 +304,6 @@ namespace GMTKJam2020.Input
             m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
             m_Gameplay_Point = m_Gameplay.FindAction("Point", throwIfNotFound: true);
             m_Gameplay_Select = m_Gameplay.FindAction("Select", throwIfNotFound: true);
-            m_Gameplay_Drag = m_Gameplay.FindAction("Drag", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
@@ -395,14 +364,12 @@ namespace GMTKJam2020.Input
         private IGameplayActions m_GameplayActionsCallbackInterface;
         private readonly InputAction m_Gameplay_Point;
         private readonly InputAction m_Gameplay_Select;
-        private readonly InputAction m_Gameplay_Drag;
         public struct GameplayActions
         {
             private @InputActions m_Wrapper;
             public GameplayActions(@InputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Point => m_Wrapper.m_Gameplay_Point;
             public InputAction @Select => m_Wrapper.m_Gameplay_Select;
-            public InputAction @Drag => m_Wrapper.m_Gameplay_Drag;
             public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -418,9 +385,6 @@ namespace GMTKJam2020.Input
                     @Select.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSelect;
                     @Select.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSelect;
                     @Select.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSelect;
-                    @Drag.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnDrag;
-                    @Drag.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnDrag;
-                    @Drag.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnDrag;
                 }
                 m_Wrapper.m_GameplayActionsCallbackInterface = instance;
                 if (instance != null)
@@ -431,9 +395,6 @@ namespace GMTKJam2020.Input
                     @Select.started += instance.OnSelect;
                     @Select.performed += instance.OnSelect;
                     @Select.canceled += instance.OnSelect;
-                    @Drag.started += instance.OnDrag;
-                    @Drag.performed += instance.OnDrag;
-                    @Drag.canceled += instance.OnDrag;
                 }
             }
         }
@@ -541,7 +502,6 @@ namespace GMTKJam2020.Input
         {
             void OnPoint(InputAction.CallbackContext context);
             void OnSelect(InputAction.CallbackContext context);
-            void OnDrag(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

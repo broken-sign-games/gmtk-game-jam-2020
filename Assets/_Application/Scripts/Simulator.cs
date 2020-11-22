@@ -3,183 +3,182 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.XR.WSA;
+using Random = System.Random;
 
 namespace GMTK2020
 {
     public class Simulator
     {
         public const int MAX_SIMULATION_STEPS = 5;
-        private readonly List<HashSet<Vector2Int>> matchingPatterns;
 
-        public Simulator(HashSet<Vector2Int> matchingPattern)
+        private readonly Board board;
+
+        private readonly Random rng;
+        private readonly int colorCount;
+
+        private int chainLength;
+
+        public Simulator(Board initialBoard, int colorCount)
         {
-            matchingPatterns = new List<HashSet<Vector2Int>>() { matchingPattern };
+            board = initialBoard;
+            this.colorCount = colorCount;
 
-            for (int i = 0; i < 3; ++i)
-            {
-                matchingPattern = RotatePattern(matchingPattern);
-                matchingPatterns.Add(matchingPattern);
-            }
+            // TODO: We probably want more control over the seed...
+            rng = new Random(Time.frameCount);
 
-            matchingPattern = MirrorPattern(matchingPattern);
-            matchingPatterns.Add(matchingPattern);
-
-            for (int i = 0; i < 3; ++i)
-            {
-                matchingPattern = RotatePattern(matchingPattern);
-                matchingPatterns.Add(matchingPattern);
-            }
+            chainLength = 0;
         }
 
-        public Simulation Simulate(Tile[,] initialGrid, bool allowShorterLevel = false)
+        public SimulationStep SimulateNextStep()
         {
-            var simulationSteps = new List<SimulationStep>();
+            List<IEnumerable<Tile>> matches = GetRawMatches();
 
-            Tile[,] workingGrid = initialGrid.Clone() as Tile[,];
+            (HashSet<Vector2Int> horizontalMatches, HashSet<Vector2Int> verticalMatches) = GetMatchPositions(matches);
 
-            for (int i = 0; i < MAX_SIMULATION_STEPS; ++i)
+            HashSet<Tile> matchedTiles = RemoveMatchedTiles(matches);
+
+            if (matchedTiles.Count > 0)
             {
-                HashSet<(Tile, Vector2Int)> matchedTiles = RemoveMatchedTiles(workingGrid);
-                if (matchedTiles.Count == 0)
-                {
-                    if (allowShorterLevel)
-                        break;
-                    else
-                        throw new ArgumentException("Boring level.");
-                }
+                List<MovedTile> movedTiles = MoveTilesDown();
 
-                List<(Tile, Vector2Int)> movingTiles = MoveTilesDown(workingGrid);
+                ++chainLength;
 
-                simulationSteps.Add(new SimulationStep(matchedTiles, movingTiles));
+                return new MatchStep(chainLength, matchedTiles, movedTiles, horizontalMatches, verticalMatches);
             }
 
-            return new Simulation(simulationSteps);
+            chainLength = 0;
+
+            HashSet<Tile> inertTiles = MakeMarkedTilesInert();
+            List<MovedTile> newTiles = FillBoardWithTiles();
+
+            return new CleanUpStep(newTiles, inertTiles);
         }
 
-        public HashSet<(Tile, Vector2Int)> RemoveMatchedTiles(Tile[,] workingGrid)
+        private List<IEnumerable<Tile>> GetRawMatches()
         {
-            var matchedTiles = new HashSet<(Tile, Vector2Int)>();
+            var matches = new List<IEnumerable<Tile>>();
 
-            int width = workingGrid.GetLength(0);
-            int height = workingGrid.GetLength(1);
+            foreach (IEnumerable<Tile> tiles in GetPotentialMatches())
+                if (IsMatch(tiles))
+                    matches.Add(tiles);
 
-            for (int x = 0; x < width; ++x)
-                for (int y = 0; y < height; ++y)
-                {
-                    Tile tile = workingGrid[x, y];
-                    if (tile is null)
-                        continue;
+            return matches;
+        }
 
-                    Vector2Int origin = new Vector2Int(x, y);
+        private (HashSet<Vector2Int> horizontalMatches, HashSet<Vector2Int> verticalMatches) GetMatchPositions(IEnumerable<IEnumerable<Tile>> matches)
+        {
+            var horizontalMatches = new HashSet<Vector2Int>();
+            var verticalMatches = new HashSet<Vector2Int>();
 
-                    bool isMatch = false;
-                    foreach (HashSet<Vector2Int> pattern in matchingPatterns)
-                    {
-                        bool doesThisSymmetryMatch = true;
-                        foreach (Vector2Int offset in pattern)
-                        {
-                            if (offset == Vector2Int.zero)
-                                continue;
+            foreach (IEnumerable<Tile> tiles in matches)
+            {
+                Vector2Int startOfMatch = tiles.First().Position;
+                if (IsHorizontal(tiles))
+                    horizontalMatches.Add(startOfMatch);
+                else
+                    verticalMatches.Add(startOfMatch);
+            }
 
-                            Vector2Int pos = origin + offset;
-                            if (pos.x < 0
-                                || pos.y < 0
-                                || pos.x >= width
-                                || pos.y >= height
-                                || workingGrid[pos.x, pos.y]?.Color != tile.Color)
-                            {
-                                doesThisSymmetryMatch = false;
-                                break;
-                            }
-                        }
+            return (horizontalMatches, verticalMatches);
+        }
 
-                        if (doesThisSymmetryMatch)
-                        {
-                            isMatch = true;
-                            break;
-                        }
-                    }
+        public List<SimulationStep> SimulateToStop()
+        {
+            var steps = new List<SimulationStep>();
 
-                    if (!isMatch)
-                        continue;
+            do
+            {
+                steps.Add(SimulateNextStep());
+            }
+            while (!steps.Last().FinalStep);
 
-                    HashSet<Vector2Int> matchedPositions = ExpandMatch(workingGrid, origin);
+            return steps;
+        }
 
-                    foreach (Vector2Int pos in matchedPositions)
-                    {
-                        matchedTiles.Add((workingGrid[pos.x, pos.y], pos));
-                        workingGrid[pos.x, pos.y] = null;
-                    }
-                }
+        private HashSet<Tile> RemoveMatchedTiles(List<IEnumerable<Tile>> matches)
+        {
+            var matchedTiles = new HashSet<Tile>();
+
+            foreach (IEnumerable<Tile> tiles in matches)
+                foreach (Tile tile in tiles)
+                    matchedTiles.Add(tile);
+
+            foreach (Tile tile in matchedTiles)
+                board[tile.Position] = null;
 
             return matchedTiles;
         }
 
-        private HashSet<Vector2Int> ExpandMatch(Tile[,] workingGrid, Vector2Int origin)
+        public bool FurtherMatchesPossible()
         {
-            int width = workingGrid.GetLength(0);
-            int height = workingGrid.GetLength(1);
-            int color = workingGrid[origin.x, origin.y].Color;
+            return GetPotentialMatches().Any(tiles => IsMatch(tiles, false));
+        }
 
-            var fullMatch = new HashSet<Vector2Int>() { origin };
+        private List<IEnumerable<Tile>> GetPotentialMatches()
+        {
+            var potentialMatches = new List<IEnumerable<Tile>>();
 
-            var positionsToProcess = new Queue<Vector2Int>();
-            positionsToProcess.Enqueue(origin);
-
-            var neighborhood = new HashSet<Vector2Int>()
+            foreach (int x in board.GetXs())
             {
-                new Vector2Int(1, 0),
-                new Vector2Int(-1, 0),
-                new Vector2Int(0, 1),
-                new Vector2Int(0, -1)
-            };
-
-            while (positionsToProcess.Count > 0)
-            {
-                Vector2Int pos = positionsToProcess.Dequeue();
-
-                foreach (Vector2Int offset in neighborhood)
+                foreach (int yMax in board.GetYs().Skip(2))
                 {
-                    Vector2Int candidate = pos + offset;
-                    if (fullMatch.Contains(candidate))
-                        continue;
-
-                    if (candidate.x >= 0
-                        && candidate.y >= 0
-                        && candidate.x < width
-                        && candidate.y < height
-                        && workingGrid[candidate.x, candidate.y]?.Color == color)
-                    {
-                        positionsToProcess.Enqueue(candidate);
-                        fullMatch.Add(candidate);
-                    }
+                    potentialMatches.Add(Enumerable
+                        .Range(yMax - 2, 3)
+                        .Select(y => board[x, y]));
                 }
             }
 
-            return fullMatch;
+
+            foreach (int y in board.GetYs())
+            {
+                foreach (int xMax in board.GetXs().Skip(2))
+                {
+                    potentialMatches.Add(Enumerable
+                        .Range(xMax - 2, 3)
+                        .Select(x => board[x, y]));
+                }
+            }
+
+            return potentialMatches;
         }
 
-        public List<(Tile, Vector2Int)> MoveTilesDown(Tile[,] workingGrid)
+        private bool IsMatch(IEnumerable<Tile> tiles, bool requiredMarked = true)
         {
-            int width = workingGrid.GetLength(0);
-            int height = workingGrid.GetLength(1);
+            if (tiles.Any(tile => tile is null || tile.Inert || requiredMarked && !tile.Marked))
+                return false;
 
-            var movedTiles = new List<(Tile, Vector2Int)>();
+            int nDistinctColors = tiles
+                .Select(tile => tile.Wildcard ? -1 : tile.Color)
+                .Distinct()
+                .Where(color => color != -1)
+                .Count();
 
-            for (int x = 0; x < width; ++x)
+            return nDistinctColors <= 1;
+        }
+
+        private bool IsHorizontal(IEnumerable<Tile> tiles)
+            => tiles.Select(t => t.Position.y).Distinct().Count() == 1;
+
+        public List<MovedTile> MoveTilesDown()
+        {
+            var movedTiles = new List<MovedTile>();
+
+            foreach (int x in board.GetXs())
             {
                 int top = 0;
-                for (int y = 0; y < height; ++y)
+                foreach (int y in board.GetYs(VerticalOrder.BottomToTop))
                 {
-                    Tile tile = workingGrid[x, y];
+                    Vector2Int from = new Vector2Int(x, y);
+                    Tile tile = board[from];
                     if (tile is null)
                         continue;
 
                     if (y > top)
                     {
-                        movedTiles.Add((tile, new Vector2Int(x, top)));
-                        workingGrid[x, top] = tile;
-                        workingGrid[x, y] = null;
+                        movedTiles.Add(
+                            board.MoveTile(tile, x, top)
+                        );
                     }
 
                     ++top;
@@ -189,22 +188,323 @@ namespace GMTK2020
             return movedTiles;
         }
 
-        private HashSet<Vector2Int> MirrorPattern(HashSet<Vector2Int> pattern)
+        private HashSet<Tile> MakeMarkedTilesInert()
         {
-            return new HashSet<Vector2Int>(pattern.Select((vec2) =>
+            var inertTiles = new HashSet<Tile>();
+
+            foreach (Tile tile in board)
             {
-                (int x, int y) = vec2;
-                return new Vector2Int(x, -y);
-            }));
+                if (tile.Marked)
+                {
+                    tile.MakeInert();
+                    inertTiles.Add(tile);
+                }
+            }
+
+            return inertTiles;
         }
 
-        private HashSet<Vector2Int> RotatePattern(HashSet<Vector2Int> pattern)
+        private List<MovedTile> FillBoardWithTiles()
         {
-            return new HashSet<Vector2Int>(pattern.Select((vec2) =>
+            var newTiles = new List<MovedTile>();
+
+            foreach (int x in board.GetXs())
             {
-                (int x, int y) = vec2;
-                return new Vector2Int(y, -x);
-            }));
+                int newTilesInColumn = board.Height;
+                foreach (int y in board.GetYs(VerticalOrder.BottomToTop))
+                {
+                    if (board[x, y] != null)
+                    {
+                        --newTilesInColumn;
+                        continue;
+                    }
+
+                    Tile newTile = new Tile(rng.Next(colorCount), new Vector2Int(x, y + newTilesInColumn));
+                    newTiles.Add(board.MoveTile(newTile, x, y));
+                }
+            }
+
+            return newTiles;
+        }
+
+        public RemovalStep RemoveTile(Vector2Int pos)
+        {
+            var positions = new[] { pos };
+
+            return RemoveTiles(positions);
+        }
+
+        public RemovalStep RemoveBlock(Vector2Int center)
+        {
+            var positions = new List<Vector2Int>();
+
+            for (int y = -1; y <= 1; ++y)
+                for (int x = -1; x <= 1; ++x)
+                {
+                    Vector2Int pos = center + new Vector2Int(x, y);
+                    if (board.IsInBounds(pos))
+                        positions.Add(pos);
+                }
+
+            return RemoveTiles(positions);
+        }
+
+        public RemovalStep RemovePlus(Vector2Int center)
+        {
+            IEnumerable<Vector2Int> positions = new[]
+            {
+                center,
+                center + Vector2Int.right,
+                center + Vector2Int.up,
+                center + Vector2Int.left,
+                center + Vector2Int.down,
+            }.Where(pos => board.IsInBounds(pos));
+
+            return RemoveTiles(positions);
+        }
+
+        public RemovalStep RemoveRow(int y)
+        {
+            IEnumerable<Vector2Int> positions = board.GetXs().Select(x => new Vector2Int(x, y));
+
+            return RemoveTiles(positions);
+        }
+
+        public RemovalStep RemoveColor(Vector2Int gridPos)
+            => RemoveColor(board[gridPos].Color);
+
+        public RemovalStep RemoveColor(int color)
+        {
+            List<Vector2Int> positions = board
+                .Where(t => t.Color == color)
+                .Select(t => t.Position)
+                .ToList();
+
+            return RemoveTiles(positions);
+        }
+
+        private RemovalStep RemoveTiles(IEnumerable<Vector2Int> positions)
+        {
+            var removedTiles = new HashSet<Tile>();
+
+            foreach (Vector2Int pos in positions)
+            {
+                removedTiles.Add(board[pos]);
+                board[pos] = null;
+            }
+
+            List<MovedTile> movedTiles = MoveTilesDown();
+            List<MovedTile> newTiles = FillBoardWithTiles();
+
+            return new RemovalStep(removedTiles, movedTiles, newTiles);
+        }
+
+        public RefillStep RefillTile(Vector2Int pos)
+        {
+            Tile tile = board[pos];
+
+            if (!tile.Inert)
+                throw new InvalidOperationException("Cannot refill full tile.");
+
+            tile.Refill();
+
+            return new RefillStep(new List<Tile> { tile });
+        }
+
+        public PermutationStep ShuffleBoard()
+        {
+            var movedTiles = new List<MovedTile>();
+
+            List<Tile> shuffledTiles = board.ToList().Shuffle(rng);
+
+            int i = 0;
+
+            foreach (int y in board.GetYs())
+                foreach (int x in board.GetXs())
+                {
+                    movedTiles.Add(board.MoveTile(shuffledTiles[i], x, y));
+                    ++i;
+                }
+
+            return new PermutationStep(movedTiles);
+        }
+
+        public RotationStep RotateBoard(RotationSense rotSense)
+        {
+            var movedTiles = new List<MovedTile>();
+
+            List<Tile> tiles = board.GetRows(HorizontalOrder.LeftToRight, VerticalOrder.BottomToTop).SelectMany(x => x).ToList();
+
+            HorizontalOrder horizontalOrder = rotSense == RotationSense.CW 
+                ? HorizontalOrder.LeftToRight
+                : HorizontalOrder.RightToLeft;
+
+            VerticalOrder verticalOrder = rotSense == RotationSense.CW
+                ? VerticalOrder.TopToBottom
+                : VerticalOrder.BottomToTop;
+
+            int i = 0;
+            foreach (int x in board.GetXs(horizontalOrder))
+                foreach (int y in board.GetYs(verticalOrder))
+                {
+                    Tile tile = tiles[i];
+                    if (tile.Position != new Vector2Int(x, y))
+                        movedTiles.Add(board.MoveTile(tile, x, y));
+
+                    ++i;
+                }
+
+            Vector2 pivot = new Vector2(board.Width - 1, board.Height - 1) / 2f;
+            return new RotationStep(pivot, rotSense, movedTiles);
+        }
+
+        public RotationStep Rotate2x2Block(Vector2Int bottomLeft, RotationSense rotSense)
+        {
+            if (!board.IsInBounds(bottomLeft) || !board.IsInBounds(bottomLeft + Vector2Int.one))
+                throw new InvalidOperationException("2x2 block partially or fully out of bounds");
+
+
+            var movedTiles = new List<MovedTile>();
+
+            List<Tile> tiles = board.GetRows(HorizontalOrder.LeftToRight, VerticalOrder.BottomToTop)
+                .Skip(bottomLeft.y)
+                .Take(2)
+                .SelectMany(row => row.Skip(bottomLeft.x).Take(2))
+                .ToList();
+
+            HorizontalOrder horizontalOrder = rotSense == RotationSense.CW
+                ? HorizontalOrder.LeftToRight
+                : HorizontalOrder.RightToLeft;
+
+            VerticalOrder verticalOrder = rotSense == RotationSense.CW
+                ? VerticalOrder.TopToBottom
+                : VerticalOrder.BottomToTop;
+
+            int i = 0;
+            foreach (int x in board.GetXs(horizontalOrder))
+                foreach (int y in board.GetYs(verticalOrder))
+                {
+                    if (x < bottomLeft.x || x > bottomLeft.x + 1 || y < bottomLeft.y || y > bottomLeft.y + 1)
+                        continue;
+
+                    movedTiles.Add(board.MoveTile(tiles[i], x, y));
+
+                    ++i;
+                }
+
+            Vector2 pivot = bottomLeft + 0.5f * Vector2.one;
+            return new RotationStep(pivot, rotSense, movedTiles);
+        }
+
+        public RotationStep Rotate3x3Block(Vector2Int pivot, RotationSense rotSense)
+        {
+            if (!board.IsInBounds(pivot - Vector2Int.one) || !board.IsInBounds(pivot + Vector2Int.one))
+                throw new InvalidOperationException("3x3 block partially or fully out of bounds");
+
+            var movedTiles = new List<MovedTile>();
+
+            List<Tile> tiles = board.GetRows(HorizontalOrder.LeftToRight, VerticalOrder.BottomToTop)
+                .Skip(pivot.y - 1)
+                .Take(3)
+                .SelectMany(row => row.Skip(pivot.x - 1).Take(3))
+                .ToList();
+
+            HorizontalOrder horizontalOrder = rotSense == RotationSense.CW
+                ? HorizontalOrder.LeftToRight
+                : HorizontalOrder.RightToLeft;
+
+            VerticalOrder verticalOrder = rotSense == RotationSense.CW
+                ? VerticalOrder.TopToBottom
+                : VerticalOrder.BottomToTop;
+
+            int i = 0;
+            foreach (int x in board.GetXs(horizontalOrder))
+                foreach (int y in board.GetYs(verticalOrder))
+                {
+                    if (x < pivot.x - 1 || x > pivot.x + 1 || y < pivot.y - 1 || y > pivot.y + 1)
+                        continue;
+
+                    Tile tile = tiles[i];
+                    if (tile.Position != new Vector2Int(x, y))
+                        movedTiles.Add(board.MoveTile(tile, x, y));
+
+                    ++i;
+                }
+
+            return new RotationStep(pivot, rotSense, movedTiles);
+        }
+
+        public PermutationStep SwapTiles(Vector2Int pos1, Vector2Int pos2)
+        {
+            Tile tile1 = board[pos1];
+            Tile tile2 = board[pos2];
+
+            var movedTiles = new List<MovedTile>
+            {
+                board.MoveTile(tile1, pos2),
+                board.MoveTile(tile2, pos1),
+            };
+
+            return new PermutationStep(movedTiles);
+        }
+
+        public PermutationStep SwapRows(int y1, int y2)
+        {
+            List<Tile> row1 = board.GetRow(y1).ToList();
+            List<Tile> row2 = board.GetRow(y2).ToList();
+
+            var movedTiles = new List<MovedTile>();
+
+            foreach (Tile tile in row1)
+                movedTiles.Add(board.MoveTile(tile, tile.Position.x, y2));
+
+            foreach (Tile tile in row2)
+                movedTiles.Add(board.MoveTile(tile, tile.Position.x, y1));
+
+            return new PermutationStep(movedTiles);
+        }
+
+        public PermutationStep SwapColumns(int x1, int x2)
+        {
+            List<Tile> column1 = board.GetColumn(x1).ToList();
+            List<Tile> column2 = board.GetColumn(x2).ToList();
+
+            var movedTiles = new List<MovedTile>();
+
+            foreach (Tile tile in column1)
+                movedTiles.Add(board.MoveTile(tile, x2, tile.Position.y));
+
+            foreach (Tile tile in column2)
+                movedTiles.Add(board.MoveTile(tile, x1, tile.Position.y));
+
+            return new PermutationStep(movedTiles);
+        }
+
+        public WildcardStep CreateWildcard(Vector2Int pos)
+        {
+            Tile tile = board[pos];
+
+            if (tile.Inert)
+                throw new InvalidOperationException("Cannot create wildcard from inert tile");
+
+            if (tile.Wildcard)
+                throw new InvalidOperationException("Tile was already a wildcard");
+            
+            tile.MakeWildcard();
+
+            return new WildcardStep(new List<Tile> { tile });
+        }
+
+        public PredictionStep TogglePrediction(Vector2Int pos)
+        {
+            Tile tile = board[pos];
+
+            if (tile.Inert)
+                throw new InvalidOperationException("Cannot mark inert tile for prediction");
+
+            tile.Marked = !tile.Marked;
+
+            return new PredictionStep(new List<Tile> { tile });
         }
     }
 }

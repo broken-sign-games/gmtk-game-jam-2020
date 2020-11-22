@@ -1,34 +1,93 @@
 ﻿using GMTK2020.Audio;
 using GMTK2020.Data;
 using GMTK2020.Rendering;
+using GMTK2020.UI;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GMTK2020
 {
     public class Playback : MonoBehaviour
     {
         [SerializeField] private BoardRenderer boardRenderer = null;
-        [SerializeField] private PredictionEditor predictionEditor = null;
-        [SerializeField] private LevelLoader levelLoader = null;
+        [SerializeField] private ScoreRenderer scoreRenderer = null;
+        [SerializeField] private Button runButton = null;
+        [SerializeField] private Button retryButton = null;
+        [SerializeField] private BoardManipulator boardManipulator = null;
 
-        private SoundManager soundManager;
+        // TODO: This is probably not the best place to put this data.
+        [SerializeField] private int baseScore = 100;
 
-        private void Start()
+        private Board board;
+        private ScoreKeeper scoreKeeper;
+
+        private Simulator simulator;
+
+        public void Initialize(Board initialBoard, Simulator simulator)
         {
-            soundManager = FindObjectOfType<SoundManager>();
+            board = initialBoard;
+            this.simulator = simulator;
+
+            scoreKeeper = new ScoreKeeper(baseScore);
+            scoreRenderer.SetScoreKeeper(scoreKeeper);
+
+            boardManipulator.LastToolUsed += OnLastToolUsed;
         }
 
-        public void Run()
+        private void OnDestroy()
         {
-            if (soundManager)
-                soundManager.PlayEffect(SoundManager.Effect.CLICK);
+            boardManipulator.LastToolUsed -= OnLastToolUsed;
+        }
 
-            var validator = new Validator();
-            Prediction prediction = predictionEditor.GetPredictions();
-            Level level = levelLoader.Level;
-            LevelResult levelResult = validator.ValidatePrediction(level.Simulation, prediction);
+        public async void KickOffPlayback()
+        {
+            // TODO: This should be triggered directly by the button instead
+            SoundManager.Instance.PlayEffect(SoundEffect.Click);
 
-            boardRenderer.KickOffRenderSimulation(level.Simulation, levelResult);
+            await RunPlaybackAsync();
+        }
+
+        private async Task RunPlaybackAsync()
+        {
+            runButton.interactable = false;
+            
+            while (true)
+            {
+                SimulationStep step = simulator.SimulateNextStep();
+
+                scoreKeeper.ScoreStep(step);
+                // We might need to tie this into the board renderer 
+                // to sync the update with the match animation.
+                scoreRenderer.UpdateScore();
+
+                if (step is MatchStep matchStep)
+                    boardManipulator.RewardMatch(matchStep);
+
+                await boardRenderer.AnimateSimulationStepAsync(step);
+
+                if (step.FinalStep)
+                    break;
+            }
+
+            if (simulator.FurtherMatchesPossible() || boardManipulator.AnyToolsAvailable())
+                runButton.interactable = true;
+            else
+                EndLevel();
+        }
+
+        public void OnLastToolUsed()
+        {
+            if (!simulator.FurtherMatchesPossible())
+                EndLevel();
+        }
+
+        private void EndLevel()
+        {
+            runButton.interactable = false;
+            scoreKeeper.UpdateHighscore();
+            scoreRenderer.UpdateHighscore();
+            retryButton.ActivateObject();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = System.Random;
@@ -59,6 +60,19 @@ namespace GMTK2020
         {
             for (int i = items.Count - 1; i >= 0; i--)
                 yield return items[i];
+        }
+        public static TValue GetValueOrDefault<TKey, TValue>(
+            this IDictionary<TKey, TValue> dictionary,
+            TKey key,
+            TValue defaultValue)
+        {
+            return dictionary.TryGetValue(key, out TValue value) ? value : defaultValue;
+        }
+
+        public static TValue RandomChoice<TValue>(this TValue[] values, Random rng)
+        {
+            int randomIndex = rng.Next(values.Length);
+            return values[randomIndex];
         }
     }
 

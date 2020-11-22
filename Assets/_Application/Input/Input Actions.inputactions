@@ -20,14 +20,6 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
-                },
-                {
-                    "name": "Drag",
-                    "type": "Value",
-                    "id": "57eff983-b9ce-4826-9373-82d5b868043c",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -72,28 +64,6 @@
                     "processors": "",
                     "groups": "Touch",
                     "action": "Select",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "182bc42c-719b-44b6-b948-2bd9ff5d1854",
-                    "path": "<Mouse>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Drag",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5f2c3315-c042-4f9c-b5c4-a7fc0b081c2a",
-                    "path": "<Touchscreen>/touch*/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Touch",
-                    "action": "Drag",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

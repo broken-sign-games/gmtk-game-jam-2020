@@ -36,16 +36,16 @@ namespace GMTK2020.Editor
         private static readonly TestRunnerApi testApi;
 
         // TODO: Store this in a scriptable object
-        private const string BUILD_BASE_NAME = "5-steps-ahead";
+        private const string BUILD_BASE_NAME = "alkahest";
 
         static TestAndBuildMenu()
         {
             testApi = ScriptableObject.CreateInstance<TestRunnerApi>();
+
             testCallbacks = new TestCallbacks
             {
-                RunFinishedCallback = CheckPlayModeTestResults
+                RunFinishedCallback = CheckEditModeTestResults
             };
-            testApi.RegisterCallbacks(testCallbacks);
         }
 
         [MenuItem("Build/Build all _F7")]
@@ -54,6 +54,8 @@ namespace GMTK2020.Editor
             Debug.Log("Starting build...");
 
             Debug.Log("Running EditMode tests...");
+
+            testApi.RegisterCallbacks(testCallbacks);
             RunTests(TestMode.EditMode);
 
             // Callback will continue control flow in CheckEditModeTestResults
@@ -63,14 +65,13 @@ namespace GMTK2020.Editor
         {
             var modeFilter = new Filter() { testMode = testMode };
 
-            // This will be overridden by the static constructor for PlayMode tests.
-            testCallbacks.RunFinishedCallback = CheckEditModeTestResults;
-
             testApi.Execute(new ExecutionSettings(modeFilter));
         }
 
         private static void CheckEditModeTestResults(bool passed)
         {
+            testApi.UnregisterCallbacks(testCallbacks);
+
             if (passed)
                 Debug.Log("EditMode tests passed.");
             else
@@ -79,23 +80,8 @@ namespace GMTK2020.Editor
                 return;
             }
 
-            Debug.Log("Running PlayMode tests...");
-            //RunTests(TestMode.PlayMode);
-
-            BuildAll();
-
-            // Callback will continue control flow in CheckPlayModeTestResults
-        }
-
-        private static void CheckPlayModeTestResults(bool passed)
-        {
-            if (passed)
-                Debug.Log("PlayMode tests passed.");
-            else
-            {
-                Debug.Log("PlayMode tests failed, aborting build.");
-                return;
-            }
+            // TODO: Run playmode tests in a way that doesn't set up a
+            // test callbacks for test runs started from the editor.
 
             BuildAll();
         }

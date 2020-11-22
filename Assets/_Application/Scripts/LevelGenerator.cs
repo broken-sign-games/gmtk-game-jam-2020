@@ -10,130 +10,81 @@ namespace GMTK2020
     public class LevelGenerator
     {
         private LevelSpecification levelSpec;
-        private Simulator simulator;
 
-        public LevelGenerator(LevelSpecification levelSpec, Simulator simulator)
+        private Random rng;
+        
+        public LevelGenerator(LevelSpecification levelSpec)
         {
             this.levelSpec = levelSpec;
-            this.simulator = simulator;
+
+            rng = new Random(Time.frameCount);
         }
 
         public Level GenerateValidLevel()
         {
-            Tile[,] grid = null;
-            Simulation simulation = null;
+            Board board = null;
             bool isValid;
+            var failureReasons = new Dictionary<string, int>();
+            string FAILED_VALIDATION = "Failed validation";
+            int MAX_ATTEMPTS = 1000;
+            int nAttempts = 0;
             do
             {
+                ++nAttempts;
                 isValid = true;
                 try
                 {
-                    grid = GenerateLevel();
-                    simulation = simulator.Simulate(grid);
-                    isValid = ValidateSimulation(simulation);
+                    board = GenerateLevel();
+                    Board workingCopy = board.DeepCopy();
+                    foreach (Tile tile in workingCopy)
+                        tile.Marked = true;
+                    List<SimulationStep> steps = new Simulator(workingCopy, levelSpec.ColorCount).SimulateToStop();
+                    isValid = ValidateSimulation(steps);
+
+                    if (!isValid)
+                        failureReasons[FAILED_VALIDATION] = failureReasons.GetValueOrDefault(FAILED_VALIDATION, 0) + 1;
                 }
                 catch (Exception e) when (
                     e is ArgumentException ||
                     e is InvalidOperationException)
                 {
                     isValid = false;
+                    failureReasons[e.Message] = failureReasons.GetValueOrDefault(e.Message, 0) + 1;
                 }
+
+                if (nAttempts >= MAX_ATTEMPTS)
+                    isValid = true;
             }
             while (!isValid);
 
-            return new Level(grid, simulation);
-        }
-
-        private Tile[,] GenerateLevel()
-        {
-            switch (levelSpec.GeneratorStrategy)
+            foreach ((string reason, int count) in failureReasons)
             {
-            case GeneratorStrategy.Random: return GenerateRandomLevel();
-            case GeneratorStrategy.SingleHorizontalMatch: return GenerateSingleHorizontalMatchLevel();
-            case GeneratorStrategy.SingleMatch: return GenerateSingleMatchLevel();
-            case GeneratorStrategy.MultipleMatches: return GenerateSingleMatchLevel();
-            case GeneratorStrategy.BiggerMatches: return GenerateSingleMatchLevel();
-            default: throw new InvalidOperationException("Unknown level generation strategy.");
+                Debug.Log($"{reason}: {count}");
             }
+
+            return new Level(board);
         }
 
-        private Tile[,] GenerateRandomLevel()
+        private Board GenerateLevel()
         {
-            var rand = new Random();
-            var tiles = new Tile[levelSpec.Size.x, levelSpec.Size.y];
-            for (int x = 0; x < levelSpec.Size.x; ++x)
-            {
-                for (int y = 0; y < levelSpec.Size.y; ++y)
-                {
-                    tiles[x, y] = new Tile(rand.Next(levelSpec.ColorCount));
-                }
-            }
-            return tiles;
+            return GenerateSingleMatchLevel();
         }
 
-        private Tile[,] GenerateSingleHorizontalMatchLevel()
+        private Board GenerateSingleMatchLevel()
         {
-            var rng = new Random();
             int width = levelSpec.Size.x;
             int height = levelSpec.Size.y;
-            var tiles = new Tile[width, height];
+            var board = new Board(width, height);
 
-            List<int> colors = Enumerable.Range(0, levelSpec.ColorCount).ToList().Shuffle(rng);
+            List<int> colors = Enumerable.Range(0, levelSpec.GuaranteedChain).ToList().Shuffle(rng);
+            int verticalMatches = levelSpec.GuaranteedChain / 2;
+            int horizontalMatches = levelSpec.GuaranteedChain - verticalMatches;
 
-            var anchors = new List<Vector2Int> { new Vector2Int(width / 2, 0) };
-
-            for (int i = 0; i < colors.Count; ++i)
-            {
-                int color = colors[i];
-                int leftEnd;
-                if (anchors.Count == 1)
-                {
-                    leftEnd = anchors[0].x == 0 ? 0 :
-                                anchors[0].x == width - 1 ? width - 2 :
-                                anchors[0].x - rng.Next(2);
-                }
-                else
-                {
-                    leftEnd = anchors[0].x == 0 ? 1 :
-                                anchors[1].x == width - 1 ? width - 3 :
-                                anchors[1].x - 2 * rng.Next(2);
-                }
-
-                if (tiles[leftEnd, height - 1] != null || tiles[leftEnd + 1, height - 1] != null)
-                    throw new InvalidOperationException("Can't fit horizontal match");
-
-                var newTiles = new Vector2Int[2]
-                {
-                    new Vector2Int(leftEnd, anchors[0].y),
-                    new Vector2Int(leftEnd + 1, anchors[0].y)
-                };
-
-                anchors = newTiles.ToList();
-
-                foreach (Vector2Int tile in newTiles)
-                {
-                    for (int y = height - 1; y > tile.y; --y)
-                    {
-                        tiles[tile.x, y] = tiles[tile.x, y - 1];
-                    }
-                    tiles[tile.x, tile.y] = new Tile(color);
-                }
-            }
-
-            FillGridWithNonMatchingTiles(tiles, rng);
-
-            return tiles;
-        }
-
-        private Tile[,] GenerateSingleMatchLevel()
-        {
-            var rng = new Random();
-            int width = levelSpec.Size.x;
-            int height = levelSpec.Size.y;
-            var tiles = new Tile[width, height];
-
-            List<int> colors = Enumerable.Range(0, levelSpec.ColorCount).ToList().Shuffle(rng);
-            List<bool> verticalList = new List<bool> { true, true, false, false, false }.Shuffle(rng);
+            List<bool> verticalList = Enumerable.Repeat(true, verticalMatches).ToList();
+            verticalList.AddRange(
+                Enumerable.Repeat(false, horizontalMatches)
+            );
+            verticalList = verticalList.Shuffle(rng);
 
             var anchors = new List<Vector2Int> { new Vector2Int(width / 2, 0) };
 
@@ -142,67 +93,64 @@ namespace GMTK2020
                 int color = colors[i];
                 bool vertical = verticalList[i];
 
-                var newTiles = new Vector2Int[2];
+                var newTiles = new Vector2Int[3];
                 if (vertical)
                 {
                     Vector2Int anchor = anchors[rng.Next(anchors.Count)];
-                    if (tiles[anchor.x, height - 1] != null || tiles[anchor.x, height - 2] != null)
+                    if (board[anchor.x, height - 1] != null || board[anchor.x, height - 2] != null || board[anchor.x, height - 3] != null)
                         throw new InvalidOperationException("Can't fit vertical match");
 
                     newTiles[0] = anchor;
                     newTiles[1] = anchor + new Vector2Int(0, 1);
+                    newTiles[2] = anchor + new Vector2Int(0, 2);
 
-                    anchors = new List<Vector2Int> { newTiles[1] };
+                    anchors = new List<Vector2Int> { newTiles[1], newTiles[2] };
                 }
                 else
                 {
-                    int leftEnd;
-                    if (anchors.Count == 1)
-                    {
-                        leftEnd = anchors[0].x == 0 ? 0 :
-                                  anchors[0].x == width - 1 ? width - 2 :
-                                  anchors[0].x - rng.Next(2);
-                    }
-                    else
-                    {
-                        leftEnd = anchors[0].x == 0 ? 1 :
-                                  anchors[1].x == width - 1 ? width - 3 :
-                                  anchors[1].x - 2 * rng.Next(2);
-                    }
+                    Vector2Int anchor = anchors[rng.Next(anchors.Count)];
+                    int leftEnd = Math.Max(0, Math.Min(width - 3, anchor.x - rng.Next(3)));
 
-                    if (tiles[leftEnd, height - 1] != null || tiles[leftEnd + 1, height - 1] != null)
+                    if (board[leftEnd, height - 1] != null || board[leftEnd + 1, height - 1] != null || board[leftEnd + 2, height - 1] != null)
                         throw new InvalidOperationException("Can't fit horizontal match");
 
-                    newTiles[0] = new Vector2Int(leftEnd, anchors[0].y);
-                    newTiles[1] = new Vector2Int(leftEnd+1, anchors[0].y);
+                    newTiles[0] = new Vector2Int(leftEnd, anchor.y);
+                    newTiles[1] = new Vector2Int(leftEnd+1, anchor.y);
+                    newTiles[2] = new Vector2Int(leftEnd+2, anchor.y);
 
-                    anchors = newTiles.ToList();
+                    anchors = new List<Vector2Int>();
+
+                    for (int y = anchor.y; y >= 0; --y)
+                    {
+                        anchors.Add(new Vector2Int(newTiles[0].x, y));
+                        anchors.Add(new Vector2Int(newTiles[2].x, y));
+                    }
                 }
 
                 foreach (Vector2Int tile in newTiles)
                 {
                     for (int y = height - 1; y > tile.y; --y)
                     {
-                        tiles[tile.x, y] = tiles[tile.x, y - 1];
+                        board[tile.x, y] = board[tile.x, y - 1];
                     }
-                    tiles[tile.x, tile.y] = new Tile(color);
+                    board[tile] = new Tile(color, tile);
                 }
             }
 
-            FillGridWithNonMatchingTiles(tiles, rng);
+            FillBoardWithNonMatchingTiles(board);
 
-            return tiles;
+            return board;
         }
 
-        private void FillGridWithNonMatchingTiles(Tile[,] tiles, Random rng)
+        private void FillBoardWithNonMatchingTiles(Board board)
         {
-            for (int y = 0; y < tiles.GetLength(1); ++y)
-                for (int x = 0; x < tiles.GetLength(0); ++x)
-                    if (tiles[x, y] is null)
-                        tiles[x, y] = GetNonMatchingTile(x, y, tiles, rng);
+            foreach (int y in board.GetYs())
+                foreach (int x in board.GetXs())
+                    if (board[x, y] is null)
+                        board[x, y] = GetNonMatchingTile(x, y, board);
         }
 
-        private Tile GetNonMatchingTile(int x, int y, Tile[,] tiles, Random rng)
+        private Tile GetNonMatchingTile(int x, int y, Board board)
         {
             var neighborhood = new HashSet<Vector2Int>
             {
@@ -212,8 +160,8 @@ namespace GMTK2020
                 new Vector2Int(0, -1),
             };
 
-            int width = tiles.GetLength(0);
-            int height = tiles.GetLength(1);
+            int width = board.Width;
+            int height = board.Height;
 
             var colors = new HashSet<int>(Enumerable.Range(0, levelSpec.ColorCount));
             var origin = new Vector2Int(x, y);
@@ -224,102 +172,20 @@ namespace GMTK2020
                     || pos.y < 0
                     || pos.x >= width
                     || pos.y >= height
-                    || tiles[pos.x, pos.y] is null)
+                    || board[pos] is null)
                 {
                     continue;
                 }
-                colors.Remove(tiles[pos.x, pos.y].Color);
+                //colors.Remove(board[pos].Color);
             }
 
             int color = colors.ElementAt(rng.Next(colors.Count));
-            return new Tile(color);
+            return new Tile(color, origin);
         }
 
-        private bool ValidateSimulation(Simulation simulation)
+        private bool ValidateSimulation(List<SimulationStep> steps)
         {
-            switch (levelSpec.GeneratorStrategy)
-            {
-            case GeneratorStrategy.Random: return true;
-            case GeneratorStrategy.SingleHorizontalMatch: return ValidateSingleHorizontalMatches(simulation);
-            case GeneratorStrategy.SingleMatch: return ValidateSingleMatches(simulation);
-            case GeneratorStrategy.MultipleMatches: return ValidateMultipleMatches(simulation);
-            case GeneratorStrategy.BiggerMatches: return ValidateBiggerMatches(simulation);
-            default: return true;
-            }
-        }
-
-        private bool ValidateSingleHorizontalMatches(Simulation simulation)
-        {
-            foreach (SimulationStep step in simulation.Steps)
-            {
-                (Tile tile, Vector2Int pos)[] tiles = step.MatchedTiles.ToArray();
-
-                if (tiles.Length != 2)
-                    return false;
-
-                Vector2Int delta = tiles[0].pos - tiles[1].pos;
-
-                if (delta.y != 0 || Math.Abs(delta.x) != 1)
-                    return false;
-            }
-
-            return true;
-        }
-
-        private bool ValidateSingleMatches(Simulation simulation)
-        {
-            foreach (SimulationStep step in simulation.Steps)
-            {
-                if (step.MatchedTiles.Count != 2)
-                    return false;
-            }
-
-            return true;
-        }
-
-        private bool ValidateMultipleMatches(Simulation simulation)
-        {
-            bool foundMultiMatch = false;
-
-            foreach (SimulationStep step in simulation.Steps)
-            {
-                int matches = 0;
-                for (int color = 0; color < levelSpec.ColorCount; ++color)
-                {
-                    int tileCount = step.MatchedTiles.Count<(Tile tile, Vector2Int)>(t => t.tile.Color == color);
-                    if (tileCount == 0)
-                        continue;
-
-                    if (tileCount != 2)
-                        return false;
-
-                    ++matches;
-                }
-
-                if (matches == 0)
-                    return false;
-
-                if (matches > 1)
-                    foundMultiMatch = true;
-            }
-
-            return foundMultiMatch;
-        }
-
-        private bool ValidateBiggerMatches(Simulation simulation)
-        {
-            int matchPatternSize = levelSpec.MatchingPattern.Count;
-            foreach (SimulationStep step in simulation.Steps)
-            {
-                for (int color = 0; color < levelSpec.ColorCount; ++color)
-                {
-                    int tileCount = step.MatchedTiles.Count<(Tile tile, Vector2Int)>(t => t.tile.Color == color);
-                    if (tileCount % matchPatternSize != 0)
-                        return true;
-                }
-            }
-
-            return false;
+            return steps.Count == levelSpec.GuaranteedChain + 1;
         }
     }
 }

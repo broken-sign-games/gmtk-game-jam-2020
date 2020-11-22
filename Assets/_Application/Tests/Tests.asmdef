@@ -3,7 +3,8 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "GMTK2020"
+        "GMTK2020",
+        "RotaryHeart.SerializableDictionary"
     ],
     "includePlatforms": [
         "Editor"
