@@ -2,8 +2,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-namespace GMTK2020.Audio
+namespace GMTK2020
 {
     public class TutorialSystem : MonoBehaviour
     {
@@ -13,8 +14,13 @@ namespace GMTK2020.Audio
 
         public delegate void TutorialHandler(Tutorial tutorial);
         public event TutorialHandler TutorialReady;
+        public event TutorialHandler TutorialCompleted;
 
         private static readonly IEnumerable<TutorialID> allTutorials = Utility.GetEnumValues<TutorialID>();
+
+        private TutorialID? activeTutorial;
+
+        private Queue<TutorialID> queuedTutorials = new Queue<TutorialID>();
 
         private void Awake()
         {
@@ -28,11 +34,17 @@ namespace GMTK2020.Audio
             Instance = this;
         }
 
-        public static void ResetTutorial()
+        private void Update()
         {
-            foreach (TutorialID msg in allTutorials)
+            if (Keyboard.current.ctrlKey.isPressed && Keyboard.current.shiftKey.isPressed && Keyboard.current.rKey.wasPressedThisFrame)
+                ResetTutorial();
+        }
+
+        private void ResetTutorial()
+        {
+            foreach (TutorialID id in allTutorials)
             {
-                PlayerPrefs.DeleteKey(Enum.GetName(typeof(TutorialID), msg));
+                PlayerPrefs.DeleteKey(TutorialIDToPrefsKey(id));
             }
         }
 
@@ -41,18 +53,48 @@ namespace GMTK2020.Audio
             if (TutorialWasShownAlready(id))
                 return;
 
+            ShowTutorial(id);
+        }
+
+        private void ShowTutorial(TutorialID id)
+        {
+            if (activeTutorial.HasValue)
+            {
+                queuedTutorials.Enqueue(id);
+                return;
+            }
+
+            activeTutorial = id;
             TutorialReady?.Invoke(tutorialData.Map[id]);
         }
+
         private bool TutorialWasShownAlready(TutorialID id)
         {
             string prefsKey = TutorialIDToPrefsKey(id);
             return PlayerPrefs.GetInt(prefsKey, -1) >= 0;
         }
 
-        public void CompleteTutorial(TutorialID id)
+        public void CompleteActiveTutorial()
         {
+            if (!activeTutorial.HasValue)
+                return;
+
+            TutorialID id = activeTutorial.Value;
             string prefsKey = TutorialIDToPrefsKey(id);
             PlayerPrefs.SetInt(prefsKey, 1);
+            activeTutorial = null;
+            TutorialCompleted(tutorialData.Map[id]);
+
+            DequeueNextTutorialIfAvailable();
+        }
+
+        private void DequeueNextTutorialIfAvailable()
+        {
+            while (queuedTutorials.Count > 0 && TutorialWasShownAlready(queuedTutorials.Peek()))
+                queuedTutorials.Dequeue();
+
+            if (queuedTutorials.Count > 0)
+                ShowTutorial(queuedTutorials.Dequeue());
         }
 
         private string TutorialIDToPrefsKey(TutorialID id) 
