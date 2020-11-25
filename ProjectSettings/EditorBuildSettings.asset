@@ -14,15 +14,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Application/Scenes/SplashScene.unity
     guid: 257b3e130b3409e4db0d1a11b127e9ec
-  - enabled: 1
-    path: Assets/_Application/Scenes/TutorialScene.unity
-    guid: e45d5a3636f986647ac51fcd4971db1e
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/_Application/Scenes/LevelScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
-    path: Assets/_Application/Scenes/WinScene.unity
-    guid: 8731b1e4fca36bd489b5990319e4cf53
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 33f8145719a27ba44bddce2baae4b57f,
       type: 2}

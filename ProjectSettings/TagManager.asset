@@ -57,3 +57,6 @@ TagManager:
   - name: UI
     uniqueID: 4057161333
     locked: 0
+  - name: Tutorial Mask
+    uniqueID: 1710855171
+    locked: 0
