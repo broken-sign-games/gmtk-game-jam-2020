@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace GMTK2020
+namespace GMTK2020.TutorialSystem
 {
-    public class TutorialSystem : MonoBehaviour
+    public class TutorialManager : MonoBehaviour
     {
         [SerializeField] private TutorialMap tutorialData = null;
 
-        public static TutorialSystem Instance { get; private set; }
+        public static TutorialManager Instance { get; private set; }
 
         public delegate void TutorialHandler(Tutorial tutorial);
         public event TutorialHandler TutorialReady;

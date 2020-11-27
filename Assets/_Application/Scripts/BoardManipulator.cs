@@ -1,5 +1,6 @@
 ﻿using GMTK2020.Data;
 using GMTK2020.Rendering;
+using GMTK2020.TutorialSystem;
 using GMTK2020.UI;
 using GMTKJam2020.Input;
 using RotaryHeart.Lib.SerializableDictionary;
@@ -12,6 +13,7 @@ namespace GMTK2020
     public class BoardManipulator : MonoBehaviour
     {
         [SerializeField] private BoardRenderer boardRenderer = null;
+        [SerializeField] private TutorialOverlay tutorialOverlay = null;
         [SerializeField] private SerializableDictionaryBase<Tool, ToolButton> toolButtons = null;
         [SerializeField] private RotationButton rotate3x3Button = null;
         [SerializeField] private ToolData toolData = null;
@@ -122,6 +124,9 @@ namespace GMTK2020
 
             Vector2Int gridPos = gridPosOrNull.Value;
 
+            if (!tutorialOverlay.IsPositionAllowedByCurrentMask(gridPos))
+                return;
+
             if (ActiveTool == Tool.SwapTiles || ActiveTool == Tool.SwapLines)
             {
                 isDragging = true;
@@ -144,6 +149,12 @@ namespace GMTK2020
             }
 
             Vector2Int gridPos = gridPosOrNull.Value;
+
+            if (!tutorialOverlay.IsPositionAllowedByCurrentMask(gridPos))
+            {
+                isDragging = false;
+                return;
+            }
 
             int delta = (gridPos - draggingFrom).sqrMagnitude;
 

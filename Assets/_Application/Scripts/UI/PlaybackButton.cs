@@ -1,22 +1,20 @@
 ﻿using GMTK2020.Data;
 using GMTK2020.TutorialSystem;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace GMTK2020.UI
 {
-    public class InfoBox : MonoBehaviour
+    public class PlaybackButton : MonoBehaviour
     {
-        [SerializeField] TextMeshProUGUI infoText;
-        [SerializeField] Button dismissTutorialButton;
+        [SerializeField] private Playback playback = null;
+        [SerializeField] private Canvas maskableCanvas = null;
+        [SerializeField] private Canvas unmaskableCanvas = null;
 
         private TutorialManager tutorialManager;
 
-        private void Start()
+        private void Awake()
         {
             tutorialManager = TutorialManager.Instance;
-
             tutorialManager.TutorialReady += OnTutorialReady;
             tutorialManager.TutorialCompleted += OnTutorialCompleted;
         }
@@ -27,22 +25,21 @@ namespace GMTK2020.UI
             tutorialManager.TutorialCompleted -= OnTutorialCompleted;
         }
 
-        public void DismissTutorial()
+        public void OnClick()
         {
             tutorialManager.CompleteActiveTutorial();
+            playback.KickOffPlayback();
         }
 
         private void OnTutorialReady(Tutorial tutorial)
         {
-            infoText.text = tutorial.Message;
-            if (tutorial.ShowDismissButton)
-                dismissTutorialButton.ActivateObject();
+            if (tutorial.PlaybackButtonAvailable)
+                transform.SetParent(unmaskableCanvas.transform);
         }
 
         private void OnTutorialCompleted(Tutorial tutorial)
         {
-            infoText.text = "";
-            dismissTutorialButton.DeactivateObject();
+            transform.SetParent(maskableCanvas.transform);
         }
     } 
 }

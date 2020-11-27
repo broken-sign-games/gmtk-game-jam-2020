@@ -1,5 +1,6 @@
 ﻿using GMTK2020.Data;
 using GMTK2020.Rendering;
+using GMTK2020.TutorialSystem;
 using TMPro;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ namespace GMTK2020
         private void Start()
         {
             LoadLevel();
-            TutorialSystem.Instance.ShowTutorialIfNew(TutorialID.Welcome);
+            TutorialManager.Instance.ShowTutorialIfNew(TutorialID.Welcome);
         }
 
         public void LoadLevel()

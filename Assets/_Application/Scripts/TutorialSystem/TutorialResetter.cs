@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GMTK2020
+namespace GMTK2020.TutorialSystem
 {
-    [RequireComponent(typeof(TutorialSystem))]
+    [RequireComponent(typeof(TutorialManager))]
     public class TutorialResetter : MonoBehaviour
     {
-        private TutorialSystem tutorialSystem;
+        private TutorialManager tutorialManager;
 
         private void Awake()
         {
-            tutorialSystem = GetComponent<TutorialSystem>();
+            tutorialManager = GetComponent<TutorialManager>();
         }
     } 
 }
