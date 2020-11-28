@@ -1,6 +1,7 @@
 ﻿using GMTK2020.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,7 +9,9 @@ namespace GMTK2020.TutorialSystem
 {
     public class TutorialManager : MonoBehaviour
     {
-        [SerializeField] private TutorialMap tutorialData = null;
+        [SerializeField] private TutorialData tutorialData = null;
+
+        private Dictionary<TutorialID, Tutorial> tutorialMap;
 
         public static TutorialManager Instance { get; private set; }
 
@@ -18,9 +21,9 @@ namespace GMTK2020.TutorialSystem
 
         private static readonly IEnumerable<TutorialID> allTutorials = Utility.GetEnumValues<TutorialID>();
 
-        private TutorialID? activeTutorial;
+        private Tutorial activeTutorial;
 
-        private Queue<TutorialID> queuedTutorials = new Queue<TutorialID>();
+        private Queue<Tutorial> queuedTutorials = new Queue<Tutorial>();
 
         private void Awake()
         {
@@ -32,6 +35,8 @@ namespace GMTK2020.TutorialSystem
             }
 
             Instance = this;
+
+            tutorialMap = tutorialData.Tutorials.ToDictionary(tut => tut.ID);
         }
 
         private void Update()
@@ -42,30 +47,42 @@ namespace GMTK2020.TutorialSystem
 
         private void ResetTutorial()
         {
+            Debug.Log("Resetting tutorial");
             foreach (TutorialID id in allTutorials)
             {
                 PlayerPrefs.DeleteKey(TutorialIDToPrefsKey(id));
             }
         }
 
-        public void ShowTutorialIfNew(TutorialID id)
+        public void ShowTutorialIfNew(TutorialID id) 
+            => ShowTutorialIfNew(id, new List<GridRect>());
+
+        public void ShowTutorialIfNew(TutorialID id, List<GridRect> interactableRects)
         {
             if (TutorialWasShownAlready(id))
                 return;
 
-            ShowTutorial(id);
+            ShowTutorial(id, interactableRects);
         }
 
-        private void ShowTutorial(TutorialID id)
+        private void ShowTutorial(TutorialID id, List<GridRect> interactableRects)
         {
-            if (activeTutorial.HasValue)
+            Tutorial tutorial = tutorialMap[id];
+            tutorial.InteractableRects = interactableRects;
+
+            ShowTutorial(tutorial);
+        }
+
+        private void ShowTutorial(Tutorial tutorial)
+        {
+            if (activeTutorial != null)
             {
-                queuedTutorials.Enqueue(id);
+                queuedTutorials.Enqueue(tutorial);
                 return;
             }
 
-            activeTutorial = id;
-            TutorialReady?.Invoke(tutorialData.Map[id]);
+            activeTutorial = tutorial;
+            TutorialReady?.Invoke(tutorial);
         }
 
         private bool TutorialWasShownAlready(TutorialID id)
@@ -76,21 +93,21 @@ namespace GMTK2020.TutorialSystem
 
         public void CompleteActiveTutorial()
         {
-            if (!activeTutorial.HasValue)
+            if (activeTutorial is null)
                 return;
 
-            TutorialID id = activeTutorial.Value;
-            string prefsKey = TutorialIDToPrefsKey(id);
+            string prefsKey = TutorialIDToPrefsKey(activeTutorial.ID);
             PlayerPrefs.SetInt(prefsKey, 1);
+            Tutorial completedTutorial = activeTutorial;
             activeTutorial = null;
-            TutorialCompleted(tutorialData.Map[id]);
+            TutorialCompleted(completedTutorial);
 
             DequeueNextTutorialIfAvailable();
         }
 
         private void DequeueNextTutorialIfAvailable()
         {
-            while (queuedTutorials.Count > 0 && TutorialWasShownAlready(queuedTutorials.Peek()))
+            while (queuedTutorials.Count > 0 && TutorialWasShownAlready(queuedTutorials.Peek().ID))
                 queuedTutorials.Dequeue();
 
             if (queuedTutorials.Count > 0)

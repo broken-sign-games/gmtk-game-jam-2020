@@ -1,5 +1,4 @@
 ﻿using GMTK2020.Data;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,8 +6,8 @@ namespace GMTK2020.TutorialSystem
 {
     public class TutorialOverlay : MonoBehaviour
     {
-        [SerializeField] private SpriteRenderer overlaySprite;
-        [SerializeField] private TutorialMask tutorialMaskPrefab;
+        [SerializeField] private SpriteRenderer overlaySprite = null;
+        [SerializeField] private TutorialMask tutorialMaskPrefab = null;
 
         private TutorialManager tutorialManager;
 
@@ -18,6 +17,8 @@ namespace GMTK2020.TutorialSystem
         private void Awake()
         {
             activeTutorialMasks = new List<TutorialMask>();
+
+            tutorialManager = TutorialManager.Instance;
 
             tutorialManager.TutorialReady += OnTutorialReady;
             tutorialManager.TutorialCompleted += OnTutorialCompleted;

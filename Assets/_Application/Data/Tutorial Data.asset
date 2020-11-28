@@ -12,54 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14b76b70c88cf3a48a85c53f64bff61a, type: 3}
   m_Name: Tutorial Data
   m_EditorClassIdentifier: 
-  Map:
-    reorderableList:
-      canAdd: 1
-      canRemove: 1
-      draggable: 1
-      expandable: 1
-      multipleSelection: 1
-      isExpanded: 1
-      label:
-        m_Text: Keys
-        m_Image: {fileID: 0}
-        m_Tooltip: 
-      headerHeight: 18
-      footerHeight: 13
-      slideEasing: 0.15
-      verticalSpacing: 2
-      showDefaultBackground: 1
-      elementDisplayType: 0
-      elementNameProperty: 
-      elementNameOverride: 
-      elementIcon: {fileID: 0}
-    reqReferences: {fileID: 0}
-    isExpanded: 1
-    _keyValues: 00000000010000000200000003000000
-    _keys: 00000000010000000200000003000000
-    _values:
-    - Message: Welcome to Alkahest! Uncork three matching vials in a row to prepare
-        them for a reaction.
-      ShowDismissButton: 1
-      InteractablePositions: []
-      InteractableTools: 
-      PlaybackButtonAvailable: 0
-      HighlightInertTiles: 0
-    - Message: 
-      ShowDismissButton: 0
-      InteractablePositions: []
-      InteractableTools: 
-      PlaybackButtonAvailable: 0
-      HighlightInertTiles: 0
-    - Message: 
-      ShowDismissButton: 0
-      InteractablePositions: []
-      InteractableTools: 
-      PlaybackButtonAvailable: 0
-      HighlightInertTiles: 0
-    - Message: 
-      ShowDismissButton: 0
-      InteractablePositions: []
-      InteractableTools: 
-      PlaybackButtonAvailable: 0
-      HighlightInertTiles: 0
+  Tutorials:
+  - ID: 0
+    Message: Test
+    ShowDismissButton: 1
+    InteractableTools: 
+    PlaybackButtonAvailable: 0
+  - ID: 1
+    Message: 
+    ShowDismissButton: 0
+    InteractableTools: 
+    PlaybackButtonAvailable: 0
+  - ID: 2
+    Message: 
+    ShowDismissButton: 0
+    InteractableTools: 
+    PlaybackButtonAvailable: 0
+  - ID: 3
+    Message: 
+    ShowDismissButton: 0
+    InteractableTools: 
+    PlaybackButtonAvailable: 0

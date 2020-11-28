@@ -8,8 +8,8 @@ namespace GMTK2020.UI
 {
     public class InfoBox : MonoBehaviour
     {
-        [SerializeField] TextMeshProUGUI infoText;
-        [SerializeField] Button dismissTutorialButton;
+        [SerializeField] TextMeshProUGUI infoText = null;
+        [SerializeField] Button dismissTutorialButton = null;
 
         private TutorialManager tutorialManager;
 
