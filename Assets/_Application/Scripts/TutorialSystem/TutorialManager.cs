@@ -24,6 +24,8 @@ namespace GMTK2020.TutorialSystem
         private Tutorial activeTutorial;
 
         private Queue<Tutorial> queuedTutorials = new Queue<Tutorial>();
+        
+        public static readonly string FIRST_GAME_PREFS_KEY = "FirstGameCompleted";
 
         private void Awake()
         {
@@ -52,6 +54,7 @@ namespace GMTK2020.TutorialSystem
             {
                 PlayerPrefs.DeleteKey(TutorialIDToPrefsKey(id));
             }
+            PlayerPrefs.DeleteKey(FIRST_GAME_PREFS_KEY);
         }
 
         public void ShowTutorialIfNew(TutorialID id) 
