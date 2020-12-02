@@ -12,6 +12,8 @@ namespace GMTK2020
     {
         public const int MAX_SIMULATION_STEPS = 5;
 
+        public const int MAX_CRACKS = 2;
+
         private readonly Board board;
 
         private readonly Random rng;
@@ -49,10 +51,11 @@ namespace GMTK2020
 
             chainLength = 0;
 
-            HashSet<Tile> inertTiles = MakeMarkedTilesInert();
+            HashSet<Tile> inertTiles = MakeMarkedAndCrackedTilesInert();
+            HashSet<Tile> crackedTiles = CrackTiles();
             List<MovedTile> newTiles = FillBoardWithTiles();
 
-            return new CleanUpStep(newTiles, inertTiles);
+            return new CleanUpStep(newTiles, inertTiles, crackedTiles);
         }
 
         private List<IEnumerable<Tile>> GetRawMatches()
@@ -188,13 +191,13 @@ namespace GMTK2020
             return movedTiles;
         }
 
-        private HashSet<Tile> MakeMarkedTilesInert()
+        private HashSet<Tile> MakeMarkedAndCrackedTilesInert()
         {
             var inertTiles = new HashSet<Tile>();
 
             foreach (Tile tile in board)
             {
-                if (tile.Marked)
+                if (!tile.Inert && (tile.Marked || tile.Cracks >= MAX_CRACKS))
                 {
                     tile.MakeInert();
                     inertTiles.Add(tile);
@@ -202,6 +205,33 @@ namespace GMTK2020
             }
 
             return inertTiles;
+        }
+
+        private HashSet<Tile> CrackTiles()
+        {
+            var crackedTiles = new HashSet<Tile>();
+
+            // Increment cracks on non-inert cracked tiles
+            foreach (Tile tile in board)
+            {
+                if (tile.Cracks > 0 && !tile.Inert)
+                {
+                    tile.AddCrack();
+                    crackedTiles.Add(tile);
+                }
+            }
+
+            // Crack a random tile
+            Tile[] eligibleTiles = board.Where(tile => tile.Cracks == 0 && !tile.Inert).ToArray();
+            if (eligibleTiles.Length > 0)
+            {
+                Tile crackedTile = eligibleTiles.RandomChoice(rng);
+
+                crackedTile.AddCrack();
+                crackedTiles.Add(crackedTile);
+            }
+
+            return crackedTiles;
         }
 
         private List<MovedTile> FillBoardWithTiles()

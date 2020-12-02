@@ -89,6 +89,7 @@ namespace GMTK2020.Rendering
         {
             await AnimateInertTilesAsync(step.InertTiles);
             await AnimateNewTilesAsync(step.NewTiles);
+            await AnimateCrackedTilesAsync(step.CrackedTiles);
         }
 
         private async Task AnimateRemovalStepAsync(RemovalStep step)
@@ -196,6 +197,22 @@ namespace GMTK2020.Rendering
                 TileRenderer tileRenderer = tileDictionary[tile.ID];
 
                 seq.Insert(0, tileRenderer.TransitionToInert());
+            }
+
+            await CompletionOf(seq);
+
+            await new WaitForSeconds(postInertDelay);
+        }
+
+        private async Task AnimateCrackedTilesAsync(HashSet<Tile> crackedTiles)
+        {
+            Sequence seq = DOTween.Sequence();
+
+            foreach (Tile tile in crackedTiles)
+            {
+                TileRenderer tileRenderer = tileDictionary[tile.ID];
+
+                seq.Insert(0, tileRenderer.UpdateCracks());
             }
 
             await CompletionOf(seq);

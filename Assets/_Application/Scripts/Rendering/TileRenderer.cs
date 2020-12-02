@@ -10,6 +10,7 @@ namespace GMTK2020.Rendering
     {
         [SerializeField] private Transform vialTransform = null;
         [SerializeField] private SpriteRenderer glassSprite = null;
+        [SerializeField] private SpriteRenderer cracksSprite = null;
         [SerializeField] private SpriteRenderer liquidSprite = null;
         [SerializeField] private SpriteRenderer corkSprite = null;
         [SerializeField] private SpriteRenderer glowSprite = null;
@@ -56,6 +57,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private float landingShakeRandomness = 90f;
 
         [SerializeField] private TileData tileData = null;
+        [SerializeField] private Sprite[] crackSprites = null;
 
         private Tile tile;
 
@@ -84,6 +86,8 @@ namespace GMTK2020.Rendering
             glowSprite.sprite = tileData.GlowSpriteMap[tile.Color];
             glowSprite.color = tileData.GlowColor[tile.Color];
 
+            UpdateCracks();
+
             Color highlightColor = tileData.PopDropletColor[tile.Color];
             highlightColor.a = 0;
             tileHighlight.color = highlightColor;
@@ -98,6 +102,14 @@ namespace GMTK2020.Rendering
             mainLiquidEvap.startColor = tileData.PopDropletColor[tile.Color];
             ParticleSystem.MainModule mainNeckEvap = neckEvap.main;
             mainNeckEvap.startColor = tileData.PopDropletColor[tile.Color];
+        }
+
+        public Tween UpdateCracks()
+        {
+            cracksSprite.gameObject.SetActive(tile.Cracks > 0);
+            cracksSprite.sprite = crackSprites[tile.Cracks];
+
+            return DOTween.Sequence();
         }
 
         public Tween UpdatePrediction()
