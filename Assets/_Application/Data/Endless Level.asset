@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Endless Level
   m_EditorClassIdentifier: 
   Size: {x: 9, y: 9}
-  ColorCount: 7
-  GuaranteedChain: 3
+  ColorCount: 6
+  GuaranteedChain: 2

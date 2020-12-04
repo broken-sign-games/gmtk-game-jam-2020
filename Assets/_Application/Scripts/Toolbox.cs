@@ -58,6 +58,8 @@ namespace GMTK2020
             case RewardStrategy.OnePerLength: return 1;
             case RewardStrategy.NPerLength: return chainLength;
             case RewardStrategy.NAtOncePerLength: return chainLength;
+            case RewardStrategy.PermanentUnlock: return -1;
+            case RewardStrategy.OnePerMatch: return -1;
             default:
                 throw new InvalidOperationException("Unknown reward strategy.");
             }
@@ -107,8 +109,8 @@ namespace GMTK2020
 
         public bool AnyToolsAvailable()
         {
-            foreach ((Tool _, int uses) in availableToolUses)
-                if (uses > 0)
+            foreach ((Tool tool, int uses) in availableToolUses)
+                if (tool != Tool.ToggleMarked && uses != 0)
                     return true;
 
             return false;
@@ -251,24 +253,29 @@ namespace GMTK2020
             if (chainLength < requiredChainLength[tool])
                 return;
 
-            if (toolData.RewardStrategy == RewardStrategy.NAtOncePerLength)
+            switch (toolData.RewardStrategy)
             {
+            case RewardStrategy.NAtOncePerLength:
                 while (requiredChainLength[tool] <= chainLength)
                 {
                     availableToolUses[tool] += requiredChainLength[tool];
                     ++requiredChainLength[tool];
                 }
-            }
-            else
-            {
+                break;
+            case RewardStrategy.PermanentUnlock:
+                availableToolUses[tool] = -1;
+                break;
+            default:
                 ++availableToolUses[tool];
                 ++awardedToolsForCurrentChainLength[tool];
 
-                if (awardedToolsForCurrentChainLength[tool] >= GetAvailableToolUsesForChainLength(requiredChainLength[tool]))
+                int availableToolUsesForChainLength = GetAvailableToolUsesForChainLength(requiredChainLength[tool]);
+                if (availableToolUsesForChainLength >= 0 && awardedToolsForCurrentChainLength[tool] >= availableToolUsesForChainLength)
                 {
                     ++requiredChainLength[tool];
                     awardedToolsForCurrentChainLength[tool] = 0;
                 }
+                break;
             }
         }
     }

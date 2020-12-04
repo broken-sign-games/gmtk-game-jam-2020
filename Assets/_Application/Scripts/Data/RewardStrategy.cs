@@ -5,5 +5,7 @@
         OnePerLength,
         NPerLength,
         NAtOncePerLength,
+        PermanentUnlock,
+        OnePerMatch,
     }
 }
