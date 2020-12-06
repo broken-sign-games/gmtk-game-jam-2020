@@ -48,7 +48,7 @@ MonoBehaviour:
     - InitialUses: 0
       AwardedFor: 0
     - InitialUses: 0
-      AwardedFor: 0
+      AwardedFor: 2
     - InitialUses: 0
       AwardedFor: 0
     - InitialUses: 0
@@ -64,6 +64,6 @@ MonoBehaviour:
     - InitialUses: -1
       AwardedFor: 1
     - InitialUses: 0
-      AwardedFor: 2
+      AwardedFor: 0
     - InitialUses: 0
       AwardedFor: 6

@@ -49,11 +49,11 @@ namespace GMTK2020
                 return new MatchStep(chainLength, matchedTiles, movedTiles, horizontalMatches, verticalMatches);
             }
 
-            chainLength = 0;
-
             HashSet<Tile> inertTiles = MakeMarkedAndCrackedTilesInert();
             HashSet<Tile> crackedTiles = CrackTiles();
             List<MovedTile> newTiles = FillBoardWithTiles();
+
+            chainLength = 0;
 
             return new CleanUpStep(newTiles, inertTiles, crackedTiles);
         }
@@ -223,10 +223,10 @@ namespace GMTK2020
 
             // Crack a random tile
             Tile[] eligibleTiles = board.Where(tile => tile.Cracks == 0 && !tile.Inert).ToArray();
-            if (eligibleTiles.Length > 0)
-            {
-                Tile crackedTile = eligibleTiles.RandomChoice(rng);
 
+            int tilesToCrack = 3 - chainLength;
+            foreach (Tile crackedTile in eligibleTiles.Shuffle(rng).Take(tilesToCrack))
+            {
                 crackedTile.AddCrack();
                 crackedTiles.Add(crackedTile);
             }

@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Size: {x: 9, y: 9}
   ColorCount: 6
-  GuaranteedChain: 2
+  GuaranteedChain: 3
