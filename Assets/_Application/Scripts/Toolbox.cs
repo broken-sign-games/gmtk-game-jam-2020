@@ -15,6 +15,8 @@ namespace GMTK2020
         private Dictionary<Tool, int> requiredChainLength;
         private Dictionary<Tool, int> awardedToolsForCurrentChainLength;
 
+        bool toolUsedThisTurn = true;
+
         public Toolbox(ToolData toolData, Simulator simulator)
         {
             this.toolData = toolData;
@@ -65,6 +67,34 @@ namespace GMTK2020
             }
         }
 
+        public bool IsToolAvailable(Tool tool)
+        {
+            if (tool == Tool.ToggleMarked)
+                return true;
+
+            if (toolUsedThisTurn)
+                return false;
+
+            return availableToolUses[tool] != 0;
+        }
+
+        public bool AnyToolsAvailable()
+        {
+            if (toolUsedThisTurn)
+                return false;
+
+            foreach ((Tool tool, int uses) in availableToolUses)
+                if (tool != Tool.ToggleMarked && uses != 0)
+                    return true;
+
+            return false;
+        }
+
+        public void StartNewTurn()
+        {
+            toolUsedThisTurn = false;
+        }
+
         public SimulationStep UseTool(Tool tool, Vector2Int gridPos, RotationSense rotSense = RotationSense.CW)
         {
             switch (tool)
@@ -104,16 +134,10 @@ namespace GMTK2020
             if (availableToolUses[tool] > 0)
                 --availableToolUses[tool];
 
+            if (tool != Tool.ToggleMarked)
+                toolUsedThisTurn = true;
+
             return step;
-        }
-
-        public bool AnyToolsAvailable()
-        {
-            foreach ((Tool tool, int uses) in availableToolUses)
-                if (tool != Tool.ToggleMarked && uses != 0)
-                    return true;
-
-            return false;
         }
 
         public SimulationStep UseSwapTool(Tool tool, Vector2Int from, Vector2Int to)
@@ -150,6 +174,8 @@ namespace GMTK2020
 
             if (availableToolUses[tool] > 0)
                 --availableToolUses[tool];
+
+            toolUsedThisTurn = true;
 
             return step;
         }

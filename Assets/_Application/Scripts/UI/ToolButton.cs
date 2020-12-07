@@ -27,6 +27,11 @@ namespace GMTK2020.UI
             availableUsesText.text = uses.ToString();
         }
 
+        public void UpdateAvailable(bool available)
+        {
+            button.interactable = available;
+        }
+
         public void UpdateChainLength(int awarded, int available, int chainLength)
         {
             

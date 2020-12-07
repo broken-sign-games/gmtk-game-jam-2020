@@ -71,9 +71,15 @@ namespace GMTK2020
             }
 
             if (simulator.FurtherMatchesPossible() || boardManipulator.AnyToolsAvailable())
-                runButton.interactable = true;
+                StartNewTurn();
             else
                 EndLevel();
+        }
+
+        private void StartNewTurn()
+        {
+            boardManipulator.StartNewTurn();
+            runButton.interactable = true;
         }
 
         public void OnLastToolUsed()

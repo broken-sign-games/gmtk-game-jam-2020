@@ -94,6 +94,13 @@ namespace GMTK2020
             UpdateUI();
         }
 
+        public void StartNewTurn()
+        { 
+            toolbox.StartNewTurn();
+
+            UpdateUI();
+        }
+
         public void LockPredictions()
         {
             predictionsFinalised = true;
@@ -239,6 +246,7 @@ namespace GMTK2020
             foreach ((Tool tool, ToolButton button) in toolButtons)
             {
                 button.UpdateUses(toolbox.GetAvailableUses(tool));
+                button.UpdateAvailable(toolbox.IsToolAvailable(tool));
                 int awarded = toolbox.GetAwardedToolsForCurrentChainLength(tool);
                 int chainLength = toolbox.GetRequiredChainLength(tool);
                 int available = toolbox.GetAvailableToolUsesForChainLength(chainLength);
