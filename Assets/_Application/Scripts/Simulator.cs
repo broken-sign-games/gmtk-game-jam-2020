@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.XR.WSA;
 using Random = System.Random;
 
 namespace GMTK2020
@@ -17,19 +16,21 @@ namespace GMTK2020
         private readonly Board board;
 
         private readonly Random rng;
-        private readonly int colorCount;
+        private int colorCount;
+        private readonly LevelSpecification levelSpec;
 
-        private int chainLength;
+        private int chainCount = 0;
+        private int chainLength = 0;
 
-        public Simulator(Board initialBoard, int colorCount)
+        public Simulator(Board initialBoard, LevelSpecification levelSpec)
         {
             board = initialBoard;
-            this.colorCount = colorCount;
+            this.levelSpec = levelSpec;
+
+            colorCount = levelSpec.InitialColorCount;
 
             // TODO: We probably want more control over the seed...
             rng = new Random(Time.frameCount);
-
-            chainLength = 0;
         }
 
         public SimulationStep SimulateNextStep()
@@ -49,9 +50,16 @@ namespace GMTK2020
                 return new MatchStep(chainLength, matchedTiles, movedTiles, horizontalMatches, verticalMatches);
             }
 
+            ++chainCount;
+            bool colorWasAdded = false;
+            if (colorCount < levelSpec.MaxColorCount && chainCount % levelSpec.ChainsUntilColorIsAdded == 0)
+            {
+                ++colorCount;
+                colorWasAdded = true;
+            }
             HashSet<Tile> inertTiles = MakeMarkedAndCrackedTilesInert();
             HashSet<Tile> crackedTiles = CrackTiles();
-            List<MovedTile> newTiles = FillBoardWithTiles();
+            List<MovedTile> newTiles = FillBoardWithTiles(colorWasAdded);
 
             chainLength = 0;
 
@@ -234,10 +242,14 @@ namespace GMTK2020
             return crackedTiles;
         }
 
-        private List<MovedTile> FillBoardWithTiles()
+        private List<MovedTile> FillBoardWithTiles(bool ensureNewestColorIsUsed = false)
         {
             var newTiles = new List<MovedTile>();
 
+            int nNewTiles = board.Width * board.Height - board.Count();
+            int newColorIndex = rng.Next(nNewTiles);
+
+            int i = 0;
             foreach (int x in board.GetXs())
             {
                 int newTilesInColumn = board.Height;
@@ -249,8 +261,14 @@ namespace GMTK2020
                         continue;
                     }
 
-                    Tile newTile = new Tile(rng.Next(colorCount), new Vector2Int(x, y + newTilesInColumn));
+                    int color = (ensureNewestColorIsUsed && i == newColorIndex)
+                        ? colorCount - 1
+                        : rng.Next(colorCount);
+
+                    Tile newTile = new Tile(color, new Vector2Int(x, y + newTilesInColumn));
                     newTiles.Add(board.MoveTile(newTile, x, y));
+
+                    ++i;
                 }
             }
 

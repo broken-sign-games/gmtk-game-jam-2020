@@ -1,5 +1,4 @@
-﻿using Array2DEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GMTK2020.Data
 {
@@ -7,7 +6,9 @@ namespace GMTK2020.Data
     public class LevelSpecification : ScriptableObject
     {
         public Vector2Int Size;
-        public int ColorCount;
+        public int InitialColorCount;
+        public int MaxColorCount;
+        public int ChainsUntilColorIsAdded;
         public int GuaranteedChain;
     }
 }

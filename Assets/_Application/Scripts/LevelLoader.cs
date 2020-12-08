@@ -2,8 +2,6 @@
 using GMTK2020.Data;
 using GMTK2020.Rendering;
 using GMTK2020.TutorialSystem;
-using System;
-using TMPro;
 using UnityEngine;
 
 namespace GMTK2020
@@ -38,7 +36,7 @@ namespace GMTK2020
                 Level = new LevelGenerator(levelSpec).GenerateValidLevel();
             }
 
-            Simulator simulator = new Simulator(Level.Board, levelSpec.ColorCount);
+            Simulator simulator = new Simulator(Level.Board, levelSpec);
 
             predictionEditor.Initialize(simulator);
             boardRenderer.RenderInitial(Level.Board);

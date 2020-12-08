@@ -38,7 +38,7 @@ namespace GMTK2020
                     Board workingCopy = board.DeepCopy();
                     foreach (Tile tile in workingCopy)
                         tile.Marked = true;
-                    List<SimulationStep> steps = new Simulator(workingCopy, levelSpec.ColorCount).SimulateToStop();
+                    List<SimulationStep> steps = new Simulator(workingCopy, levelSpec).SimulateToStop();
                     isValid = ValidateSimulation(steps);
 
                     if (!isValid)
@@ -163,7 +163,7 @@ namespace GMTK2020
             int width = board.Width;
             int height = board.Height;
 
-            var colors = new HashSet<int>(Enumerable.Range(0, levelSpec.ColorCount));
+            var colors = new HashSet<int>(Enumerable.Range(0, levelSpec.InitialColorCount));
             var origin = new Vector2Int(x, y);
             foreach (Vector2Int offset in neighborhood)
             {

@@ -240,7 +240,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             return new Toolbox(toolData, simulator);
         }
@@ -274,6 +274,17 @@ namespace Tests
                 }
 
             return board;
+        }
+
+        private LevelSpecification GetLevelSpecification()
+        {
+            var levelSpec = ScriptableObject.CreateInstance<LevelSpecification>();
+
+            levelSpec.InitialColorCount = 9;
+            levelSpec.Size = new Vector2Int(9, 9);
+            levelSpec.GuaranteedChain = 1;
+
+            return levelSpec;
         }
 
         private static readonly object[] singleShapeTestCases = {
