@@ -70,6 +70,8 @@ namespace GMTK2020
                     break;
             }
 
+            boardManipulator.StartNewTurn();
+
             if (simulator.FurtherMatchesPossible() || boardManipulator.AnyToolsAvailable())
                 StartNewTurn();
             else
@@ -78,7 +80,6 @@ namespace GMTK2020
 
         private void StartNewTurn()
         {
-            boardManipulator.StartNewTurn();
             runButton.interactable = true;
         }
 
