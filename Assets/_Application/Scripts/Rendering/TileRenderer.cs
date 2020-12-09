@@ -10,7 +10,6 @@ namespace GMTK2020.Rendering
     {
         [SerializeField] private Transform vialTransform = null;
         [SerializeField] private SpriteRenderer glassSprite = null;
-        [SerializeField] private SpriteRenderer cracksSprite = null;
         [SerializeField] private SpriteRenderer liquidSprite = null;
         [SerializeField] private SpriteRenderer corkSprite = null;
         [SerializeField] private SpriteRenderer glowSprite = null;
@@ -78,7 +77,6 @@ namespace GMTK2020.Rendering
 
             transform.localPosition = (Vector2)initialPosition;
 
-            glassSprite.sprite = tileData.VialSpriteMap[tile.Color];
             vialMask.sprite = tileData.VialMaskMap[tile.Color];
             corkSprite.sprite = tileData.CorkSpriteMap[tile.Color];
             liquidSprite.sprite = tileData.LiquidSpriteMap[tile.Color];
@@ -106,8 +104,7 @@ namespace GMTK2020.Rendering
 
         public Tween UpdateCracks()
         {
-            cracksSprite.gameObject.SetActive(tile.Cracks > 0);
-            cracksSprite.sprite = crackSprites[tile.Cracks];
+            glassSprite.sprite = tileData.VialSpriteMap[tile.Color][tile.Cracks];
 
             return DOTween.Sequence();
         }

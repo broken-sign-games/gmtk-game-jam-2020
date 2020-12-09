@@ -1,4 +1,4 @@
-﻿using GMTK2020.Rendering;
+﻿using System;
 using UnityEngine;
 
 namespace GMTK2020.Data
@@ -6,7 +6,15 @@ namespace GMTK2020.Data
     [CreateAssetMenu]
     public class TileData : ScriptableObject
     {
-        public Sprite[] VialSpriteMap;
+        [Serializable]
+        public struct VialSprites
+        {
+            public Sprite[] Sprites;
+
+            public Sprite this[int i] => Sprites[i];
+        }
+
+        public VialSprites[] VialSpriteMap;
         public Sprite[] VialMaskMap;
         public Sprite[] LiquidSpriteMap;
         public Sprite[] CorkSpriteMap;
