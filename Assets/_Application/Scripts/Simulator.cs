@@ -17,7 +17,18 @@ namespace GMTK2020
 
         private readonly Random rng;
         private int colorCount;
+        private int cracksPerChain;
         private readonly LevelSpecification levelSpec;
+
+        private enum DifficultyIncrease
+        {
+            AddColor,
+            AddCrack,
+        }
+
+        private DifficultyIncrease nextDifficultyIncrease = DifficultyIncrease.AddCrack;
+        
+        private bool ensureLatestColorDrops = false;
 
         private int chainCount = 0;
         private int chainLength = 0;
@@ -28,6 +39,7 @@ namespace GMTK2020
             this.levelSpec = levelSpec;
 
             colorCount = levelSpec.InitialColorCount;
+            cracksPerChain = levelSpec.InitialCracksPerChain;
 
             // TODO: We probably want more control over the seed...
             rng = new Random(Time.frameCount);
@@ -51,15 +63,13 @@ namespace GMTK2020
             }
 
             ++chainCount;
-            bool colorWasAdded = false;
-            if (colorCount < levelSpec.MaxColorCount && chainCount % levelSpec.ChainsUntilColorIsAdded == 0)
-            {
-                ++colorCount;
-                colorWasAdded = true;
-            }
+
             HashSet<Tile> inertTiles = MakeMarkedAndCrackedTilesInert();
             HashSet<Tile> crackedTiles = CrackTiles();
-            List<MovedTile> newTiles = FillBoardWithTiles(colorWasAdded);
+            
+            IncreaseDifficulty();
+
+            List<MovedTile> newTiles = FillBoardWithTiles();
 
             chainLength = 0;
 
@@ -232,7 +242,7 @@ namespace GMTK2020
             // Crack a random tile
             Tile[] eligibleTiles = board.Where(tile => tile.Cracks == 0 && !tile.Inert).ToArray();
 
-            int tilesToCrack = 3 - chainLength;
+            int tilesToCrack = cracksPerChain - chainLength;
             foreach (Tile crackedTile in eligibleTiles.Shuffle(rng).Take(tilesToCrack))
             {
                 crackedTile.AddCrack();
@@ -242,7 +252,34 @@ namespace GMTK2020
             return crackedTiles;
         }
 
-        private List<MovedTile> FillBoardWithTiles(bool ensureNewestColorIsUsed = false)
+        private void IncreaseDifficulty()
+        {
+            if (chainCount % levelSpec.ChainsPerDifficultyIncrease != 0)
+                return;
+
+            switch (nextDifficultyIncrease)
+            {
+            case DifficultyIncrease.AddColor:
+                if (colorCount < levelSpec.MaxColorCount)
+                {
+                    ++colorCount;
+                    ensureLatestColorDrops = true;
+                }
+                nextDifficultyIncrease = DifficultyIncrease.AddCrack;
+                break;
+            case DifficultyIncrease.AddCrack:
+                if (cracksPerChain < levelSpec.MaxCracksPerChain)
+                {
+                    ++cracksPerChain;
+                }
+                nextDifficultyIncrease = DifficultyIncrease.AddColor;
+                break;
+            default:
+                break;
+            }
+        }
+
+        private List<MovedTile> FillBoardWithTiles()
         {
             var newTiles = new List<MovedTile>();
 
@@ -261,7 +298,7 @@ namespace GMTK2020
                         continue;
                     }
 
-                    int color = (ensureNewestColorIsUsed && i == newColorIndex)
+                    int color = (ensureLatestColorDrops && i == newColorIndex)
                         ? colorCount - 1
                         : rng.Next(colorCount);
 
@@ -271,6 +308,8 @@ namespace GMTK2020
                     ++i;
                 }
             }
+
+            ensureLatestColorDrops = false;
 
             return newTiles;
         }

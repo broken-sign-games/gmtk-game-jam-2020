@@ -8,7 +8,9 @@ namespace GMTK2020.Data
         public Vector2Int Size;
         public int InitialColorCount;
         public int MaxColorCount;
-        public int ChainsUntilColorIsAdded;
+        public int InitialCracksPerChain;
+        public int MaxCracksPerChain;
+        public int ChainsPerDifficultyIncrease;
         public int GuaranteedChain;
     }
 }

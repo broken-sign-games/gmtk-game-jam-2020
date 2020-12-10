@@ -88,8 +88,8 @@ namespace GMTK2020.Rendering
         private async Task AnimateCleanUpStepAsync(CleanUpStep step)
         {
             await AnimateInertTilesAsync(step.InertTiles);
-            await AnimateNewTilesAsync(step.NewTiles);
             await AnimateCrackedTilesAsync(step.CrackedTiles);
+            await AnimateNewTilesAsync(step.NewTiles);
         }
 
         private async Task AnimateRemovalStepAsync(RemovalStep step)

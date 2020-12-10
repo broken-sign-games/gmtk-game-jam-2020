@@ -106,7 +106,7 @@ namespace GMTK2020.Rendering
         {
             glassSprite.sprite = tileData.VialSpriteMap[tile.Color][tile.Cracks];
 
-            return DOTween.Sequence();
+            return vialTransform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0);
         }
 
         public Tween UpdatePrediction()
