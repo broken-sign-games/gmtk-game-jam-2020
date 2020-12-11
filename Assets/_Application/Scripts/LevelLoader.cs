@@ -2,6 +2,7 @@
 using GMTK2020.Data;
 using GMTK2020.Rendering;
 using GMTK2020.TutorialSystem;
+using GMTK2020.UI;
 using UnityEngine;
 
 namespace GMTK2020

@@ -15,6 +15,7 @@ namespace GMTK2020
         [SerializeField] private Button runButton = null;
         [SerializeField] private Button retryButton = null;
         [SerializeField] private BoardManipulator boardManipulator = null;
+        [SerializeField] private CrackCounter crackCounter = null;
 
         // TODO: This is probably not the best place to put this data.
         [SerializeField] private int baseScore = 100;
@@ -31,6 +32,8 @@ namespace GMTK2020
 
             scoreKeeper = new ScoreKeeper(baseScore);
             scoreRenderer.SetScoreKeeper(scoreKeeper);
+            crackCounter.SetAvoidedCracks(0);
+            crackCounter.SetMaxCracks(simulator.CracksPerChain);
 
             boardManipulator.LastToolUsed += OnLastToolUsed;
         }
@@ -64,6 +67,8 @@ namespace GMTK2020
                 if (step is MatchStep matchStep)
                     boardManipulator.RewardMatch(matchStep);
 
+                crackCounter.SetAvoidedCracks(simulator.ChainLength);
+                
                 await boardRenderer.AnimateSimulationStepAsync(step);
 
                 if (step.FinalStep)
@@ -81,6 +86,8 @@ namespace GMTK2020
         private void StartNewTurn()
         {
             runButton.interactable = true;
+            crackCounter.SetAvoidedCracks(0);
+            crackCounter.SetMaxCracks(simulator.CracksPerChain);
         }
 
         public void OnLastToolUsed()

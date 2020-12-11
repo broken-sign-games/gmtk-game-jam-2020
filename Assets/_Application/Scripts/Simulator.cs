@@ -17,7 +17,7 @@ namespace GMTK2020
 
         private readonly Random rng;
         private int colorCount;
-        private int cracksPerChain;
+        public int CracksPerChain { get; private set; }
         private readonly LevelSpecification levelSpec;
 
         private enum DifficultyIncrease
@@ -31,7 +31,7 @@ namespace GMTK2020
         private bool ensureLatestColorDrops = false;
 
         private int chainCount = 0;
-        private int chainLength = 0;
+        public int ChainLength { get; private set; } = 0;
 
         public Simulator(Board initialBoard, LevelSpecification levelSpec)
         {
@@ -39,7 +39,7 @@ namespace GMTK2020
             this.levelSpec = levelSpec;
 
             colorCount = levelSpec.InitialColorCount;
-            cracksPerChain = levelSpec.InitialCracksPerChain;
+            CracksPerChain = levelSpec.InitialCracksPerChain;
 
             // TODO: We probably want more control over the seed...
             rng = new Random(Time.frameCount);
@@ -57,9 +57,9 @@ namespace GMTK2020
             {
                 List<MovedTile> movedTiles = MoveTilesDown();
 
-                ++chainLength;
+                ++ChainLength;
 
-                return new MatchStep(chainLength, matchedTiles, movedTiles, horizontalMatches, verticalMatches);
+                return new MatchStep(ChainLength, matchedTiles, movedTiles, horizontalMatches, verticalMatches);
             }
 
             ++chainCount;
@@ -71,7 +71,7 @@ namespace GMTK2020
 
             List<MovedTile> newTiles = FillBoardWithTiles();
 
-            chainLength = 0;
+            ChainLength = 0;
 
             return new CleanUpStep(newTiles, inertTiles, crackedTiles);
         }
@@ -242,7 +242,7 @@ namespace GMTK2020
             // Crack a random tile
             Tile[] eligibleTiles = board.Where(tile => tile.Cracks == 0 && !tile.Inert).ToArray();
 
-            int tilesToCrack = cracksPerChain - chainLength;
+            int tilesToCrack = CracksPerChain - ChainLength;
             foreach (Tile crackedTile in eligibleTiles.Shuffle(rng).Take(tilesToCrack))
             {
                 crackedTile.AddCrack();
@@ -268,9 +268,9 @@ namespace GMTK2020
                 nextDifficultyIncrease = DifficultyIncrease.AddCrack;
                 break;
             case DifficultyIncrease.AddCrack:
-                if (cracksPerChain < levelSpec.MaxCracksPerChain)
+                if (CracksPerChain < levelSpec.MaxCracksPerChain)
                 {
-                    ++cracksPerChain;
+                    ++CracksPerChain;
                 }
                 nextDifficultyIncrease = DifficultyIncrease.AddColor;
                 break;
