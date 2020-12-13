@@ -14,22 +14,70 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Tutorials:
   - ID: 0
-    Message: Test
-    ShowDismissButton: 1
+    Message: Open three matching vials in a row to prepare them for a reaction.
+    ShowDismissButton: 0
     InteractableTools: 
     PlaybackButtonAvailable: 0
   - ID: 1
-    Message: 
+    Message: Hit the reaction button to kick things off.
     ShowDismissButton: 0
     InteractableTools: 
-    PlaybackButtonAvailable: 0
+    PlaybackButtonAvailable: 1
   - ID: 2
-    Message: 
-    ShowDismissButton: 0
+    Message: After a reaction, some vials may crack. If you don't match them within
+      two turns, their contents will evaporate.
+    ShowDismissButton: 1
     InteractableTools: 
     PlaybackButtonAvailable: 0
   - ID: 3
-    Message: 
+    Message: After each reaction, you can manipulate the board **once** to set up
+      further matches. Select the swap tool and swap these vials.
     ShowDismissButton: 0
+    InteractableTools: 0b000000
+    PlaybackButtonAvailable: 0
+  - ID: 4
+    Message: You can already open vials that will form a match after earlier matches
+      resolve and predict chain reactions. This reduces the number of vials that
+      will crack and nets you more points.
+    ShowDismissButton: 0
+    InteractableTools: 
+    PlaybackButtonAvailable: 0
+  - ID: 5
+    Message: Let's kick off the chain reaction!
+    ShowDismissButton: 0
+    InteractableTools: 
+    PlaybackButtonAvailable: 1
+  - ID: 6
+    Message: Matching bigger shapes can unlock various tools to manipulate the board.
+    ShowDismissButton: 1
+    InteractableTools: 
+    PlaybackButtonAvailable: 0
+  - ID: 7
+    Message: Let's try out the new tool! You can use the hammer to remove vials from
+      the board without a match.
+    ShowDismissButton: 0
+    InteractableTools: 01000000
+    PlaybackButtonAvailable: 0
+  - ID: 8
+    Message: You're on your own now, good luck!
+    ShowDismissButton: 1
+    InteractableTools: 
+    PlaybackButtonAvailable: 0
+  - ID: 9
+    Message: If any vials are still open when the chain reaction stops, their contents
+      will evaporate. Empty vials can no longer participate in reactions.
+    ShowDismissButton: 1
+    InteractableTools: 
+    PlaybackButtonAvailable: 0
+  - ID: 10
+    Message: 'Tip: only open vials will participate in reactions. Sometimes it''s
+      better to leave a vial closed to get a longer chain reaction.'
+    ShowDismissButton: 0
+    InteractableTools: 
+    PlaybackButtonAvailable: 0
+  - ID: 11
+    Message: Every {0} turns, the difficulty increases. Either by increasing the
+      number of cracking vials per turn, or by adding a new vial colour to the mix.
+    ShowDismissButton: 1
     InteractableTools: 
     PlaybackButtonAvailable: 0

@@ -2,9 +2,17 @@
 {
     public enum TutorialID
     {
-        Welcome,
+        OpenVials,
         StartReaction,
+        CrackingVials,
+        SwapTiles,
         PredictChains,
-        InertTiles,
+        StartChainReaction,
+        MatchShapes,
+        RemoveTileTool,
+        EndOfMainTutorial,
+        IncorrectPredictions,
+        OmittingVials,
+        DifficultyIncrease,
     }
 }

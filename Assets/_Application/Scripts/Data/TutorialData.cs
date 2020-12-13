@@ -1,5 +1,4 @@
-﻿using RotaryHeart.Lib.SerializableDictionary;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace GMTK2020.Data

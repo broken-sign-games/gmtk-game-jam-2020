@@ -20,7 +20,7 @@ namespace GMTK2020
         private void Start()
         {
             LoadLevel();
-            TutorialManager.Instance.ShowTutorialIfNew(TutorialID.Welcome);
+            TutorialManager.Instance.ShowTutorialIfNew(TutorialID.OpenVials);
         }
 
         public void LoadLevel()

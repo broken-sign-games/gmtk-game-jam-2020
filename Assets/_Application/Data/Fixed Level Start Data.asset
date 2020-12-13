@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dcc56db3d35c6744bd02626c53145d1, type: 3}
+  m_Name: Fixed Level Start Data
+  m_EditorClassIdentifier: 
+  Levels:
+  - BoardData: {fileID: 11400000, guid: 308dacb3956da6e49bd154de128b9f88, type: 2}
+    CrackedTiles:
+    - {x: 4, y: 2}
+    - {x: 0, y: 0}
+  - BoardData: {fileID: 11400000, guid: bbaca48d2e0bffe4bbc8045bb4f2034c, type: 2}
+    CrackedTiles: []
