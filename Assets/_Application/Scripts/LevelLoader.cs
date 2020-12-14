@@ -2,7 +2,6 @@
 using GMTK2020.Data;
 using GMTK2020.Rendering;
 using GMTK2020.TutorialSystem;
-using GMTK2020.UI;
 using UnityEngine;
 
 namespace GMTK2020
@@ -13,7 +12,7 @@ namespace GMTK2020
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private BoardManipulator predictionEditor = null;
         [SerializeField] private LevelSequence levelSequence = null;
-        [SerializeField] private Array2DInt firstGameBoard = null;
+        [SerializeField] private FixedLevelStartData fixedLevelStartData = null;
 
         public Level Level { get; private set; }
 
@@ -28,9 +27,10 @@ namespace GMTK2020
             int levelIndex = GameProgression.CurrentLevelIndex;
             LevelSpecification levelSpec = levelSequence.Levels[levelIndex];
 
-            if (IsFirstGame())
+            int gameNumber = GetGameNumber();
+            if (gameNumber < fixedLevelStartData.Levels.Length)
             {
-                Level = SetUpFirstGameLevel();
+                Level = SetUpFixedLevelStart(fixedLevelStartData.Levels[gameNumber]);
             }
             else
             {
@@ -42,25 +42,25 @@ namespace GMTK2020
             predictionEditor.Initialize(simulator);
             boardRenderer.RenderInitial(Level.Board);
             playback.Initialize(Level.Board, simulator);
+
+            PlayerPrefs.SetInt(TutorialManager.GAME_COUNT_PREFS_KEY, gameNumber+1);
         }
 
-        private bool IsFirstGame() 
-            => PlayerPrefs.GetInt(TutorialManager.FIRST_GAME_PREFS_KEY, -1) < 0;
+        private int GetGameNumber() 
+            => PlayerPrefs.GetInt(TutorialManager.GAME_COUNT_PREFS_KEY, 0);
 
-        private Level SetUpFirstGameLevel()
+        private Level SetUpFixedLevelStart(FixedLevelStartData.FixedLevelStart levelData)
         {
-            Vector2Int gridSize = firstGameBoard.GridSize;
+            Array2DInt boardData = levelData.BoardData;
+            Vector2Int gridSize = boardData.GridSize;
 
             var board = new Board(gridSize.x, gridSize.y);
 
-            int[,] colors = firstGameBoard.GetCells();
+            int[,] colors = boardData.GetCells();
 
             foreach (int y in board.GetYs())
                 foreach (int x in board.GetXs())
                     board[x, y] = new Tile(colors[board.Height - y - 1, x]);
-
-            // TODO: We probably want to tie this to a certain tutorial message instead
-            PlayerPrefs.SetInt(TutorialManager.FIRST_GAME_PREFS_KEY, 1);
 
             return new Level(board);
         }

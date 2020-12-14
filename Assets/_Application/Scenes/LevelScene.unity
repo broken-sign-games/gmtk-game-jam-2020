@@ -3848,7 +3848,8 @@ MonoBehaviour:
   boardRenderer: {fileID: 2077407154}
   predictionEditor: {fileID: 1689814306}
   levelSequence: {fileID: 11400000, guid: a406af891823fa34eb72e48528b7ba49, type: 2}
-  firstGameBoard: {fileID: 11400000, guid: 308dacb3956da6e49bd154de128b9f88, type: 2}
+  fixedLevelStartData: {fileID: 11400000, guid: 10586bf676bc08743969f29d92522d02,
+    type: 2}
 --- !u!4 &1784404316
 Transform:
   m_ObjectHideFlags: 0
