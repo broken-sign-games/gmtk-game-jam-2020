@@ -39,6 +39,9 @@ namespace GMTK2020
 
             Simulator simulator = new Simulator(Level.Board, levelSpec);
 
+            if (gameNumber < fixedLevelStartData.Levels.Length)
+                    simulator.SetFixedCracks(fixedLevelStartData.Levels[levelIndex].CrackedTiles);
+
             predictionEditor.Initialize(simulator);
             boardRenderer.RenderInitial(Level.Board);
             playback.Initialize(Level.Board, simulator);

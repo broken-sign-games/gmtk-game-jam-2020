@@ -33,6 +33,8 @@ namespace GMTK2020
         private int chainCount = 0;
         public int ChainLength { get; private set; } = 0;
 
+        private Queue<Tile> fixedCrackQueue = new Queue<Tile>();
+
         public Simulator(Board initialBoard, LevelSpecification levelSpec)
         {
             board = initialBoard;
@@ -43,6 +45,15 @@ namespace GMTK2020
 
             // TODO: We probably want more control over the seed...
             rng = new Random(Time.frameCount);
+        }
+
+        public void SetFixedCracks(Vector2Int[] crackedTiles)
+        {
+            foreach (Vector2Int pos in crackedTiles)
+            {
+                Tile tile = board[pos];
+                fixedCrackQueue.Enqueue(tile);
+            }
         }
 
         public SimulationStep SimulateNextStep()
@@ -239,10 +250,23 @@ namespace GMTK2020
                 }
             }
 
-            // Crack a random tile
+            int tilesToCrack = CracksPerChain - ChainLength;
+            // Crack fixed tiles
+            while (fixedCrackQueue.Count > 0 && tilesToCrack > 0)
+            {
+                Tile tile = fixedCrackQueue.Dequeue();
+
+                if (board[tile.Position] != tile || tile.Inert || tile.Cracks > 0)
+                    continue;
+
+                tile.AddCrack();
+                crackedTiles.Add(tile);
+                --tilesToCrack;
+            }
+
+            // Crack random tiles
             Tile[] eligibleTiles = board.Where(tile => tile.Cracks == 0 && !tile.Inert).ToArray();
 
-            int tilesToCrack = CracksPerChain - ChainLength;
             foreach (Tile crackedTile in eligibleTiles.Shuffle(rng).Take(tilesToCrack))
             {
                 crackedTile.AddCrack();

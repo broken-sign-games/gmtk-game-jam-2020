@@ -1384,6 +1384,7 @@ namespace Tests
             levelSpec.InitialColorCount = 9;
             levelSpec.Size = new Vector2Int(9, 9);
             levelSpec.GuaranteedChain = 1;
+            levelSpec.ChainsPerDifficultyIncrease = 1000;
 
             return levelSpec;
         }
