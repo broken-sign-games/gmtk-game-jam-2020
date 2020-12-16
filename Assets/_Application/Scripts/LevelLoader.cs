@@ -19,7 +19,6 @@ namespace GMTK2020
         private void Start()
         {
             LoadLevel();
-            TutorialManager.Instance.ShowTutorialIfNew(TutorialID.OpenVials);
         }
 
         public void LoadLevel()
@@ -27,10 +26,12 @@ namespace GMTK2020
             int levelIndex = GameProgression.CurrentLevelIndex;
             LevelSpecification levelSpec = levelSequence.Levels[levelIndex];
 
-            int gameNumber = GetGameNumber();
-            if (gameNumber < fixedLevelStartData.Levels.Length)
+            int gameNumber = TutorialManager.GetGameCount();
+            ++gameNumber;
+            PlayerPrefs.SetInt(TutorialManager.GAME_COUNT_PREFS_KEY, gameNumber);
+            if (gameNumber <= fixedLevelStartData.Levels.Length)
             {
-                Level = SetUpFixedLevelStart(fixedLevelStartData.Levels[gameNumber]);
+                Level = SetUpFixedLevelStart(fixedLevelStartData.Levels[gameNumber-1]);
             }
             else
             {
@@ -39,18 +40,13 @@ namespace GMTK2020
 
             Simulator simulator = new Simulator(Level.Board, levelSpec);
 
-            if (gameNumber < fixedLevelStartData.Levels.Length)
-                    simulator.SetFixedCracks(fixedLevelStartData.Levels[levelIndex].CrackedTiles);
+            if (gameNumber <= fixedLevelStartData.Levels.Length)
+                    simulator.SetFixedCracks(fixedLevelStartData.Levels[gameNumber-1].CrackedTiles);
 
             predictionEditor.Initialize(simulator);
             boardRenderer.RenderInitial(Level.Board);
             playback.Initialize(Level.Board, simulator);
-
-            PlayerPrefs.SetInt(TutorialManager.GAME_COUNT_PREFS_KEY, gameNumber+1);
         }
-
-        private int GetGameNumber() 
-            => PlayerPrefs.GetInt(TutorialManager.GAME_COUNT_PREFS_KEY, 0);
 
         private Level SetUpFixedLevelStart(FixedLevelStartData.FixedLevelStart levelData)
         {

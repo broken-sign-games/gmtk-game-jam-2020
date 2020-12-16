@@ -1,6 +1,7 @@
 ﻿using GMTK2020.Audio;
 using GMTK2020.Data;
 using GMTK2020.Rendering;
+using GMTK2020.TutorialSystem;
 using GMTK2020.UI;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -36,6 +37,8 @@ namespace GMTK2020
             crackCounter.SetMaxCracks(simulator.CracksPerChain);
 
             boardManipulator.LastToolUsed += OnLastToolUsed;
+
+            simulator.StartGame();
         }
 
         private void OnDestroy()

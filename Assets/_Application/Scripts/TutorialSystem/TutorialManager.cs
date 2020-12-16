@@ -47,7 +47,7 @@ namespace GMTK2020.TutorialSystem
                 ResetTutorial();
         }
 
-        private void ResetTutorial()
+        private static void ResetTutorial()
         {
             Debug.Log("Resetting tutorial");
             foreach (TutorialID id in allTutorials)
@@ -56,6 +56,9 @@ namespace GMTK2020.TutorialSystem
             }
             PlayerPrefs.DeleteKey(GAME_COUNT_PREFS_KEY);
         }
+
+        public static int GetGameCount()
+            => PlayerPrefs.GetInt(GAME_COUNT_PREFS_KEY, 0);
 
         public void ShowTutorialIfNew(TutorialID id) 
             => ShowTutorialIfNew(id, new List<GridRect>());
@@ -117,7 +120,7 @@ namespace GMTK2020.TutorialSystem
                 ShowTutorial(queuedTutorials.Dequeue());
         }
 
-        private string TutorialIDToPrefsKey(TutorialID id) 
+        private static string TutorialIDToPrefsKey(TutorialID id) 
             => $"TutorialCompleted:{Enum.GetName(typeof(TutorialID), id)}";
     }
 }

@@ -38,7 +38,7 @@ namespace GMTK2020.TutorialSystem
 
             foreach (GridRect rect in tutorial.InteractableRects)
             {
-                TutorialMask mask = Instantiate(tutorialMaskPrefab);
+                TutorialMask mask = Instantiate(tutorialMaskPrefab, transform);
                 mask.SetRect(rect);
 
                 activeTutorialMasks.Add(mask);

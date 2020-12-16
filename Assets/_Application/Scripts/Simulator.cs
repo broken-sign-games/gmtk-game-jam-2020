@@ -1,4 +1,5 @@
 ﻿using GMTK2020.Data;
+using GMTK2020.TutorialSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace GMTK2020
         private int chainCount = 0;
         public int ChainLength { get; private set; } = 0;
 
-        private Queue<Tile> fixedCrackQueue = new Queue<Tile>();
+        private readonly Queue<Tile> fixedCrackQueue = new Queue<Tile>();
 
         public Simulator(Board initialBoard, LevelSpecification levelSpec)
         {
@@ -54,6 +55,36 @@ namespace GMTK2020
                 Tile tile = board[pos];
                 fixedCrackQueue.Enqueue(tile);
             }
+        }
+
+        public void StartGame()
+        {
+            int gameCount = TutorialManager.GetGameCount();
+
+            switch (gameCount)
+            {
+            case 1:
+            {
+                List<GridRect> interactableRects = new List<GridRect> { new GridRect(new Vector2Int(3, 1), new Vector2Int(5, 1)) };
+                TutorialManager.Instance.ShowTutorialIfNew(TutorialID.OpenVials, interactableRects);
+                TutorialManager.Instance.ShowTutorialIfNew(TutorialID.StartReaction);
+                break;
+            }
+            case 2:
+            {
+                List<GridRect> interactableRects = new List<GridRect> { 
+                    new GridRect(new Vector2Int(3, 3), new Vector2Int(5, 3)),
+                    new GridRect(new Vector2Int(4, 2), new Vector2Int(4, 5)),
+                    new GridRect(new Vector2Int(4, 8), new Vector2Int(4, 8)),
+                    new GridRect(new Vector2Int(5, 5), new Vector2Int(5, 5)),
+                    new GridRect(new Vector2Int(6, 4), new Vector2Int(6, 4)),
+
+                };
+                TutorialManager.Instance.ShowTutorialIfNew(TutorialID.OmittingVials, interactableRects);
+                break;
+            }
+            }
+
         }
 
         public SimulationStep SimulateNextStep()
