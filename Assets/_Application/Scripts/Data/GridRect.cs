@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GMTK2020.Data
@@ -23,5 +24,12 @@ namespace GMTK2020.Data
             && pos.x <= TopRight.x 
             && BottomLeft.y <= pos.y 
             && pos.y <= TopRight.y;
+
+        public IEnumerable<Vector2Int> GetPositions()
+        {
+            for (int y = BottomLeft.y; y <= TopRight.y; ++y)
+                for (int x = BottomLeft.x; x <= TopRight.x; ++x)
+                    yield return new Vector2Int(x, y);
+        }
     }
 }

@@ -36,6 +36,10 @@ namespace GMTK2020
 
         private readonly Queue<Tile> fixedCrackQueue = new Queue<Tile>();
 
+        private List<Tile> tutorialTilesToOpen = null;
+        private bool tutorialWaitingForRemoval = false;
+        private bool tutorialWaitingForSwap = false;
+
         public Simulator(Board initialBoard, LevelSpecification levelSpec)
         {
             board = initialBoard;
@@ -67,6 +71,8 @@ namespace GMTK2020
             {
                 List<GridRect> interactableRects = new List<GridRect> { new GridRect(new Vector2Int(3, 1), new Vector2Int(5, 1)) };
                 TutorialManager.Instance.ShowTutorialIfNew(TutorialID.OpenVials, interactableRects);
+                CreateListOfTilesToOpenForTutorial(interactableRects);
+
                 TutorialManager.Instance.ShowTutorialIfNew(TutorialID.StartReaction);
                 break;
             }
@@ -78,13 +84,22 @@ namespace GMTK2020
                     new GridRect(new Vector2Int(4, 8), new Vector2Int(4, 8)),
                     new GridRect(new Vector2Int(5, 5), new Vector2Int(5, 5)),
                     new GridRect(new Vector2Int(6, 4), new Vector2Int(6, 4)),
-
                 };
+                CreateListOfTilesToOpenForTutorial(interactableRects);
                 TutorialManager.Instance.ShowTutorialIfNew(TutorialID.OmittingVials, interactableRects);
                 break;
             }
             }
 
+        }
+
+        private void CreateListOfTilesToOpenForTutorial(List<GridRect> interactableRects)
+        {
+            tutorialTilesToOpen = new List<Tile>();
+
+            foreach (GridRect rect in interactableRects)
+                foreach (Vector2Int pos in rect.GetPositions())
+                    tutorialTilesToOpen.Add(board[pos]);
         }
 
         public SimulationStep SimulateNextStep()
@@ -438,6 +453,12 @@ namespace GMTK2020
             List<MovedTile> movedTiles = MoveTilesDown();
             List<MovedTile> newTiles = FillBoardWithTiles();
 
+            if (tutorialWaitingForRemoval)
+            {
+                tutorialWaitingForRemoval = false;
+                TutorialManager.Instance.CompleteActiveTutorial();
+            }
+
             return new RemovalStep(removedTiles, movedTiles, newTiles);
         }
 
@@ -603,6 +624,12 @@ namespace GMTK2020
             foreach (Tile tile in row2)
                 movedTiles.Add(board.MoveTile(tile, tile.Position.x, y1));
 
+            if (tutorialWaitingForSwap)
+            {
+                tutorialWaitingForSwap = false;
+                TutorialManager.Instance.CompleteActiveTutorial();
+            }
+
             return new PermutationStep(movedTiles);
         }
 
@@ -645,6 +672,12 @@ namespace GMTK2020
                 throw new InvalidOperationException("Cannot mark inert tile for prediction");
 
             tile.Marked = !tile.Marked;
+
+            if (tutorialTilesToOpen != null && tutorialTilesToOpen.All(t => t.Marked))
+            {
+                tutorialTilesToOpen = null;
+                TutorialManager.Instance.CompleteActiveTutorial();
+            }
 
             return new PredictionStep(new List<Tile> { tile });
         }
