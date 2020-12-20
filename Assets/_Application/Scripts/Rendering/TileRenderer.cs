@@ -56,7 +56,6 @@ namespace GMTK2020.Rendering
         [SerializeField] private float landingShakeRandomness = 90f;
 
         [SerializeField] private TileData tileData = null;
-        [SerializeField] private Sprite[] crackSprites = null;
 
         private Tile tile;
 

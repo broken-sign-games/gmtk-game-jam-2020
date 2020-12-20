@@ -94,9 +94,9 @@ namespace GMTK2020
             UpdateUI();
         }
 
-        public void StartNewTurn()
+        public void MakeToolsAvailable()
         { 
-            toolbox.StartNewTurn();
+            toolbox.MakeToolsAvailable();
 
             UpdateUI();
         }

@@ -28,7 +28,7 @@ namespace GMTK2020.UI
         public void OnClick()
         {
             tutorialManager.CompleteActiveTutorial();
-            playback.KickOffPlayback();
+            playback.StartReaction();
         }
 
         private void OnTutorialReady(Tutorial tutorial)

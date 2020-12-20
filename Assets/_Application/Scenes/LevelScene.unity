@@ -545,7 +545,7 @@ Transform:
   m_GameObject: {fileID: 149534257}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4, y: 4, z: 0}
-  m_LocalScale: {x: 25, y: 15, z: 1}
+  m_LocalScale: {x: 25, y: 11.25, z: 1}
   m_Children: []
   m_Father: {fileID: 172499789}
   m_RootOrder: 0
@@ -601,8 +601,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 2
   m_SpriteSortPoint: 0
---- !u!61 &149534260
-BoxCollider2D:
+--- !u!60 &149534260
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -624,9 +624,12 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.5, y: 0.5}
+      - {x: -0.5, y: -0.5}
+      - {x: 0.5, y: -0.5}
+      - {x: 0.5, y: 0.5}
 --- !u!1 &153013526
 GameObject:
   m_ObjectHideFlags: 0
@@ -775,9 +778,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3d3c14ae71a6454f896e58f231fc1db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  overlaySprite: {fileID: 149534259}
+  overlayCollider: {fileID: 149534260}
   tutorialMaskPrefab: {fileID: 4072546932699783684, guid: 99dc541198070744cbef56ff865c5962,
     type: 3}
+  toolPanel: {fileID: 1506328417}
 --- !u!1 &174233052
 GameObject:
   m_ObjectHideFlags: 0
@@ -931,6 +935,11 @@ PrefabInstance:
       propertyPath: tool
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -1284,6 +1293,11 @@ PrefabInstance:
       propertyPath: tool
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -1451,6 +1465,11 @@ PrefabInstance:
       propertyPath: tool
       value: 13
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -2097,6 +2116,11 @@ PrefabInstance:
       propertyPath: tool
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -2916,6 +2940,11 @@ PrefabInstance:
       propertyPath: tool
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -3185,6 +3214,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1506328415}
   - component: {fileID: 1506328416}
+  - component: {fileID: 1506328417}
   m_Layer: 5
   m_Name: Tool Buttons
   m_TagString: Untagged
@@ -3247,6 +3277,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1506328417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506328414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 178efffd2f809f8439ae783946b672f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1570801437
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3453,6 +3495,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   availableUsesText: {fileID: 1570801441}
   requiredChainLengthText: {fileID: 1570801442}
+  unmaskableCanvas: {fileID: 1494876634}
   tool: 9
   boardManipulator: {fileID: 1689814306}
   rotationSenseIndicator: {fileID: 635027661}
@@ -3494,6 +3537,11 @@ PrefabInstance:
       propertyPath: tool
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -3876,6 +3924,11 @@ PrefabInstance:
       propertyPath: tool
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -4048,6 +4101,11 @@ PrefabInstance:
       propertyPath: tool
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -4759,6 +4817,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1506328415}
     m_Modifications:
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
     - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

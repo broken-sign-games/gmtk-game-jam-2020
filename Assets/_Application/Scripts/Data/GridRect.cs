@@ -4,10 +4,15 @@ using UnityEngine;
 
 namespace GMTK2020.Data
 {
+    [Serializable]
     public struct GridRect
     {
-        public Vector2Int BottomLeft { get; }
-        public Vector2Int TopRight { get; }
+        [SerializeField] private Vector2Int _bottomLeft;
+        [SerializeField] private Vector2Int _topRight;
+
+        public Vector2Int BottomLeft => _bottomLeft;
+        public Vector2Int TopRight => _topRight;
+
         public int Width => TopRight.x - BottomLeft.x + 1;
         public int Height => TopRight.y - BottomLeft.y + 1;
 
@@ -15,8 +20,8 @@ namespace GMTK2020.Data
 
         public GridRect(Vector2Int corner1, Vector2Int corner2)
         {
-            BottomLeft = new Vector2Int(Math.Min(corner1.x, corner2.x), Math.Min(corner1.y, corner2.y));
-            TopRight = new Vector2Int(Math.Max(corner1.x, corner2.x), Math.Max(corner1.y, corner2.y));
+            _bottomLeft = new Vector2Int(Math.Min(corner1.x, corner2.x), Math.Min(corner1.y, corner2.y));
+            _topRight = new Vector2Int(Math.Max(corner1.x, corner2.x), Math.Max(corner1.y, corner2.y));
         }
 
         public bool IsInsideRect(Vector2Int pos)
