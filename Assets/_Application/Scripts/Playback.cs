@@ -116,11 +116,13 @@ namespace GMTK2020
                 await tutorialManager.ShowTutorialIfNewAsync(TutorialID.StartReaction);
                 break;
             case 1:
+                await tutorialManager.ShowTutorialIfNewAsync(TutorialID.SelectSwapTool);
                 await tutorialManager.ShowTutorialIfNewAsync(TutorialID.SwapTiles);
                 await tutorialManager.ShowTutorialIfNewAsync(TutorialID.PredictChains);
                 await tutorialManager.ShowTutorialIfNewAsync(TutorialID.StartChainReaction);
                 break;
             case 2:
+                await tutorialManager.ShowTutorialIfNewAsync(TutorialID.SelectRemoveTool);
                 await tutorialManager.ShowTutorialIfNewAsync(TutorialID.RemoveTileTool);
                 await tutorialManager.ShowTutorialIfNewAsync(TutorialID.EndOfMainTutorial);
                 break;

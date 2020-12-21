@@ -34,11 +34,17 @@ MonoBehaviour:
     InteractableTools: 
     PlaybackButtonAvailable: 0
     InteractableRects: []
-  - ID: 3
+  - ID: 12
     Message: After each reaction, you can manipulate the board <b>once</b> to set
-      up further matches. Select the swap tool and swap these vials.
+      up further matches. Select the swap tool.
     ShowDismissButton: 0
     InteractableTools: 0b000000
+    PlaybackButtonAvailable: 0
+    InteractableRects: []
+  - ID: 3
+    Message: Swap these vials by swiping from one to the other.
+    ShowDismissButton: 0
+    InteractableTools: 
     PlaybackButtonAvailable: 0
     InteractableRects:
     - _bottomLeft: {x: 3, y: 0}
@@ -71,13 +77,20 @@ MonoBehaviour:
     InteractableTools: 
     PlaybackButtonAvailable: 0
     InteractableRects: []
-  - ID: 7
-    Message: Let's try out the new tool! You can use the hammer to remove vials from
-      the board without a match.
+  - ID: 13
+    Message: Let's try out the new tool!
     ShowDismissButton: 0
     InteractableTools: 01000000
     PlaybackButtonAvailable: 0
     InteractableRects: []
+  - ID: 7
+    Message: You can use the hammer to remove vials from the board without a match.
+    ShowDismissButton: 0
+    InteractableTools: 
+    PlaybackButtonAvailable: 0
+    InteractableRects:
+    - _bottomLeft: {x: 3, y: 0}
+      _topRight: {x: 3, y: 0}
   - ID: 8
     Message: You're on your own now, good luck!
     ShowDismissButton: 1

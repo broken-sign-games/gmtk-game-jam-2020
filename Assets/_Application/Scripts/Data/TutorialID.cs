@@ -14,5 +14,7 @@
         IncorrectPredictions,
         OmittingVials,
         DifficultyIncrease,
+        SelectSwapTool,
+        SelectRemoveTool,
     }
 }

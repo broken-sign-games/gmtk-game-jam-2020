@@ -37,8 +37,6 @@ namespace GMTK2020
         private readonly Queue<Tile> fixedCrackQueue = new Queue<Tile>();
 
         private List<Tile> tutorialTilesToOpen = null;
-        private bool tutorialWaitingForRemoval = false;
-        private bool tutorialWaitingForSwap = false;
 
         public Simulator(Board initialBoard, LevelSpecification levelSpec)
         {
@@ -101,11 +99,7 @@ namespace GMTK2020
             if (rectCount == 0)
                 return;
 
-            if (tutorial.InteractableTools.Contains(Tool.SwapTiles))
-                tutorialWaitingForSwap = true;
-            else if (tutorial.InteractableTools.Contains(Tool.RemoveTile))
-                tutorialWaitingForRemoval = true;
-            else
+            if (tutorial.InteractableTools.Count == 0)
                 RegisterTilesToOpenForTutorial(tutorial.InteractableRects);
         }
 
@@ -438,11 +432,7 @@ namespace GMTK2020
             List<MovedTile> movedTiles = MoveTilesDown();
             List<MovedTile> newTiles = FillBoardWithTiles();
 
-            if (tutorialWaitingForRemoval)
-            {
-                tutorialWaitingForRemoval = false;
-                TutorialManager.Instance.CompleteActiveTutorial();
-            }
+            TutorialManager.Instance.CompleteActiveTutorial();
 
             return new RemovalStep(removedTiles, movedTiles, newTiles);
         }
@@ -593,11 +583,7 @@ namespace GMTK2020
                 board.MoveTile(tile2, pos1),
             };
 
-            if (tutorialWaitingForSwap)
-            {
-                tutorialWaitingForSwap = false;
-                TutorialManager.Instance.CompleteActiveTutorial();
-            }
+            TutorialManager.Instance.CompleteActiveTutorial();
 
             return new PermutationStep(movedTiles);
         }

@@ -82,6 +82,8 @@ namespace GMTK2020
                 ActiveTool = tool;
 
             UpdateUI();
+
+            TutorialManager.Instance.CompleteActiveTutorial();
         }
 
         public bool AnyToolsAvailable() 
