@@ -68,7 +68,7 @@ namespace GMTK2020.TutorialSystem
             if (TutorialWasAlreadyShown(id))
                 return Task.CompletedTask;
 
-            Tutorial tutorial = tutorialMap[id];
+            Tutorial tutorial = new Tutorial(tutorialMap[id]);
 
             if (tutorial.InteractableRects is null)
                 tutorial.InteractableRects = dynamicInteractableRects;

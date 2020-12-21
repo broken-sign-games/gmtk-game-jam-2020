@@ -18,6 +18,12 @@ namespace GMTK2020.Data
 
         public Vector2 Center => (Vector2)(BottomLeft + TopRight) / 2;
 
+        public GridRect(Vector2Int pos)
+        {
+            _bottomLeft = pos;
+            _topRight = pos;
+        }
+
         public GridRect(Vector2Int corner1, Vector2Int corner2)
         {
             _bottomLeft = new Vector2Int(Math.Min(corner1.x, corner2.x), Math.Min(corner1.y, corner2.y));

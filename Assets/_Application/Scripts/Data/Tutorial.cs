@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace GMTK2020.Data
@@ -15,5 +16,19 @@ namespace GMTK2020.Data
         public List<Tool> InteractableTools;
         public bool PlaybackButtonAvailable;
         public List<GridRect> InteractableRects;
+
+        public Tutorial()
+        {
+        }
+
+        public Tutorial(Tutorial other)
+        {
+            ID = other.ID;
+            Message = other.Message;
+            ShowDismissButton = other.ShowDismissButton;
+            InteractableTools = other.InteractableTools.ToList();
+            PlaybackButtonAvailable = other.PlaybackButtonAvailable;
+            InteractableRects = other.InteractableRects.ToList();
+        }
     }
 }

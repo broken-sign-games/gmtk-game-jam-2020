@@ -3,6 +3,9 @@ using GMTK2020.Data;
 using GMTK2020.Rendering;
 using GMTK2020.TutorialSystem;
 using GMTK2020.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -74,6 +77,8 @@ namespace GMTK2020
                 await ShowInteractiveTutorialsAsync();
 
                 await Awaiters.Until(() => reactionStarted || gameEnded);
+
+                boardManipulator.LockPredictions();
 
                 if (gameEnded)
                     break;
@@ -150,16 +155,70 @@ namespace GMTK2020
                 // to sync the update with the match animation.
                 scoreRenderer.UpdateScore();
 
-                if (step is MatchStep matchStep)
+                var matchStep = step as MatchStep;
+                var cleanUpStep = step as CleanUpStep;
+
+                if (matchStep != null)
+                {
                     boardManipulator.RewardMatch(matchStep);
+                    if (matchStep.MatchedTiles.Count > 3)
+                        await ShowMatchShapeTutorial(matchStep);
+                }
+                else if (cleanUpStep != null && cleanUpStep.InertTiles.Count > 0)
+                {
+                    await ShowIncorrectPredictionsTutorial(cleanUpStep.InertTiles);
+                }
 
                 crackCounter.SetAvoidedCracks(simulator.ChainLength);
                 
                 await boardRenderer.AnimateSimulationStepAsync(step);
 
+                if (cleanUpStep != null)
+                {
+                    if (cleanUpStep.CrackedTiles.Count > 0)
+                        await ShowCrackedVialsTutorial(cleanUpStep.CrackedTiles);
+
+                    if (simulator.DifficultyLevel > 0)
+                        await ShowDifficultyTutorial();
+                }
+
                 if (step.FinalStep)
                     break;
             }
+        }
+
+        private async Task ShowMatchShapeTutorial(MatchStep matchStep)
+        {
+            var matchedRects = matchStep.LeftEndsOfHorizontalMatches
+                .Select(pos => new GridRect(pos, pos + new Vector2Int(2, 0)))
+                .Concat(matchStep.BottomEndsOfVerticalMatches
+                    .Select(pos => new GridRect(pos, pos + new Vector2Int(0, 2))))
+                .ToList();
+
+            await tutorialManager.ShowTutorialIfNewAsync(TutorialID.MatchShapes, matchedRects);
+        }
+
+        private async Task ShowIncorrectPredictionsTutorial(HashSet<Tile> inertTiles)
+        {
+            var inertRects = inertTiles
+                .Select(tile => new GridRect(tile.Position))
+                .ToList();
+
+            await tutorialManager.ShowTutorialIfNewAsync(TutorialID.IncorrectPredictions, inertRects);
+        }
+
+        private async Task ShowCrackedVialsTutorial(HashSet<Tile> crackedTiles)
+        {
+            var crackedRects = crackedTiles
+                .Select(tile => new GridRect(tile.Position))
+                .ToList();
+
+            await tutorialManager.ShowTutorialIfNewAsync(TutorialID.CrackingVials, crackedRects);
+        }
+
+        private async Task ShowDifficultyTutorial()
+        {
+            await tutorialManager.ShowTutorialIfNewAsync(TutorialID.DifficultyIncrease);
         }
 
         private void StartNewTurn()
@@ -169,6 +228,7 @@ namespace GMTK2020
             runButton.interactable = true;
             crackCounter.SetAvoidedCracks(0);
             crackCounter.SetMaxCracks(simulator.CracksPerChain);
+            boardManipulator.UnlockPredictions();
         }
 
         private void OnLastToolUsed()

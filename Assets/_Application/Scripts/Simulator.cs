@@ -27,6 +27,7 @@ namespace GMTK2020
             AddCrack,
         }
 
+        public int DifficultyLevel { get; private set; } = 0;
         private DifficultyIncrease nextDifficultyIncrease = DifficultyIncrease.AddCrack;
         
         private bool ensureLatestColorDrops = false;
@@ -306,6 +307,8 @@ namespace GMTK2020
             if (turnCount % levelSpec.ChainsPerDifficultyIncrease != 0)
                 return;
 
+            ++DifficultyLevel;
+            
             switch (nextDifficultyIncrease)
             {
             case DifficultyIncrease.AddColor:
