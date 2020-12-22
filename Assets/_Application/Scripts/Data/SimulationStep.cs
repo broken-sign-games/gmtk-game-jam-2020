@@ -37,11 +37,13 @@ namespace GMTK2020.Data
 
         public List<MovedTile> NewTiles { get; }
         public HashSet<Tile> InertTiles { get; }
+        public HashSet<Tile> CrackedTiles { get; }
 
-        public CleanUpStep(List<MovedTile> newTiles, HashSet<Tile> inertTiles)
+        public CleanUpStep(List<MovedTile> newTiles, HashSet<Tile> inertTiles, HashSet<Tile> crackedTiles)
         {
             NewTiles = newTiles;
             InertTiles = inertTiles;
+            CrackedTiles = crackedTiles;
         }
     }
 

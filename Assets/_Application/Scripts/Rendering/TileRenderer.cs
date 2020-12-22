@@ -76,13 +76,14 @@ namespace GMTK2020.Rendering
 
             transform.localPosition = (Vector2)initialPosition;
 
-            glassSprite.sprite = tileData.VialSpriteMap[tile.Color];
             vialMask.sprite = tileData.VialMaskMap[tile.Color];
             corkSprite.sprite = tileData.CorkSpriteMap[tile.Color];
             liquidSprite.sprite = tileData.LiquidSpriteMap[tile.Color];
             liquidMask.sprite = tileData.LiquidSpriteMap[tile.Color];
             glowSprite.sprite = tileData.GlowSpriteMap[tile.Color];
             glowSprite.color = tileData.GlowColor[tile.Color];
+
+            UpdateCracks();
 
             Color highlightColor = tileData.PopDropletColor[tile.Color];
             highlightColor.a = 0;
@@ -98,6 +99,13 @@ namespace GMTK2020.Rendering
             mainLiquidEvap.startColor = tileData.PopDropletColor[tile.Color];
             ParticleSystem.MainModule mainNeckEvap = neckEvap.main;
             mainNeckEvap.startColor = tileData.PopDropletColor[tile.Color];
+        }
+
+        public Tween UpdateCracks()
+        {
+            glassSprite.sprite = tileData.VialSpriteMap[tile.Color][tile.Cracks];
+
+            return vialTransform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0);
         }
 
         public Tween UpdatePrediction()

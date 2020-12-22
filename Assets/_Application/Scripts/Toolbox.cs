@@ -15,6 +15,8 @@ namespace GMTK2020
         private Dictionary<Tool, int> requiredChainLength;
         private Dictionary<Tool, int> awardedToolsForCurrentChainLength;
 
+        bool toolUsedThisTurn = true;
+
         public Toolbox(ToolData toolData, Simulator simulator)
         {
             this.toolData = toolData;
@@ -58,9 +60,39 @@ namespace GMTK2020
             case RewardStrategy.OnePerLength: return 1;
             case RewardStrategy.NPerLength: return chainLength;
             case RewardStrategy.NAtOncePerLength: return chainLength;
+            case RewardStrategy.PermanentUnlock: return -1;
+            case RewardStrategy.OnePerMatch: return -1;
             default:
                 throw new InvalidOperationException("Unknown reward strategy.");
             }
+        }
+
+        public bool IsToolAvailable(Tool tool)
+        {
+            if (tool == Tool.ToggleMarked)
+                return true;
+
+            if (toolUsedThisTurn)
+                return false;
+
+            return availableToolUses[tool] != 0;
+        }
+
+        public bool AnyToolsAvailable()
+        {
+            if (toolUsedThisTurn)
+                return false;
+
+            foreach ((Tool tool, int uses) in availableToolUses)
+                if (tool != Tool.ToggleMarked && uses != 0)
+                    return true;
+
+            return false;
+        }
+
+        public void MakeToolsAvailable()
+        {
+            toolUsedThisTurn = false;
         }
 
         public SimulationStep UseTool(Tool tool, Vector2Int gridPos, RotationSense rotSense = RotationSense.CW)
@@ -102,16 +134,10 @@ namespace GMTK2020
             if (availableToolUses[tool] > 0)
                 --availableToolUses[tool];
 
+            if (tool != Tool.ToggleMarked)
+                toolUsedThisTurn = true;
+
             return step;
-        }
-
-        public bool AnyToolsAvailable()
-        {
-            foreach ((Tool _, int uses) in availableToolUses)
-                if (uses > 0)
-                    return true;
-
-            return false;
         }
 
         public SimulationStep UseSwapTool(Tool tool, Vector2Int from, Vector2Int to)
@@ -148,6 +174,8 @@ namespace GMTK2020
 
             if (availableToolUses[tool] > 0)
                 --availableToolUses[tool];
+
+            toolUsedThisTurn = true;
 
             return step;
         }
@@ -251,24 +279,29 @@ namespace GMTK2020
             if (chainLength < requiredChainLength[tool])
                 return;
 
-            if (toolData.RewardStrategy == RewardStrategy.NAtOncePerLength)
+            switch (toolData.RewardStrategy)
             {
+            case RewardStrategy.NAtOncePerLength:
                 while (requiredChainLength[tool] <= chainLength)
                 {
                     availableToolUses[tool] += requiredChainLength[tool];
                     ++requiredChainLength[tool];
                 }
-            }
-            else
-            {
+                break;
+            case RewardStrategy.PermanentUnlock:
+                availableToolUses[tool] = -1;
+                break;
+            default:
                 ++availableToolUses[tool];
                 ++awardedToolsForCurrentChainLength[tool];
 
-                if (awardedToolsForCurrentChainLength[tool] >= GetAvailableToolUsesForChainLength(requiredChainLength[tool]))
+                int availableToolUsesForChainLength = GetAvailableToolUsesForChainLength(requiredChainLength[tool]);
+                if (availableToolUsesForChainLength >= 0 && awardedToolsForCurrentChainLength[tool] >= availableToolUsesForChainLength)
                 {
                     ++requiredChainLength[tool];
                     awardedToolsForCurrentChainLength[tool] = 0;
                 }
+                break;
             }
         }
     }

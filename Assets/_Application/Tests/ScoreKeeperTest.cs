@@ -54,6 +54,10 @@ namespace Tests
                     new Tile(0),
                     new Tile(1),
                     new Tile(2),
+                },
+                new HashSet<Tile>()
+                {
+                    new Tile(3),
                 });
             
             int cleanUpScore = scoreKeeper.ScoreStep(step);
@@ -72,7 +76,7 @@ namespace Tests
             scoreKeeper.ScoreStep(CreateMatchStep(1, 2));
             scoreKeeper.ScoreStep(CreateMatchStep(2, 3));
 
-            scoreKeeper.ScoreStep(new CleanUpStep(new List<MovedTile>(), new HashSet<Tile>()));
+            scoreKeeper.ScoreStep(new CleanUpStep(new List<MovedTile>(), new HashSet<Tile>(), new HashSet<Tile>()));
 
             for (int i = 0; i < nSteps - 1; ++i)
                 scoreKeeper.ScoreStep(CreateMatchStep(i + 1, 0));
@@ -114,7 +118,7 @@ namespace Tests
 
         private CleanUpStep CreateCleanUpStep()
         {
-            return new CleanUpStep(new List<MovedTile>(), new HashSet<Tile>());
+            return new CleanUpStep(new List<MovedTile>(), new HashSet<Tile>(), new HashSet<Tile>());
         }
     }
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb5c9a41534844d42825e66295089670, type: 3}
   m_Name: Tool Data
   m_EditorClassIdentifier: 
-  RewardStrategy: 2
+  RewardStrategy: 4
   Map:
     reorderableList:
       canAdd: 1
@@ -48,7 +48,7 @@ MonoBehaviour:
     - InitialUses: 0
       AwardedFor: 0
     - InitialUses: 0
-      AwardedFor: 0
+      AwardedFor: 2
     - InitialUses: 0
       AwardedFor: 0
     - InitialUses: 0
@@ -61,9 +61,9 @@ MonoBehaviour:
       AwardedFor: 5
     - InitialUses: 0
       AwardedFor: 3
-    - InitialUses: 0
+    - InitialUses: -1
       AwardedFor: 1
     - InitialUses: 0
-      AwardedFor: 2
+      AwardedFor: 0
     - InitialUses: 0
       AwardedFor: 6

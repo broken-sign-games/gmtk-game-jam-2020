@@ -57,3 +57,9 @@ TagManager:
   - name: UI
     uniqueID: 4057161333
     locked: 0
+  - name: Tutorial Mask
+    uniqueID: 1710855171
+    locked: 0
+  - name: Unmaskable UI
+    uniqueID: 2712164803
+    locked: 0

@@ -1,9 +1,9 @@
 ﻿using GMTK2020.Data;
+using GMTK2020.TutorialSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.XR.WSA;
 using Random = System.Random;
 
 namespace GMTK2020
@@ -12,22 +12,54 @@ namespace GMTK2020
     {
         public const int MAX_SIMULATION_STEPS = 5;
 
+        public const int MAX_CRACKS = 2;
+
         private readonly Board board;
 
         private readonly Random rng;
-        private readonly int colorCount;
+        private int colorCount;
+        public int CracksPerChain { get; private set; }
+        private readonly LevelSpecification levelSpec;
 
-        private int chainLength;
+        private enum DifficultyIncrease
+        {
+            AddColor,
+            AddCrack,
+        }
 
-        public Simulator(Board initialBoard, int colorCount)
+        public int DifficultyLevel { get; private set; } = 0;
+        private DifficultyIncrease nextDifficultyIncrease = DifficultyIncrease.AddCrack;
+        
+        private bool ensureLatestColorDrops = false;
+
+        private int turnCount = 0;
+        public int ChainLength { get; private set; } = 0;
+
+        private readonly Queue<Tile> fixedCrackQueue = new Queue<Tile>();
+
+        private List<Tile> tutorialTilesToOpen = null;
+
+        public Simulator(Board initialBoard, LevelSpecification levelSpec)
         {
             board = initialBoard;
-            this.colorCount = colorCount;
+            this.levelSpec = levelSpec;
+
+            colorCount = levelSpec.InitialColorCount;
+            CracksPerChain = levelSpec.InitialCracksPerChain;
+
+            TutorialManager.Instance.TutorialReady += OnTutorialReady;
 
             // TODO: We probably want more control over the seed...
             rng = new Random(Time.frameCount);
+        }
 
-            chainLength = 0;
+        public void SetFixedCracks(Vector2Int[] crackedTiles)
+        {
+            foreach (Vector2Int pos in crackedTiles)
+            {
+                Tile tile = board[pos];
+                fixedCrackQueue.Enqueue(tile);
+            }
         }
 
         public SimulationStep SimulateNextStep()
@@ -42,17 +74,43 @@ namespace GMTK2020
             {
                 List<MovedTile> movedTiles = MoveTilesDown();
 
-                ++chainLength;
+                ++ChainLength;
 
-                return new MatchStep(chainLength, matchedTiles, movedTiles, horizontalMatches, verticalMatches);
+                return new MatchStep(ChainLength, matchedTiles, movedTiles, horizontalMatches, verticalMatches);
             }
 
-            chainLength = 0;
+            ++turnCount;
 
-            HashSet<Tile> inertTiles = MakeMarkedTilesInert();
+            HashSet<Tile> inertTiles = MakeMarkedAndCrackedTilesInert();
+            HashSet<Tile> crackedTiles = CrackTiles();
+            
+            IncreaseDifficulty();
+
             List<MovedTile> newTiles = FillBoardWithTiles();
 
-            return new CleanUpStep(newTiles, inertTiles);
+            ChainLength = 0;
+
+            return new CleanUpStep(newTiles, inertTiles, crackedTiles);
+        }
+
+        private void OnTutorialReady(Tutorial tutorial)
+        {
+            int rectCount = tutorial.InteractableRects?.Count ?? 0;
+
+            if (rectCount == 0)
+                return;
+
+            if (tutorial.InteractableTools.Count == 0)
+                RegisterTilesToOpenForTutorial(tutorial.InteractableRects);
+        }
+
+        private void RegisterTilesToOpenForTutorial(List<GridRect> interactableRects)
+        {
+            tutorialTilesToOpen = new List<Tile>();
+
+            foreach (GridRect rect in interactableRects)
+                foreach (Vector2Int pos in rect.GetPositions())
+                    tutorialTilesToOpen.Add(board[pos]);
         }
 
         private List<IEnumerable<Tile>> GetRawMatches()
@@ -188,13 +246,13 @@ namespace GMTK2020
             return movedTiles;
         }
 
-        private HashSet<Tile> MakeMarkedTilesInert()
+        private HashSet<Tile> MakeMarkedAndCrackedTilesInert()
         {
             var inertTiles = new HashSet<Tile>();
 
             foreach (Tile tile in board)
             {
-                if (tile.Marked)
+                if (!tile.Inert && (tile.Marked || tile.Cracks >= MAX_CRACKS))
                 {
                     tile.MakeInert();
                     inertTiles.Add(tile);
@@ -204,10 +262,83 @@ namespace GMTK2020
             return inertTiles;
         }
 
+        private HashSet<Tile> CrackTiles()
+        {
+            var crackedTiles = new HashSet<Tile>();
+
+            // Increment cracks on non-inert cracked tiles
+            foreach (Tile tile in board)
+            {
+                if (tile.Cracks > 0 && !tile.Inert)
+                {
+                    tile.AddCrack();
+                    crackedTiles.Add(tile);
+                }
+            }
+
+            int tilesToCrack = CracksPerChain - ChainLength;
+            // Crack fixed tiles
+            while (fixedCrackQueue.Count > 0 && tilesToCrack > 0)
+            {
+                Tile tile = fixedCrackQueue.Dequeue();
+
+                if (board[tile.Position] != tile || tile.Inert || tile.Cracks > 0)
+                    continue;
+
+                tile.AddCrack();
+                crackedTiles.Add(tile);
+                --tilesToCrack;
+            }
+
+            // Crack random tiles
+            Tile[] eligibleTiles = board.Where(tile => tile.Cracks == 0 && !tile.Inert).ToArray();
+
+            foreach (Tile crackedTile in eligibleTiles.Shuffle(rng).Take(tilesToCrack))
+            {
+                crackedTile.AddCrack();
+                crackedTiles.Add(crackedTile);
+            }
+
+            return crackedTiles;
+        }
+
+        private void IncreaseDifficulty()
+        {
+            if (turnCount % levelSpec.ChainsPerDifficultyIncrease != 0)
+                return;
+
+            ++DifficultyLevel;
+            
+            switch (nextDifficultyIncrease)
+            {
+            case DifficultyIncrease.AddColor:
+                if (colorCount < levelSpec.MaxColorCount)
+                {
+                    ++colorCount;
+                    ensureLatestColorDrops = true;
+                }
+                nextDifficultyIncrease = DifficultyIncrease.AddCrack;
+                break;
+            case DifficultyIncrease.AddCrack:
+                if (CracksPerChain < levelSpec.MaxCracksPerChain)
+                {
+                    ++CracksPerChain;
+                }
+                nextDifficultyIncrease = DifficultyIncrease.AddColor;
+                break;
+            default:
+                break;
+            }
+        }
+
         private List<MovedTile> FillBoardWithTiles()
         {
             var newTiles = new List<MovedTile>();
 
+            int nNewTiles = board.Width * board.Height - board.Count();
+            int newColorIndex = rng.Next(nNewTiles);
+
+            int i = 0;
             foreach (int x in board.GetXs())
             {
                 int newTilesInColumn = board.Height;
@@ -219,10 +350,18 @@ namespace GMTK2020
                         continue;
                     }
 
-                    Tile newTile = new Tile(rng.Next(colorCount), new Vector2Int(x, y + newTilesInColumn));
+                    int color = (ensureLatestColorDrops && i == newColorIndex)
+                        ? colorCount - 1
+                        : rng.Next(colorCount);
+
+                    Tile newTile = new Tile(color, new Vector2Int(x, y + newTilesInColumn));
                     newTiles.Add(board.MoveTile(newTile, x, y));
+
+                    ++i;
                 }
             }
+
+            ensureLatestColorDrops = false;
 
             return newTiles;
         }
@@ -295,6 +434,8 @@ namespace GMTK2020
 
             List<MovedTile> movedTiles = MoveTilesDown();
             List<MovedTile> newTiles = FillBoardWithTiles();
+
+            TutorialManager.Instance.CompleteActiveTutorial();
 
             return new RemovalStep(removedTiles, movedTiles, newTiles);
         }
@@ -445,6 +586,8 @@ namespace GMTK2020
                 board.MoveTile(tile2, pos1),
             };
 
+            TutorialManager.Instance.CompleteActiveTutorial();
+
             return new PermutationStep(movedTiles);
         }
 
@@ -503,6 +646,12 @@ namespace GMTK2020
                 throw new InvalidOperationException("Cannot mark inert tile for prediction");
 
             tile.Marked = !tile.Marked;
+
+            if (tutorialTilesToOpen != null && tutorialTilesToOpen.All(t => t.Marked))
+            {
+                tutorialTilesToOpen = null;
+                TutorialManager.Instance.CompleteActiveTutorial();
+            }
 
             return new PredictionStep(new List<Tile> { tile });
         }

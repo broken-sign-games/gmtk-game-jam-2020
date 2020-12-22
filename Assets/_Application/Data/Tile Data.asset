@@ -13,13 +13,34 @@ MonoBehaviour:
   m_Name: Tile Data
   m_EditorClassIdentifier: 
   VialSpriteMap:
-  - {fileID: 8046035064800975175, guid: 0247306708a8b4fc2a9ed71a4473916d, type: 3}
-  - {fileID: 731418066001837119, guid: 0247306708a8b4fc2a9ed71a4473916d, type: 3}
-  - {fileID: -337810924391198949, guid: 0247306708a8b4fc2a9ed71a4473916d, type: 3}
-  - {fileID: -2972181040574899499, guid: 0247306708a8b4fc2a9ed71a4473916d, type: 3}
-  - {fileID: -428740059878890521, guid: 0247306708a8b4fc2a9ed71a4473916d, type: 3}
-  - {fileID: -4491254187003061167, guid: 0247306708a8b4fc2a9ed71a4473916d, type: 3}
-  - {fileID: -6134155860564393168, guid: 0247306708a8b4fc2a9ed71a4473916d, type: 3}
+  - Sprites:
+    - {fileID: 8046035064800975175, guid: 0247306708a8b4fc2a9ed71a4473916d, type: 3}
+    - {fileID: 8046035064800975175, guid: e23d81ab90fb847d6b864da0756ee65c, type: 3}
+    - {fileID: 8046035064800975175, guid: f0d23583beebc48fe815d3f84d0cdad9, type: 3}
+  - Sprites:
+    - {fileID: 731418066001837119, guid: 0247306708a8b4fc2a9ed71a4473916d, type: 3}
+    - {fileID: 731418066001837119, guid: e23d81ab90fb847d6b864da0756ee65c, type: 3}
+    - {fileID: 731418066001837119, guid: f0d23583beebc48fe815d3f84d0cdad9, type: 3}
+  - Sprites:
+    - {fileID: -337810924391198949, guid: 0247306708a8b4fc2a9ed71a4473916d, type: 3}
+    - {fileID: -337810924391198949, guid: e23d81ab90fb847d6b864da0756ee65c, type: 3}
+    - {fileID: -337810924391198949, guid: f0d23583beebc48fe815d3f84d0cdad9, type: 3}
+  - Sprites:
+    - {fileID: -2972181040574899499, guid: 0247306708a8b4fc2a9ed71a4473916d, type: 3}
+    - {fileID: -2972181040574899499, guid: e23d81ab90fb847d6b864da0756ee65c, type: 3}
+    - {fileID: -2972181040574899499, guid: f0d23583beebc48fe815d3f84d0cdad9, type: 3}
+  - Sprites:
+    - {fileID: -428740059878890521, guid: 0247306708a8b4fc2a9ed71a4473916d, type: 3}
+    - {fileID: -428740059878890521, guid: e23d81ab90fb847d6b864da0756ee65c, type: 3}
+    - {fileID: -428740059878890521, guid: f0d23583beebc48fe815d3f84d0cdad9, type: 3}
+  - Sprites:
+    - {fileID: -4491254187003061167, guid: 0247306708a8b4fc2a9ed71a4473916d, type: 3}
+    - {fileID: -4491254187003061167, guid: e23d81ab90fb847d6b864da0756ee65c, type: 3}
+    - {fileID: -4491254187003061167, guid: f0d23583beebc48fe815d3f84d0cdad9, type: 3}
+  - Sprites:
+    - {fileID: -6134155860564393168, guid: 0247306708a8b4fc2a9ed71a4473916d, type: 3}
+    - {fileID: -6134155860564393168, guid: e23d81ab90fb847d6b864da0756ee65c, type: 3}
+    - {fileID: -6134155860564393168, guid: f0d23583beebc48fe815d3f84d0cdad9, type: 3}
   VialMaskMap:
   - {fileID: -4614076331896419988, guid: e56d3f588436940889a48c86327d9aa8, type: 3}
   - {fileID: -2084255086940608313, guid: e56d3f588436940889a48c86327d9aa8, type: 3}

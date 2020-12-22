@@ -1,6 +1,7 @@
-﻿using GMTK2020.Data;
+﻿using Array2DEditor;
+using GMTK2020.Data;
 using GMTK2020.Rendering;
-using TMPro;
+using GMTK2020.TutorialSystem;
 using UnityEngine;
 
 namespace GMTK2020
@@ -11,6 +12,7 @@ namespace GMTK2020
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private BoardManipulator predictionEditor = null;
         [SerializeField] private LevelSequence levelSequence = null;
+        [SerializeField] private FixedLevelStartData fixedLevelStartData = null;
 
         public Level Level { get; private set; }
 
@@ -24,13 +26,42 @@ namespace GMTK2020
             int levelIndex = GameProgression.CurrentLevelIndex;
             LevelSpecification levelSpec = levelSequence.Levels[levelIndex];
 
-            Level = new LevelGenerator(levelSpec).GenerateValidLevel();
+            int gameNumber = TutorialManager.GetGameCount();
+            ++gameNumber;
+            PlayerPrefs.SetInt(TutorialManager.GAME_COUNT_PREFS_KEY, gameNumber);
+            if (gameNumber <= fixedLevelStartData.Levels.Length)
+            {
+                Level = SetUpFixedLevelStart(fixedLevelStartData.Levels[gameNumber-1]);
+            }
+            else
+            {
+                Level = new LevelGenerator(levelSpec).GenerateValidLevel();
+            }
 
-            Simulator simulator = new Simulator(Level.Board, levelSpec.ColorCount);
+            Simulator simulator = new Simulator(Level.Board, levelSpec);
+
+            if (gameNumber <= fixedLevelStartData.Levels.Length)
+                    simulator.SetFixedCracks(fixedLevelStartData.Levels[gameNumber-1].CrackedTiles);
 
             predictionEditor.Initialize(simulator);
             boardRenderer.RenderInitial(Level.Board);
-            playback.Initialize(Level.Board, simulator);
+            playback.Initialize(simulator);
+        }
+
+        private Level SetUpFixedLevelStart(FixedLevelStartData.FixedLevelStart levelData)
+        {
+            Array2DInt boardData = levelData.BoardData;
+            Vector2Int gridSize = boardData.GridSize;
+
+            var board = new Board(gridSize.x, gridSize.y);
+
+            int[,] colors = boardData.GetCells();
+
+            foreach (int y in board.GetYs())
+                foreach (int x in board.GetXs())
+                    board[x, y] = new Tile(colors[board.Height - y - 1, x]);
+
+            return new Level(board);
         }
     }
 }

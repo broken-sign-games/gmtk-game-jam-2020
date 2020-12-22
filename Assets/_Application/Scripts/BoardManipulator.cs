@@ -1,5 +1,6 @@
 ﻿using GMTK2020.Data;
 using GMTK2020.Rendering;
+using GMTK2020.TutorialSystem;
 using GMTK2020.UI;
 using GMTKJam2020.Input;
 using RotaryHeart.Lib.SerializableDictionary;
@@ -12,6 +13,7 @@ namespace GMTK2020
     public class BoardManipulator : MonoBehaviour
     {
         [SerializeField] private BoardRenderer boardRenderer = null;
+        [SerializeField] private TutorialOverlay tutorialOverlay = null;
         [SerializeField] private SerializableDictionaryBase<Tool, ToolButton> toolButtons = null;
         [SerializeField] private RotationButton rotate3x3Button = null;
         [SerializeField] private ToolData toolData = null;
@@ -80,6 +82,8 @@ namespace GMTK2020
                 ActiveTool = tool;
 
             UpdateUI();
+
+            TutorialManager.Instance.CompleteActiveTutorial();
         }
 
         public bool AnyToolsAvailable() 
@@ -88,6 +92,13 @@ namespace GMTK2020
         public void RewardMatch(MatchStep matchStep)
         {
             toolbox.RewardMatches(matchStep);
+
+            UpdateUI();
+        }
+
+        public void MakeToolsAvailable()
+        { 
+            toolbox.MakeToolsAvailable();
 
             UpdateUI();
         }
@@ -122,6 +133,9 @@ namespace GMTK2020
 
             Vector2Int gridPos = gridPosOrNull.Value;
 
+            if (!tutorialOverlay.IsPositionAllowedByCurrentMask(gridPos))
+                return;
+
             if (ActiveTool == Tool.SwapTiles || ActiveTool == Tool.SwapLines)
             {
                 isDragging = true;
@@ -144,6 +158,12 @@ namespace GMTK2020
             }
 
             Vector2Int gridPos = gridPosOrNull.Value;
+
+            if (!tutorialOverlay.IsPositionAllowedByCurrentMask(gridPos))
+            {
+                isDragging = false;
+                return;
+            }
 
             int delta = (gridPos - draggingFrom).sqrMagnitude;
 
@@ -228,6 +248,7 @@ namespace GMTK2020
             foreach ((Tool tool, ToolButton button) in toolButtons)
             {
                 button.UpdateUses(toolbox.GetAvailableUses(tool));
+                button.UpdateAvailable(toolbox.IsToolAvailable(tool));
                 int awarded = toolbox.GetAwardedToolsForCurrentChainLength(tool);
                 int chainLength = toolbox.GetRequiredChainLength(tool);
                 int available = toolbox.GetAvailableToolUsesForChainLength(chainLength);

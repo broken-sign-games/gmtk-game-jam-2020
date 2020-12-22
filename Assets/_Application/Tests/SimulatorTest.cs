@@ -39,7 +39,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 4, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             SimulationStep step = simulator.SimulateNextStep();
 
@@ -84,7 +84,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 4, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             SimulationStep step = simulator.SimulateNextStep();
 
@@ -129,7 +129,7 @@ namespace Tests
                 { 1, 2, 5, 2, 1, 4, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             SimulationStep step = simulator.SimulateNextStep();
 
@@ -174,7 +174,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 4, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             SimulationStep step = simulator.SimulateNextStep();
 
@@ -221,7 +221,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 4, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             SimulationStep step = simulator.SimulateNextStep();
 
@@ -255,7 +255,7 @@ namespace Tests
             board[2, 1].MakeWildcard();
             board[5, 2].MakeWildcard();
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             SimulationStep step = simulator.SimulateNextStep();
 
@@ -297,7 +297,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 4, 2, 0, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             SimulationStep step = simulator.SimulateNextStep();
 
@@ -342,7 +342,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 4, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             SimulationStep step = simulator.SimulateNextStep();
 
@@ -392,7 +392,7 @@ namespace Tests
             expected[2, 1].MakeInert();
             expected[3, 1].MakeInert();
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             SimulationStep step = simulator.SimulateNextStep();
 
@@ -438,7 +438,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 4, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             List<SimulationStep> steps = simulator.SimulateToStop();
 
@@ -472,7 +472,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 4, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             Assert.That(simulator.FurtherMatchesPossible(), Is.False);
         }
@@ -495,7 +495,7 @@ namespace Tests
             board[1, 1].MakeInert();
             board[5, 1].MakeInert();
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             Assert.That(simulator.FurtherMatchesPossible(), Is.False);
         }
@@ -516,7 +516,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 5, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             Assert.That(simulator.FurtherMatchesPossible(), Is.True);
         }
@@ -537,7 +537,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             Assert.That(simulator.FurtherMatchesPossible(), Is.True);
         }
@@ -559,7 +559,7 @@ namespace Tests
             });
             board[5, 0].MakeWildcard();
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             Assert.That(simulator.FurtherMatchesPossible(), Is.True);
         }
@@ -582,7 +582,7 @@ namespace Tests
             board[5, 0].MakeWildcard();
             board[5, 2].MakeWildcard();
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             Assert.That(simulator.FurtherMatchesPossible(), Is.True);
         }
@@ -606,7 +606,7 @@ namespace Tests
             board[5, 1].MakeWildcard();
             board[5, 2].MakeWildcard();
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             Assert.That(simulator.FurtherMatchesPossible(), Is.True);
         }
@@ -640,7 +640,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             RemovalStep step = simulator.RemoveTile(new Vector2Int(2, 1));
 
@@ -687,7 +687,7 @@ namespace Tests
             board[pos].Marked = true;
             board[pos].MakeInert();
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             RefillStep step = simulator.RefillTile(pos);
 
@@ -729,7 +729,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             RemovalStep step = simulator.RemoveBlock(new Vector2Int(2, 3));
 
@@ -769,7 +769,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 3, 2, 8, 7 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             RemovalStep step = simulator.RemoveBlock(new Vector2Int(0, 8));
 
@@ -815,7 +815,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             RemovalStep step = simulator.RemovePlus(new Vector2Int(2, 3));
 
@@ -855,7 +855,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 3, 2, 4, 7 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             RemovalStep step = simulator.RemovePlus(new Vector2Int(0, 8));
 
@@ -901,7 +901,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             RemovalStep step = simulator.RemoveRow(3);
 
@@ -941,7 +941,7 @@ namespace Tests
                 { 4, 2, 3, 2, 2, 3, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             RemovalStep step = simulator.RemoveColor(0);
 
@@ -970,7 +970,7 @@ namespace Tests
 
             Board workingBoard = initialBoard.DeepCopy();
 
-            var simulator = new Simulator(workingBoard, 9);
+            var simulator = new Simulator(workingBoard, GetLevelSpecification());
 
             PermutationStep step = simulator.ShuffleBoard();
 
@@ -1008,7 +1008,7 @@ namespace Tests
                 { 6, 1, 7, 6, 1, 3, 9, 4, 5 }
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             RotationStep step = simulator.RotateBoard(RotationSense.CW);
 
@@ -1048,7 +1048,7 @@ namespace Tests
                 { 1, 2, 1, 1, 7, 8, 2, 4, 1 }
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             RotationStep step = simulator.RotateBoard(RotationSense.CCW);
 
@@ -1088,7 +1088,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             RotationStep step = simulator.Rotate2x2Block(new Vector2Int(3, 1), RotationSense.CW);
 
@@ -1128,7 +1128,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             RotationStep step = simulator.Rotate2x2Block(new Vector2Int(3, 1), RotationSense.CCW);
 
@@ -1168,7 +1168,7 @@ namespace Tests
                 { 1, 2, 1, 2, 9, 3, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             RotationStep step = simulator.Rotate3x3Block(new Vector2Int(3, 1), RotationSense.CW);
 
@@ -1208,7 +1208,7 @@ namespace Tests
                 { 1, 2, 1, 5, 3, 3, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             RotationStep step = simulator.Rotate3x3Block(new Vector2Int(3, 1), RotationSense.CCW);
 
@@ -1248,7 +1248,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             PermutationStep step = simulator.SwapTiles(new Vector2Int(3, 2), new Vector2Int(4, 2));
 
@@ -1286,7 +1286,7 @@ namespace Tests
                 { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             PermutationStep step = simulator.SwapRows(2, 3);
 
@@ -1324,7 +1324,7 @@ namespace Tests
                 { 1, 2, 3, 1, 2, 3, 2, 5, 6 },
             });
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             PermutationStep step = simulator.SwapColumns(3, 4);
 
@@ -1365,7 +1365,7 @@ namespace Tests
             Vector2Int pos = new Vector2Int(2, 3);
             expected[pos].MakeWildcard();
 
-            var simulator = new Simulator(board, 9);
+            var simulator = new Simulator(board, GetLevelSpecification());
 
             WildcardStep step = simulator.CreateWildcard(pos);
 
@@ -1375,6 +1375,18 @@ namespace Tests
             AssertThatBoardsAreEqual(board, expected);
 
             Assert.That(board[pos].Wildcard, Is.True);
+        }
+
+        private LevelSpecification GetLevelSpecification()
+        {
+            var levelSpec = ScriptableObject.CreateInstance<LevelSpecification>();
+
+            levelSpec.InitialColorCount = 9;
+            levelSpec.Size = new Vector2Int(9, 9);
+            levelSpec.GuaranteedChain = 1;
+            levelSpec.ChainsPerDifficultyIncrease = 1000;
+
+            return levelSpec;
         }
 
         private static Board IntGridToBoard(int[,] intGrid)
