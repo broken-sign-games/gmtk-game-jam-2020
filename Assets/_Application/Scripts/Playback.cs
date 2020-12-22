@@ -164,7 +164,7 @@ namespace GMTK2020
                     if (matchStep.MatchedTiles.Count > 3)
                         await ShowMatchShapeTutorial(matchStep);
                 }
-                else if (cleanUpStep != null && cleanUpStep.InertTiles.Count > 0)
+                else if (cleanUpStep != null && cleanUpStep.InertTiles.Count(tile => tile.Marked) > 0)
                 {
                     await ShowIncorrectPredictionsTutorial(cleanUpStep.InertTiles);
                 }
@@ -201,6 +201,7 @@ namespace GMTK2020
         private async Task ShowIncorrectPredictionsTutorial(HashSet<Tile> inertTiles)
         {
             var inertRects = inertTiles
+                .Where(tile => tile.Marked)
                 .Select(tile => new GridRect(tile.Position))
                 .ToList();
 

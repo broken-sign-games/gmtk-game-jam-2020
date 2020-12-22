@@ -744,6 +744,7 @@ GameObject:
   m_Component:
   - component: {fileID: 172499789}
   - component: {fileID: 172499790}
+  - component: {fileID: 172499791}
   m_Layer: 0
   m_Name: Tutorial Masks
   m_TagString: Untagged
@@ -782,6 +783,17 @@ MonoBehaviour:
   tutorialMaskPrefab: {fileID: 4072546932699783684, guid: 99dc541198070744cbef56ff865c5962,
     type: 3}
   toolPanel: {fileID: 1506328417}
+--- !u!210 &172499791
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 172499788}
+  m_Enabled: 1
+  m_SortingLayerID: 1710855171
+  m_SortingLayer: 6
+  m_SortingOrder: 0
 --- !u!1 &174233052
 GameObject:
   m_ObjectHideFlags: 0
@@ -3495,7 +3507,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   availableUsesText: {fileID: 1570801441}
   requiredChainLengthText: {fileID: 1570801442}
-  unmaskableCanvas: {fileID: 1494876634}
   tool: 9
   boardManipulator: {fileID: 1689814306}
   rotationSenseIndicator: {fileID: 635027661}

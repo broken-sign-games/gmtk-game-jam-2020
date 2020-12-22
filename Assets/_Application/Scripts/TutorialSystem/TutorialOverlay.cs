@@ -59,10 +59,15 @@ namespace GMTK2020.TutorialSystem
 
             foreach (GridRect rect in tutorial.InteractableRects)
             {
-                TutorialMask mask = Instantiate(tutorialMaskPrefab, transform);
-                mask.SetGridRect(rect);
+                // TODO: Bit of a hack, because overlapping rects are hard to
+                // get to look nice.
+                foreach (Vector2Int pos in rect.GetPositions())
+                {
+                    TutorialMask mask = Instantiate(tutorialMaskPrefab, transform);
+                    mask.SetGridRect(new GridRect(pos));
 
-                activeTutorialMasks.Add(mask);
+                    activeTutorialMasks.Add(mask);
+                }
             }
         }
 

@@ -33,27 +33,7 @@ MonoBehaviour:
     ShowDismissButton: 1
     InteractableTools: 
     PlaybackButtonAvailable: 0
-    InteractableRects:
-    - _bottomLeft: {x: 6, y: 4}
-      _topRight: {x: 6, y: 4}
-    - _bottomLeft: {x: 3, y: 1}
-      _topRight: {x: 3, y: 1}
-    - _bottomLeft: {x: 6, y: 4}
-      _topRight: {x: 6, y: 4}
-    - _bottomLeft: {x: 3, y: 1}
-      _topRight: {x: 3, y: 1}
-    - _bottomLeft: {x: 6, y: 4}
-      _topRight: {x: 6, y: 4}
-    - _bottomLeft: {x: 3, y: 1}
-      _topRight: {x: 3, y: 1}
-    - _bottomLeft: {x: 6, y: 4}
-      _topRight: {x: 6, y: 4}
-    - _bottomLeft: {x: 3, y: 1}
-      _topRight: {x: 3, y: 1}
-    - _bottomLeft: {x: 6, y: 4}
-      _topRight: {x: 6, y: 4}
-    - _bottomLeft: {x: 3, y: 1}
-      _topRight: {x: 3, y: 1}
+    InteractableRects: []
   - ID: 12
     Message: After each reaction, you can manipulate the board <b>once</b> to set
       up further matches. Select the swap tool.
