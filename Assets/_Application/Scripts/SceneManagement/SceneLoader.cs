@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices.ComTypes;
+﻿using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,9 +9,10 @@ namespace GMTK2020.SceneManagement
     {
         [SerializeField] private string loadingSceneName = "";
         [SerializeField] private string splashSceneName = "";
-        [SerializeField] private string tutorialSceneName = "";
+        [SerializeField] private string mainMenuSceneName = "";
         [SerializeField] private string levelSceneName = "";
-        [SerializeField] private string winSceneName = "";
+        [SerializeField] private string optionsSceneName = "";
+        [SerializeField] private string creditsSceneName = "";
 
         public static SceneLoader Instance { get; private set; }
 
@@ -35,8 +36,9 @@ namespace GMTK2020.SceneManagement
 
         public async void LoadSplashScene() => await LoadSceneAsync(splashSceneName);
         public async void LoadLevelScene() => await LoadSceneAsync(levelSceneName);
-        public async void LoadWinScene() => await LoadSceneAsync(winSceneName);
-        public async void LoadTutorialScene() => await LoadSceneAsync(tutorialSceneName);
+        public async void LoadOptionsScene() => await LoadSceneAsync(optionsSceneName);
+        public async void LoadCreditsScene() => await LoadSceneAsync(creditsSceneName);
+        public async void LoadMainMenuScene() => await LoadSceneAsync(mainMenuSceneName);
 
         private async Task LoadSceneAsync(string sceneName, GameObject parameterObject = null)
         {
