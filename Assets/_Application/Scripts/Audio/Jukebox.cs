@@ -18,8 +18,13 @@ namespace GMTK2020.Audio
 
         private void Start()
         {
-            audioSource = GetComponent<AudioSource>();
+            PlayerPreferences playerPreferences = PlayerPreferences.Instance;
 
+            audioSource = GetComponent<AudioSource>();
+            audioSource.volume = playerPreferences.MusicVolume;
+
+            playerPreferences.MusicVolumeChanged += OnMusicVolumeChanged;
+            
             Random rng = new Random();
             playlist = Enumerable.Range(0, soundtrack.Length).ToList().Shuffle(rng);
 
@@ -35,6 +40,11 @@ namespace GMTK2020.Audio
             {
                 PlayNextTrack();
             }
+        }
+
+        private void OnMusicVolumeChanged(float volume)
+        {
+            audioSource.volume = volume;
         }
 
         private void PlayNextTrack()

@@ -31,6 +31,16 @@ namespace GMTK2020.Audio
             rng = new Random(Time.frameCount);
         }
 
+        private void Start()
+        {
+            PlayerPreferences playerPreferences = PlayerPreferences.Instance;
+
+            audioSource = GetComponent<AudioSource>();
+            audioSource.volume = playerPreferences.MusicVolume;
+
+            playerPreferences.SoundEffectVolumeChanged += OnSoundEffectVolumeChanged;
+        }
+
         public void PlayEffect(SoundEffect effect, float pitchModifier = 1f)
         {
             audioSource.pitch = 1f + (pitchModifier * 0.1f);
@@ -43,6 +53,11 @@ namespace GMTK2020.Audio
         public void PlayEffectWithRandomPitch(SoundEffect effect)
         {
             PlayEffect(effect, (float)rng.NextDouble() * 2 - 1);
+        }
+
+        private void OnSoundEffectVolumeChanged(float volume)
+        {
+            audioSource.volume = volume;
         }
     }
 
