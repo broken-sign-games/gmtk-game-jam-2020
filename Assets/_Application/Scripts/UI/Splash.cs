@@ -1,6 +1,6 @@
 ﻿using GMTK2020.Audio;
 using GMTK2020.SceneManagement;
-using GMTKJam2020.Input;
+using GMTK2020.Input;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-namespace GMTKJam2020.Input
+namespace GMTK2020.Input
 {
     public class @InputActions : IInputActionCollection, IDisposable
     {

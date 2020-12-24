@@ -131,6 +131,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 153013530}
     m_Modifications:
+    - target: {fileID: 3687017206743489352, guid: c03af1143c4ee3646a9189b432a93e75,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GMTK2020.UI.Exit, GMTK2020
+      objectReference: {fileID: 0}
+    - target: {fileID: 3687017206743489352, guid: c03af1143c4ee3646a9189b432a93e75,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoToMainMenu
+      objectReference: {fileID: 0}
     - target: {fileID: 3687017206743489366, guid: c03af1143c4ee3646a9189b432a93e75,
         type: 3}
       propertyPath: m_Name
@@ -2322,7 +2332,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8206b36876eccc40ac5fd8412621890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelSequence: {fileID: 11400000, guid: a406af891823fa34eb72e48528b7ba49, type: 2}
 --- !u!4 &1050045836
 Transform:
   m_ObjectHideFlags: 0

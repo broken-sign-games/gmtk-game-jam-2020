@@ -11,4 +11,4 @@ ScriptedImporter:
   generateWrapperCode: 1
   wrapperCodePath: Assets/_Application/Scripts/Input/InputActions.cs
   wrapperClassName: 
-  wrapperCodeNamespace: GMTKJam2020.Input
+  wrapperCodeNamespace: GMTK2020.Input
