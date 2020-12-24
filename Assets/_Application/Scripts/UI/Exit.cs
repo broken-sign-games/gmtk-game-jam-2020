@@ -1,13 +1,22 @@
-﻿using UnityEngine;
+﻿using GMTK2020.SceneManagement;
+using UnityEngine;
 
-public class Exit : MonoBehaviour
+namespace GMTK2020.UI
 {
-    public void StopOrQuit()
+    public class Exit : MonoBehaviour
     {
+        public void StopOrQuit()
+        {
 #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
+            UnityEditor.EditorApplication.isPlaying = false;
 #else
-        Application.Quit();
+            Application.Quit();
 #endif
-    }
+        }
+
+        public void GoToMainMenu()
+        {
+            SceneLoader.Instance.LoadMainMenuScene();
+        }
+    } 
 }

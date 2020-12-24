@@ -41,13 +41,7 @@ namespace GMTK2020.TutorialSystem
             tutorialMap = tutorialData.Tutorials.ToDictionary(tut => tut.ID);
         }
 
-        private void Update()
-        {
-            if (Keyboard.current.ctrlKey.isPressed && Keyboard.current.shiftKey.isPressed && Keyboard.current.rKey.wasPressedThisFrame)
-                ResetTutorial();
-        }
-
-        private static void ResetTutorial()
+        public static void ResetTutorial()
         {
             Debug.Log("Resetting tutorial");
             foreach (TutorialID id in allTutorials)

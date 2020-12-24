@@ -2,7 +2,7 @@
 using GMTK2020.Rendering;
 using GMTK2020.TutorialSystem;
 using GMTK2020.UI;
-using GMTKJam2020.Input;
+using GMTK2020.Input;
 using RotaryHeart.Lib.SerializableDictionary;
 using System;
 using UnityEngine;

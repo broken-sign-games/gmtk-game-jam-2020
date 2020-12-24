@@ -1,6 +1,6 @@
 ﻿using GMTK2020.Audio;
 using GMTK2020.SceneManagement;
-using GMTKJam2020.Input;
+using GMTK2020.Input;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -35,12 +35,12 @@ namespace GMTK2020.UI
         private void OnSelect(InputAction.CallbackContext obj)
         {
             SoundManager.Instance.PlayEffect(SoundEffect.Click);
-            LoadLevelScene();
+            LoadMainMenuScene();
         }
 
-        private void LoadLevelScene()
+        private void LoadMainMenuScene()
         {
-            SceneLoader.Instance.LoadLevelScene();
+            SceneLoader.Instance.LoadMainMenuScene();
         }
     }
 }
