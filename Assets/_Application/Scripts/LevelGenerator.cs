@@ -76,7 +76,11 @@ namespace GMTK2020
             int height = levelSpec.Size.y;
             var board = new Board(width, height);
 
-            List<int> colors = Enumerable.Range(0, levelSpec.GuaranteedChain).ToList().Shuffle(rng);
+            List<int> colors = Enumerable.Range(0, levelSpec.InitialColorCount)
+                .ToList()
+                .Shuffle(rng)
+                .Take(levelSpec.GuaranteedChain)
+                .ToList();
             int verticalMatches = levelSpec.GuaranteedChain / 2;
             int horizontalMatches = levelSpec.GuaranteedChain - verticalMatches;
 
@@ -86,7 +90,7 @@ namespace GMTK2020
             );
             verticalList = verticalList.Shuffle(rng);
 
-            var anchors = new List<Vector2Int> { new Vector2Int(width / 2, 0) };
+            List<Vector2Int> anchors = Enumerable.Range(0, height).Select(y => new Vector2Int(width / 2, y)).ToList();
 
             for (int i = 0; i < colors.Count; ++i)
             {
@@ -96,9 +100,16 @@ namespace GMTK2020
                 var newTiles = new Vector2Int[3];
                 if (vertical)
                 {
-                    Vector2Int anchor = anchors[rng.Next(anchors.Count)];
-                    if (board[anchor.x, height - 1] != null || board[anchor.x, height - 2] != null || board[anchor.x, height - 3] != null)
+                    anchors = anchors.Where(a => 
+                        a.y < height - 2 ||
+                        board[a.x, height - 1] != null || 
+                        board[a.x, height - 2] != null || 
+                        board[a.x, height - 3] != null).ToList();
+                    
+                    if (anchors.Count == 0)
                         throw new InvalidOperationException("Can't fit vertical match");
+
+                    Vector2Int anchor = anchors[rng.Next(anchors.Count)];
 
                     newTiles[0] = anchor;
                     newTiles[1] = anchor + new Vector2Int(0, 1);
@@ -123,6 +134,7 @@ namespace GMTK2020
                     for (int y = anchor.y; y >= 0; --y)
                     {
                         anchors.Add(new Vector2Int(newTiles[0].x, y));
+                        anchors.Add(new Vector2Int(newTiles[1].x, y));
                         anchors.Add(new Vector2Int(newTiles[2].x, y));
                     }
                 }
@@ -176,7 +188,7 @@ namespace GMTK2020
                 {
                     continue;
                 }
-                //colors.Remove(board[pos].Color);
+                colors.Remove(board[pos].Color);
             }
 
             int color = colors.ElementAt(rng.Next(colors.Count));
