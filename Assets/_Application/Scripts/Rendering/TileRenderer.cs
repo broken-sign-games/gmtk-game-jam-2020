@@ -83,7 +83,7 @@ namespace GMTK2020.Rendering
             glowSprite.sprite = tileData.GlowSpriteMap[tile.Color];
             glowSprite.color = tileData.GlowColor[tile.Color];
 
-            UpdateCracks();
+            UpdateCracks(false);
 
             Color highlightColor = tileData.PopDropletColor[tile.Color];
             highlightColor.a = 0;
@@ -101,8 +101,11 @@ namespace GMTK2020.Rendering
             mainNeckEvap.startColor = tileData.PopDropletColor[tile.Color];
         }
 
-        public Tween UpdateCracks()
+        public Tween UpdateCracks(bool playSound = true)
         {
+            if (playSound)
+                SoundManager.Instance.PlayEffect(SoundEffect.VialCracked);
+
             glassSprite.sprite = tileData.VialSpriteMap[tile.Color][tile.Cracks];
 
             return vialTransform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0);
@@ -156,6 +159,8 @@ namespace GMTK2020.Rendering
             bubbles.Stop();
             vialTransform.localRotation = Quaternion.identity;
 
+            SoundManager.Instance.PlayEffect(SoundEffect.VialEvaporated);
+
             Sequence seq = DOTween.Sequence();
 
             seq.Join(glowSprite.DOFade(0, glowFadeDuration));
@@ -178,6 +183,8 @@ namespace GMTK2020.Rendering
         {
             wildcardIndicator.SetActive(true);
 
+            SoundManager.Instance.PlayEffect(SoundEffect.WildcardCreated);
+
             return DOTween.Sequence();
         }
 
@@ -192,6 +199,7 @@ namespace GMTK2020.Rendering
                 .SetDelay(fallDelay));
 
             seq.AppendCallback(() => dust.Play());
+            seq.AppendCallback(() => SoundManager.Instance.PlayEffect(SoundEffect.VialLanded));
             seq.Append(vialTransform.DOShakePosition(landingShakeDuration, landingShakeStrength * (from.y - tile.Position.y) / 9, landingShakeVibrato, landingShakeRandomness));
 
             return seq;
@@ -204,11 +212,15 @@ namespace GMTK2020.Rendering
                 .DOLocalMove((Vector3Int)tile.Position, Mathf.Sqrt(2f * (from - tile.Position).magnitude / fallingSpeed))
                 .SetEase(Ease.InOutQuad));
 
+            SoundManager.Instance.PlayEffect(SoundEffect.VialShifted);
+
             return seq;
         }
 
         public Tween RotateToCurrentPosition(Vector2Int from, Vector2 pivot, RotationSense rotSense)
         {
+            SoundManager.Instance.PlayEffect(SoundEffect.VialShifted);
+
             Sequence seq = DOTween.Sequence();
 
             #region Direct rotation
@@ -322,7 +334,8 @@ namespace GMTK2020.Rendering
 
         public Tween MatchAndDestroy()
         {
-            puff.Play();
+            puff.Play(); 
+            SoundManager.Instance.PlayEffect(SoundEffect.VialMatched);
             Sequence seq = DOTween.Sequence();
 
             seq.Append(vialTransform.DOScale(0, matchShrinkDuration).SetEase(Ease.OutBack));
@@ -335,6 +348,7 @@ namespace GMTK2020.Rendering
         public Tween Destroy()
         {
             puff.Play();
+            SoundManager.Instance.PlayEffect(SoundEffect.VialDestroyed);
             Sequence seq = DOTween.Sequence();
 
             seq.Append(vialTransform.DOScale(0, matchShrinkDuration).SetEase(Ease.OutBack));

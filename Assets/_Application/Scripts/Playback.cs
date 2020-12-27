@@ -239,6 +239,7 @@ namespace GMTK2020
         {
             gameEnded = true;
 
+            SoundManager.Instance.PlayEffect(SoundEffect.GameEnded);
             runButton.interactable = false;
             scoreKeeper.UpdateHighscore();
             scoreRenderer.UpdateHighscore();

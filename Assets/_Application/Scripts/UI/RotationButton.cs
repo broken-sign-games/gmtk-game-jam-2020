@@ -1,4 +1,5 @@
-﻿using GMTK2020.Data;
+﻿using GMTK2020.Audio;
+using GMTK2020.Data;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,7 +7,6 @@ namespace GMTK2020.UI
 {
     public class RotationButton : ToolButton
     {
-        [SerializeField] private BoardManipulator boardManipulator = null;
         [SerializeField] private Image rotationSenseIndicator = null;
         [SerializeField] private Sprite cwSprite = null;
         [SerializeField] private Sprite ccwSprite = null;
@@ -21,23 +21,25 @@ namespace GMTK2020.UI
         private void Update()
         {
             // HACK!
-            if (boardManipulator.ActiveTool != Tool)
+            if (BoardManipulator.ActiveTool != Tool)
             {
                 RotationSense = RotationSense.CCW;
                 UpdateRotationSenseIndicator();
             }
         }
 
-        public void OnClick()
+        public override void OnClick()
         {
-            if (boardManipulator.ActiveTool == Tool)
+            SoundManager.Instance.PlayEffect(SoundEffect.ToolSelected);
+
+            if (BoardManipulator.ActiveTool == Tool)
             {
                 RotationSense = RotationSense.Other();
                 UpdateRotationSenseIndicator();
             }
 
             if (RotationSense == RotationSense.CCW)
-                boardManipulator.ToggleTool(Tool);
+                BoardManipulator.ToggleTool(Tool);
         }
 
         private void UpdateRotationSenseIndicator()

@@ -71,9 +71,6 @@ namespace GMTK2020
             UpdateUI();
         }
 
-        public void ToggleTool(ToolButton toolButton)
-            => ToggleTool(toolButton.Tool);
-
         public void ToggleTool(Tool tool)
         {
             if (tool == ActiveTool)
