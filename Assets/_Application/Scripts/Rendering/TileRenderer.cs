@@ -112,7 +112,7 @@ namespace GMTK2020.Rendering
         {
             if (tile.Marked)
             {
-                SoundManager.Instance.PlayEffect(SoundEffect.SelectTile);
+                SoundManager.Instance.PlayEffect(SoundEffect.VialOpened);
                 bubbles.Play();
                 pop.Play();
                 DOTween.Complete(corkSprite);
@@ -133,7 +133,7 @@ namespace GMTK2020.Rendering
             }
             else
             {
-                SoundManager.Instance.PlayEffectWithRandomPitch(SoundEffect.DeselectTile);
+                SoundManager.Instance.PlayEffectWithRandomPitch(SoundEffect.VialClosed);
                 bubbles.Stop();
                 vialTransform.localRotation = Quaternion.identity;
 

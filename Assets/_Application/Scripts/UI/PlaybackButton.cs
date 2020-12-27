@@ -1,4 +1,5 @@
-﻿using GMTK2020.Data;
+﻿using GMTK2020.Audio;
+using GMTK2020.Data;
 using GMTK2020.TutorialSystem;
 using UnityEngine;
 
@@ -27,6 +28,7 @@ namespace GMTK2020.UI
 
         public void OnClick()
         {
+            SoundManager.Instance.PlayEffect(SoundEffect.Click);
             tutorialManager.CompleteActiveTutorial();
             playback.StartReaction();
         }

@@ -31,7 +31,6 @@ namespace GMTK2020
             do
             {
                 ++nAttempts;
-                isValid = true;
                 try
                 {
                     board = GenerateLevel();

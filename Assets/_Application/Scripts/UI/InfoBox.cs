@@ -1,4 +1,5 @@
-﻿using GMTK2020.Data;
+﻿using GMTK2020.Audio;
+using GMTK2020.Data;
 using GMTK2020.TutorialSystem;
 using TMPro;
 using UnityEngine;
@@ -29,6 +30,7 @@ namespace GMTK2020.UI
 
         public void DismissTutorial()
         {
+            SoundManager.Instance.PlayEffect(SoundEffect.Click);
             tutorialManager.CompleteActiveTutorial();
         }
 
