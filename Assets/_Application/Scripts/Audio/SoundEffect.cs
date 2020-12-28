@@ -16,5 +16,6 @@
         VialLanded,
         ToolSelected,
         GameEnded,
+        VialBubbling,
     }
 }

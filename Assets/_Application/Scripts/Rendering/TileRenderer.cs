@@ -1,11 +1,11 @@
 ﻿using DG.Tweening;
 using GMTK2020.Audio;
 using GMTK2020.Data;
-using System;
 using UnityEngine;
 
 namespace GMTK2020.Rendering
 {
+    [RequireComponent(typeof(AudioSource))]
     public class TileRenderer : MonoBehaviour
     {
         [SerializeField] private Transform vialTransform = null;
@@ -58,6 +58,12 @@ namespace GMTK2020.Rendering
         [SerializeField] private TileData tileData = null;
 
         private Tile tile;
+        private AudioSource audioSource;
+
+        private void Awake()
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
 
         private void Update()
         {
@@ -116,6 +122,7 @@ namespace GMTK2020.Rendering
             if (tile.Marked)
             {
                 SoundManager.Instance.PlayEffect(SoundEffect.VialOpened);
+                SoundManager.Instance.StartPlayingLoopEffect(audioSource, SoundEffect.VialBubbling);
                 bubbles.Play();
                 pop.Play();
                 DOTween.Complete(corkSprite);
@@ -137,6 +144,7 @@ namespace GMTK2020.Rendering
             else
             {
                 SoundManager.Instance.PlayEffectWithRandomPitch(SoundEffect.VialClosed);
+                audioSource.Stop();
                 bubbles.Stop();
                 vialTransform.localRotation = Quaternion.identity;
 
@@ -334,7 +342,8 @@ namespace GMTK2020.Rendering
 
         public Tween MatchAndDestroy()
         {
-            puff.Play(); 
+            puff.Play();
+            audioSource.Stop();
             SoundManager.Instance.PlayEffect(SoundEffect.VialMatched);
             Sequence seq = DOTween.Sequence();
 

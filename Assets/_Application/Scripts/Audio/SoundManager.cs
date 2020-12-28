@@ -11,6 +11,8 @@ namespace GMTK2020.Audio
 
         [SerializeField] private SoundEffectData soundEffects = null;
 
+        private PlayerPreferences playerPreferences;
+
         private AudioSource audioSource;
 
         private Random rng;
@@ -33,10 +35,10 @@ namespace GMTK2020.Audio
 
         private void Start()
         {
-            PlayerPreferences playerPreferences = PlayerPreferences.Instance;
+            playerPreferences = PlayerPreferences.Instance;
 
             audioSource = GetComponent<AudioSource>();
-            audioSource.volume = playerPreferences.MusicVolume;
+            audioSource.volume = playerPreferences.SoundEffectVolume;
 
             playerPreferences.SoundEffectVolumeChanged += OnSoundEffectVolumeChanged;
         }
@@ -53,6 +55,17 @@ namespace GMTK2020.Audio
         public void PlayEffectWithRandomPitch(SoundEffect effect)
         {
             PlayEffect(effect, (float)rng.NextDouble() * 2 - 1);
+        }
+
+        public void StartPlayingLoopEffect(AudioSource source, SoundEffect effect)
+        {
+            source.volume = playerPreferences.SoundEffectVolume;
+            source.loop = true;
+
+            AudioClip[] availableClips = soundEffects.Map[effect].Clips;
+            source.clip = availableClips.RandomChoice(rng);
+
+            source.Play();
         }
 
         private void OnSoundEffectVolumeChanged(float volume)
