@@ -41,29 +41,44 @@ MonoBehaviour:
     _values:
     - InitialUses: -1
       AwardedFor: 0
+      Tooltip: 
     - InitialUses: 0
       AwardedFor: 4
+      Tooltip: Destroys a vial.
     - InitialUses: 0
       AwardedFor: 0
+      Tooltip: 
     - InitialUses: 0
       AwardedFor: 0
+      Tooltip: 
     - InitialUses: 0
       AwardedFor: 2
+      Tooltip: Destroys a row of vials.
     - InitialUses: 0
       AwardedFor: 0
+      Tooltip: 
     - InitialUses: 0
       AwardedFor: 0
+      Tooltip: 
     - InitialUses: 0
       AwardedFor: 0
+      Tooltip: 
     - InitialUses: 0
       AwardedFor: 0
+      Tooltip: 
     - InitialUses: 0
       AwardedFor: 5
+      Tooltip: Rotates a 3x3 block of vials by 90 degrees. Tap button again to change
+        direction.
     - InitialUses: 0
       AwardedFor: 3
+      Tooltip: Turns one vial into a wildcard.
     - InitialUses: -1
       AwardedFor: 1
+      Tooltip: Swipe to swap to adjacent tiles.
     - InitialUses: 0
       AwardedFor: 0
+      Tooltip: 
     - InitialUses: 0
       AwardedFor: 6
+      Tooltip: Destroys a 3x3 cross of vials.

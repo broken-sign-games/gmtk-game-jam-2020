@@ -2782,6 +2782,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cbd820aea1981e43905356120627260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boardManipulator: {fileID: 1689814306}
+  toolData: {fileID: 11400000, guid: 03367c26bc3432f4ca4936a0c2dd0cd0, type: 2}
   infoText: {fileID: 840547881}
   dismissTutorialButton: {fileID: 1115531519}
 --- !u!114 &1447083626
