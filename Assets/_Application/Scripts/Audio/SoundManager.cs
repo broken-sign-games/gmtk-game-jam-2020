@@ -103,6 +103,11 @@ namespace GMTK2020.Audio
                 effect.AudioSource.Play();
             }
         }
+
+        public void StopEffect(AudioSource source)
+        {
+            source.Stop();
+        }
     }
 
 }

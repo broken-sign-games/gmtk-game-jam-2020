@@ -141,8 +141,7 @@ namespace GMTK2020.Rendering
             else
             {
                 SoundManager.Instance.PlayEffect(SoundEffect.VialClosed);
-                // TODO: This needs to go via the sound manager
-                bubblingAudioSource.Stop();
+                SoundManager.Instance.StopEffect(bubblingAudioSource);
                 bubbles.Stop();
                 vialTransform.localRotation = Quaternion.identity;
 
@@ -341,9 +340,8 @@ namespace GMTK2020.Rendering
         public Tween MatchAndDestroy()
         {
             puff.Play();
-            // TODO: This needs to go via the sound manager
-            evaporatingAudioSource.Stop();
-            bubblingAudioSource.Stop();
+            SoundManager.Instance.StopEffect(evaporatingAudioSource);
+            SoundManager.Instance.StopEffect(bubblingAudioSource);
             SoundManager.Instance.PlayEffect(SoundEffect.VialMatched);
             Sequence seq = DOTween.Sequence();
 
