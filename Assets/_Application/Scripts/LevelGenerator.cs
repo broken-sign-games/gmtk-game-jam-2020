@@ -100,10 +100,10 @@ namespace GMTK2020
                 if (vertical)
                 {
                     anchors = anchors.Where(a => 
-                        a.y < height - 2 ||
-                        board[a.x, height - 1] != null || 
-                        board[a.x, height - 2] != null || 
-                        board[a.x, height - 3] != null).ToList();
+                        a.y < height - 2 &&
+                        board[a.x, height - 1] == null &&
+                        board[a.x, height - 2] == null && 
+                        board[a.x, height - 3] == null).ToList();
                     
                     if (anchors.Count == 0)
                         throw new InvalidOperationException("Can't fit vertical match");
