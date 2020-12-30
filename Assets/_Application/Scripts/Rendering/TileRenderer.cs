@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace GMTK2020.Rendering
 {
-    [RequireComponent(typeof(AudioSource))]
     public class TileRenderer : MonoBehaviour
     {
         [SerializeField] private Transform vialTransform = null;
@@ -27,6 +26,10 @@ namespace GMTK2020.Rendering
         [SerializeField] private ParticleSystem liquidEvap = null;
         [SerializeField] private ParticleSystem neckEvap = null;
         [SerializeField] private ParticleSystem dust = null;
+
+        [SerializeField] private AudioSource bubblingAudioSource = null;
+        [SerializeField] private AudioSource fallingAudioSource = null;
+        [SerializeField] private AudioSource evaporatingAudioSource = null;
 
         [SerializeField] private float tileFadeDuration = 0.25f;
 
@@ -58,12 +61,6 @@ namespace GMTK2020.Rendering
         [SerializeField] private TileData tileData = null;
 
         private Tile tile;
-        private AudioSource audioSource;
-
-        private void Awake()
-        {
-            audioSource = GetComponent<AudioSource>();
-        }
 
         private void Update()
         {
@@ -122,7 +119,7 @@ namespace GMTK2020.Rendering
             if (tile.Marked)
             {
                 SoundManager.Instance.PlayEffect(SoundEffect.VialOpened);
-                SoundManager.Instance.StartPlayingLoopEffect(audioSource, SoundEffect.VialBubbling);
+                SoundManager.Instance.StartPlayingLoopEffect(bubblingAudioSource, SoundEffect.VialBubbling);
                 bubbles.Play();
                 pop.Play();
                 DOTween.Complete(corkSprite);
@@ -144,7 +141,8 @@ namespace GMTK2020.Rendering
             else
             {
                 SoundManager.Instance.PlayEffectWithRandomPitch(SoundEffect.VialClosed);
-                audioSource.Stop();
+                // TODO: This needs to go via the sound manager
+                bubblingAudioSource.Stop();
                 bubbles.Stop();
                 vialTransform.localRotation = Quaternion.identity;
 
@@ -343,7 +341,9 @@ namespace GMTK2020.Rendering
         public Tween MatchAndDestroy()
         {
             puff.Play();
-            audioSource.Stop();
+            // TODO: This needs to go via the sound manager
+            evaporatingAudioSource.Stop();
+            bubblingAudioSource.Stop();
             SoundManager.Instance.PlayEffect(SoundEffect.VialMatched);
             Sequence seq = DOTween.Sequence();
 

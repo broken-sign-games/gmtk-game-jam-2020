@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using UnityEngine.Serialization;
 using Random = System.Random;
+using UnityEngine.Audio;
 
 namespace GMTK2020.Audio
 {
     [RequireComponent(typeof(AudioSource))]
     public class Jukebox : MonoBehaviour
     {
-        [FormerlySerializedAs("Soundtrack")]
         [SerializeField] private AudioClip[] soundtrack = new AudioClip[0];
+        [SerializeField] private AudioMixer mixer = null;
 
         private AudioSource audioSource;
         private List<int> playlist;
@@ -20,13 +20,13 @@ namespace GMTK2020.Audio
         {
             PlayerPreferences playerPreferences = PlayerPreferences.Instance;
 
-            audioSource = GetComponent<AudioSource>();
-            audioSource.volume = playerPreferences.MusicVolume;
-
+            UpdateMusicVolume(playerPreferences.MusicVolume);
             playerPreferences.MusicVolumeChanged += OnMusicVolumeChanged;
             
             Random rng = new Random();
             playlist = Enumerable.Range(0, soundtrack.Length).ToList().Shuffle(rng);
+
+            audioSource = GetComponent<AudioSource>();
 
             if (!audioSource.playOnAwake)
             {
@@ -44,7 +44,12 @@ namespace GMTK2020.Audio
 
         private void OnMusicVolumeChanged(float volume)
         {
-            audioSource.volume = volume;
+            UpdateMusicVolume(volume);
+        }
+
+        private void UpdateMusicVolume(float volume)
+        {
+            mixer.SetFloat("MusicVolume", Mathf.Log10(volume) * 20);
         }
 
         private void PlayNextTrack()

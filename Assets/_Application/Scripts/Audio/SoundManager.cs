@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using GMTK2020.Data;
 using Random = System.Random;
+using UnityEngine.Audio;
 
 namespace GMTK2020.Audio
 {
@@ -10,8 +11,7 @@ namespace GMTK2020.Audio
         public static SoundManager Instance { get; private set; }
 
         [SerializeField] private SoundEffectData soundEffects = null;
-
-        private PlayerPreferences playerPreferences;
+        [SerializeField] private AudioMixer mixer = null;
 
         private AudioSource audioSource;
 
@@ -35,12 +35,13 @@ namespace GMTK2020.Audio
 
         private void Start()
         {
-            playerPreferences = PlayerPreferences.Instance;
+            PlayerPreferences playerPreferences = PlayerPreferences.Instance;
 
-            audioSource = GetComponent<AudioSource>();
-            audioSource.volume = playerPreferences.SoundEffectVolume;
+            UpdateFXVolume(playerPreferences.SoundEffectVolume);
 
             playerPreferences.SoundEffectVolumeChanged += OnSoundEffectVolumeChanged;
+
+            audioSource = GetComponent<AudioSource>();
         }
 
         public void PlayEffect(SoundEffect effect, float pitchModifier = 1f)
@@ -59,7 +60,6 @@ namespace GMTK2020.Audio
 
         public void StartPlayingLoopEffect(AudioSource source, SoundEffect effect)
         {
-            source.volume = playerPreferences.SoundEffectVolume;
             source.loop = true;
 
             AudioClip[] availableClips = soundEffects.Map[effect].Clips;
@@ -70,7 +70,12 @@ namespace GMTK2020.Audio
 
         private void OnSoundEffectVolumeChanged(float volume)
         {
-            audioSource.volume = volume;
+            UpdateFXVolume(volume);
+        }
+
+        private void UpdateFXVolume(float volume)
+        {
+            mixer.SetFloat("FXVolume", Mathf.Log10(volume) * 20);
         }
     }
 
