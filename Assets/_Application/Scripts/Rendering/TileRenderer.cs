@@ -140,7 +140,7 @@ namespace GMTK2020.Rendering
             }
             else
             {
-                SoundManager.Instance.PlayEffectWithRandomPitch(SoundEffect.VialClosed);
+                SoundManager.Instance.PlayEffect(SoundEffect.VialClosed);
                 // TODO: This needs to go via the sound manager
                 bubblingAudioSource.Stop();
                 bubbles.Stop();

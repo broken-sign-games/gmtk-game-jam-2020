@@ -2,16 +2,26 @@
 using GMTK2020.Data;
 using Random = System.Random;
 using UnityEngine.Audio;
+using System.Collections.Generic;
 
 namespace GMTK2020.Audio
 {
     [RequireComponent(typeof(AudioSource))]
     public class SoundManager : MonoBehaviour
     {
+        private struct QueuedSoundEffect
+        {
+            public SoundEffect SoundEffect;
+            public AudioSource AudioSource;
+            public bool OneShot;
+        }
+
         public static SoundManager Instance { get; private set; }
 
         [SerializeField] private SoundEffectData soundEffects = null;
         [SerializeField] private AudioMixer mixer = null;
+
+        private Queue<QueuedSoundEffect> soundEffectQueue = new Queue<QueuedSoundEffect>();
 
         private AudioSource audioSource;
 
@@ -44,28 +54,30 @@ namespace GMTK2020.Audio
             audioSource = GetComponent<AudioSource>();
         }
 
-        public void PlayEffect(SoundEffect effect, float pitchModifier = 1f)
+        private void Update()
         {
-            audioSource.pitch = 1f + (pitchModifier * 0.1f);
-
-            AudioClip[] availableClips = soundEffects.Map[effect].Clips;
-
-            audioSource.PlayOneShot(availableClips.RandomChoice(rng));
+            if (soundEffectQueue.Count > 0)
+                PlayQueuedEffect(soundEffectQueue.Dequeue());
         }
 
-        public void PlayEffectWithRandomPitch(SoundEffect effect)
+        public void PlayEffect(SoundEffect effect)
         {
-            PlayEffect(effect, (float)rng.NextDouble() * 2 - 1);
+            soundEffectQueue.Enqueue(new QueuedSoundEffect
+            {
+                SoundEffect = effect,
+                AudioSource = audioSource,
+                OneShot = true,
+            });
         }
 
         public void StartPlayingLoopEffect(AudioSource source, SoundEffect effect)
         {
-            source.loop = true;
-
-            AudioClip[] availableClips = soundEffects.Map[effect].Clips;
-            source.clip = availableClips.RandomChoice(rng);
-
-            source.Play();
+            soundEffectQueue.Enqueue(new QueuedSoundEffect
+            {
+                SoundEffect = effect,
+                AudioSource = source,
+                OneShot = false,
+            });
         }
 
         private void OnSoundEffectVolumeChanged(float volume)
@@ -76,6 +88,20 @@ namespace GMTK2020.Audio
         private void UpdateFXVolume(float volume)
         {
             mixer.SetFloat("FXVolume", Mathf.Log10(volume) * 20);
+        }
+
+        private void PlayQueuedEffect(QueuedSoundEffect effect)
+        {
+            AudioClip[] availableClips = soundEffects.Map[effect.SoundEffect].Clips;
+            AudioClip clip = availableClips.RandomChoice(rng);
+
+            if (effect.OneShot)
+                effect.AudioSource.PlayOneShot(clip);
+            else
+            {
+                effect.AudioSource.clip = clip;
+                effect.AudioSource.Play();
+            }
         }
     }
 
