@@ -165,6 +165,8 @@ namespace GMTK2020.Rendering
             vialTransform.localRotation = Quaternion.identity;
 
             SoundManager.Instance.PlayEffect(SoundEffect.VialEvaporated);
+            SoundManager.Instance.StopEffect(bubblingAudioSource);
+            SoundManager.Instance.StopEffect(evaporatingAudioSource);
 
             Sequence seq = DOTween.Sequence();
 
