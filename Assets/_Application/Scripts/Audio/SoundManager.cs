@@ -3,10 +3,10 @@ using GMTK2020.Data;
 using Random = System.Random;
 using UnityEngine.Audio;
 using System.Collections.Generic;
+using RotaryHeart.Lib.SerializableDictionary;
 
 namespace GMTK2020.Audio
 {
-    [RequireComponent(typeof(AudioSource))]
     public class SoundManager : MonoBehaviour
     {
         private struct QueuedSoundEffect
@@ -20,10 +20,9 @@ namespace GMTK2020.Audio
 
         [SerializeField] private SoundEffectData soundEffects = null;
         [SerializeField] private AudioMixer mixer = null;
+        [SerializeField] private SerializableDictionaryBase<SoundEffect, AudioSource> audioSources = null;
 
         private Queue<QueuedSoundEffect> soundEffectQueue = new Queue<QueuedSoundEffect>();
-
-        private AudioSource audioSource;
 
         private Random rng;
 
@@ -38,8 +37,6 @@ namespace GMTK2020.Audio
 
             Instance = this;
 
-            audioSource = GetComponent<AudioSource>();
-
             rng = new Random(Time.frameCount);
         }
 
@@ -50,8 +47,6 @@ namespace GMTK2020.Audio
             UpdateFXVolume(playerPreferences.SoundEffectVolume);
 
             playerPreferences.SoundEffectVolumeChanged += OnSoundEffectVolumeChanged;
-
-            audioSource = GetComponent<AudioSource>();
         }
 
         private void Update()
@@ -65,7 +60,7 @@ namespace GMTK2020.Audio
             soundEffectQueue.Enqueue(new QueuedSoundEffect
             {
                 SoundEffect = effect,
-                AudioSource = audioSource,
+                AudioSource = audioSources[effect],
                 OneShot = true,
             });
         }
