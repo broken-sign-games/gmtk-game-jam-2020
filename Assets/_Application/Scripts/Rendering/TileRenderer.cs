@@ -26,6 +26,8 @@ namespace GMTK2020.Rendering
         [SerializeField] private ParticleSystem liquidEvap = null;
         [SerializeField] private ParticleSystem neckEvap = null;
         [SerializeField] private ParticleSystem dust = null;
+        [SerializeField] private ParticleSystem weakEvaporation = null;
+        [SerializeField] private ParticleSystem strongEvaporation = null;
 
         [SerializeField] private AudioSource bubblingAudioSource = null;
         [SerializeField] private AudioSource fallingAudioSource = null;
@@ -98,6 +100,14 @@ namespace GMTK2020.Rendering
             mainPopRing.startColor = tileData.PopDropletColor[tile.Color];
             ParticleSystem.MainModule mainPuff = puff.main;
             mainPuff.startColor = tileData.PopDropletColor[tile.Color];
+            ParticleSystem.MainModule mainWeakEvaporation = weakEvaporation.main;
+            Color evaporationColor = tileData.PopDropletColor[tile.Color];
+            evaporationColor.a = mainWeakEvaporation.startColor.color.a;
+            mainWeakEvaporation.startColor = evaporationColor;
+            ParticleSystem.MainModule mainStrongEvaporation = strongEvaporation.main;
+            evaporationColor = tileData.PopDropletColor[tile.Color];
+            evaporationColor.a = mainStrongEvaporation.startColor.color.a;
+            mainStrongEvaporation.startColor = tileData.PopDropletColor[tile.Color];
             ParticleSystem.MainModule mainLiquidEvap = liquidEvap.main;
             mainLiquidEvap.startColor = tileData.PopDropletColor[tile.Color];
             ParticleSystem.MainModule mainNeckEvap = neckEvap.main;
@@ -110,6 +120,17 @@ namespace GMTK2020.Rendering
                 SoundManager.Instance.PlayEffect(SoundEffect.VialCracked);
 
             glassSprite.sprite = tileData.VialSpriteMap[tile.Color][tile.Cracks];
+
+            switch (tile.Cracks)
+            {
+            case 1:
+                weakEvaporation.Play();
+                break;
+            case 2:
+                weakEvaporation.Stop();
+                strongEvaporation.Play();
+                break;
+            }
 
             return vialTransform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0);
         }
@@ -159,6 +180,8 @@ namespace GMTK2020.Rendering
 
         public Tween TransitionToInert()
         {
+            weakEvaporation.Stop();
+            strongEvaporation.Stop();
             liquidEvap.Play();
             neckEvap.Play();
             bubbles.Stop();
@@ -341,6 +364,8 @@ namespace GMTK2020.Rendering
 
         public Tween MatchAndDestroy()
         {
+            weakEvaporation.Stop();
+            strongEvaporation.Stop();
             puff.Play();
             SoundManager.Instance.StopEffect(evaporatingAudioSource);
             SoundManager.Instance.StopEffect(bubblingAudioSource);
@@ -356,6 +381,8 @@ namespace GMTK2020.Rendering
 
         public Tween Destroy()
         {
+            weakEvaporation.Stop();
+            strongEvaporation.Stop();
             puff.Play();
             SoundManager.Instance.PlayEffect(SoundEffect.VialDestroyed);
             Sequence seq = DOTween.Sequence();
