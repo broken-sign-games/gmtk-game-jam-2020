@@ -204,6 +204,8 @@ namespace GMTK2020.Rendering
             }
             else
             {
+                liquidEvap.Play();
+
                 seq.Join(glowSprite.DOFade(0, glowFadeDuration));
                 seq.Join(tileHighlight.DOFade(0, glowFadeDuration));
                 seq.Join(PulseVial());
