@@ -1,13 +1,26 @@
-﻿using UnityEngine;
+﻿using GMTK2020.Audio;
+using GMTK2020.SceneManagement;
+using UnityEngine;
 
-public class Exit : MonoBehaviour
+namespace GMTK2020.UI
 {
-    public void StopOrQuit()
+    public class Exit : MonoBehaviour
     {
+        public void StopOrQuit()
+        {
+            SoundManager.Instance.PlayEffect(SoundEffect.Click);
+
 #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
+            UnityEditor.EditorApplication.isPlaying = false;
 #else
-        Application.Quit();
+            Application.Quit();
 #endif
-    }
+        }
+
+        public void GoToMainMenu()
+        {
+            SoundManager.Instance.PlayEffect(SoundEffect.Click);
+            SceneLoader.Instance.LoadMainMenuScene();
+        }
+    } 
 }

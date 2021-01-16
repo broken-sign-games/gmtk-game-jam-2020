@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -22,8 +23,7 @@ namespace GMTK2020.TutorialSystem
         private static readonly IEnumerable<TutorialID> allTutorials = Utility.GetEnumValues<TutorialID>();
 
         private Tutorial activeTutorial;
-
-        private Queue<Tutorial> queuedTutorials = new Queue<Tutorial>();
+        private TaskCompletionSource<object> activeTutorialTCS;
         
         public static readonly string GAME_COUNT_PREFS_KEY = "FirstGameCompleted";
 
@@ -41,13 +41,7 @@ namespace GMTK2020.TutorialSystem
             tutorialMap = tutorialData.Tutorials.ToDictionary(tut => tut.ID);
         }
 
-        private void Update()
-        {
-            if (Keyboard.current.ctrlKey.isPressed && Keyboard.current.shiftKey.isPressed && Keyboard.current.rKey.wasPressedThisFrame)
-                ResetTutorial();
-        }
-
-        private static void ResetTutorial()
+        public static void ResetTutorial()
         {
             Debug.Log("Resetting tutorial");
             foreach (TutorialID id in allTutorials)
@@ -60,41 +54,22 @@ namespace GMTK2020.TutorialSystem
         public static int GetGameCount()
             => PlayerPrefs.GetInt(GAME_COUNT_PREFS_KEY, 0);
 
-        public void ShowTutorialIfNew(TutorialID id) 
-            => ShowTutorialIfNew(id, new List<GridRect>());
+        public Task ShowTutorialIfNewAsync(TutorialID id) 
+            => ShowTutorialIfNewAsync(id, new List<GridRect>());
 
-        public void ShowTutorialIfNew(TutorialID id, List<GridRect> interactableRects)
+        public Task ShowTutorialIfNewAsync(TutorialID id, List<GridRect> dynamicInteractableRects)
         {
-            if (TutorialWasShownAlready(id))
-                return;
+            if (TutorialWasAlreadyShown(id))
+                return Task.CompletedTask;
 
-            ShowTutorial(id, interactableRects);
-        }
+            Tutorial tutorial = new Tutorial(tutorialMap[id]);
 
-        private void ShowTutorial(TutorialID id, List<GridRect> interactableRects)
-        {
-            Tutorial tutorial = tutorialMap[id];
-            tutorial.InteractableRects = interactableRects;
+            if (tutorial.InteractableRects is null)
+                tutorial.InteractableRects = dynamicInteractableRects;
+            else
+                tutorial.InteractableRects.AddRange(dynamicInteractableRects);
 
-            ShowTutorial(tutorial);
-        }
-
-        private void ShowTutorial(Tutorial tutorial)
-        {
-            if (activeTutorial != null)
-            {
-                queuedTutorials.Enqueue(tutorial);
-                return;
-            }
-
-            activeTutorial = tutorial;
-            TutorialReady?.Invoke(tutorial);
-        }
-
-        private bool TutorialWasShownAlready(TutorialID id)
-        {
-            string prefsKey = TutorialIDToPrefsKey(id);
-            return PlayerPrefs.GetInt(prefsKey, -1) >= 0;
+            return ShowTutorialAsync(tutorial);
         }
 
         public void CompleteActiveTutorial()
@@ -107,17 +82,26 @@ namespace GMTK2020.TutorialSystem
             Tutorial completedTutorial = activeTutorial;
             activeTutorial = null;
             TutorialCompleted(completedTutorial);
-
-            DequeueNextTutorialIfAvailable();
+            activeTutorialTCS.TrySetResult(null);
         }
 
-        private void DequeueNextTutorialIfAvailable()
+        private Task ShowTutorialAsync(Tutorial tutorial)
         {
-            while (queuedTutorials.Count > 0 && TutorialWasShownAlready(queuedTutorials.Peek().ID))
-                queuedTutorials.Dequeue();
+            if (activeTutorial != null)
+                throw new InvalidOperationException("Can't show new tutorial while other tutorial is still in progress.");
 
-            if (queuedTutorials.Count > 0)
-                ShowTutorial(queuedTutorials.Dequeue());
+            activeTutorial = tutorial;
+            activeTutorialTCS = new TaskCompletionSource<object>();
+
+            TutorialReady?.Invoke(tutorial);
+
+            return activeTutorialTCS.Task;
+        }
+
+        private bool TutorialWasAlreadyShown(TutorialID id)
+        {
+            string prefsKey = TutorialIDToPrefsKey(id);
+            return PlayerPrefs.GetInt(prefsKey, -1) >= 0;
         }
 
         private static string TutorialIDToPrefsKey(TutorialID id) 

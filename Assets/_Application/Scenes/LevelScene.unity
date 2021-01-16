@@ -131,6 +131,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 153013530}
     m_Modifications:
+    - target: {fileID: 3687017206743489352, guid: c03af1143c4ee3646a9189b432a93e75,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GMTK2020.UI.Exit, GMTK2020
+      objectReference: {fileID: 0}
+    - target: {fileID: 3687017206743489352, guid: c03af1143c4ee3646a9189b432a93e75,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoToMainMenu
+      objectReference: {fileID: 0}
     - target: {fileID: 3687017206743489366, guid: c03af1143c4ee3646a9189b432a93e75,
         type: 3}
       propertyPath: m_Name
@@ -545,7 +555,7 @@ Transform:
   m_GameObject: {fileID: 149534257}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4, y: 4, z: 0}
-  m_LocalScale: {x: 25, y: 15, z: 1}
+  m_LocalScale: {x: 25, y: 11.25, z: 1}
   m_Children: []
   m_Father: {fileID: 172499789}
   m_RootOrder: 0
@@ -601,8 +611,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 2
   m_SpriteSortPoint: 0
---- !u!61 &149534260
-BoxCollider2D:
+--- !u!60 &149534260
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -624,9 +634,12 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.5, y: 0.5}
+      - {x: -0.5, y: -0.5}
+      - {x: 0.5, y: -0.5}
+      - {x: 0.5, y: 0.5}
 --- !u!1 &153013526
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,6 +754,7 @@ GameObject:
   m_Component:
   - component: {fileID: 172499789}
   - component: {fileID: 172499790}
+  - component: {fileID: 172499791}
   m_Layer: 0
   m_Name: Tutorial Masks
   m_TagString: Untagged
@@ -775,9 +789,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3d3c14ae71a6454f896e58f231fc1db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  overlaySprite: {fileID: 149534259}
+  overlayCollider: {fileID: 149534260}
   tutorialMaskPrefab: {fileID: 4072546932699783684, guid: 99dc541198070744cbef56ff865c5962,
     type: 3}
+  toolPanel: {fileID: 1506328417}
+--- !u!210 &172499791
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 172499788}
+  m_Enabled: 1
+  m_SortingLayerID: 1710855171
+  m_SortingLayer: 6
+  m_SortingOrder: 0
 --- !u!1 &174233052
 GameObject:
   m_ObjectHideFlags: 0
@@ -931,6 +957,16 @@ PrefabInstance:
       propertyPath: tool
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: boardManipulator
+      value: 
+      objectReference: {fileID: 1689814306}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -941,21 +977,6 @@ PrefabInstance:
       propertyPath: Tool
       value: 10
       objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1689814306}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: GMTK2020.UI.ToolButton, GMTK2020
-      objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
-      value: 
-      objectReference: {fileID: 401800991}
     - target: {fileID: 6788153932471032802, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1284,6 +1305,16 @@ PrefabInstance:
       propertyPath: tool
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: boardManipulator
+      value: 
+      objectReference: {fileID: 1689814306}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -1294,21 +1325,6 @@ PrefabInstance:
       propertyPath: Tool
       value: 11
       objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1689814306}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: GMTK2020.UI.ToolButton, GMTK2020
-      objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
-      value: 
-      objectReference: {fileID: 622815233}
     - target: {fileID: 6788153932471032802, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1451,6 +1467,16 @@ PrefabInstance:
       propertyPath: tool
       value: 13
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: boardManipulator
+      value: 
+      objectReference: {fileID: 1689814306}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -1461,21 +1487,6 @@ PrefabInstance:
       propertyPath: Tool
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1689814306}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: GMTK2020.UI.ToolButton, GMTK2020
-      objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
-      value: 
-      objectReference: {fileID: 627272588}
     - target: {fileID: 6788153932471032802, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2097,6 +2108,16 @@ PrefabInstance:
       propertyPath: tool
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: boardManipulator
+      value: 
+      objectReference: {fileID: 1689814306}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -2107,21 +2128,6 @@ PrefabInstance:
       propertyPath: Tool
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1689814306}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: GMTK2020.UI.ToolButton, GMTK2020
-      objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
-      value: 
-      objectReference: {fileID: 939396457}
     - target: {fileID: 6788153932471032802, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2245,18 +2251,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 939396455}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &939396457 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-    type: 3}
-  m_PrefabInstance: {fileID: 939396455}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0924db0c4c93d5e4e82c4029b9efcf3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1050045834
 GameObject:
   m_ObjectHideFlags: 0
@@ -2286,7 +2280,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8206b36876eccc40ac5fd8412621890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelSequence: {fileID: 11400000, guid: a406af891823fa34eb72e48528b7ba49, type: 2}
 --- !u!4 &1050045836
 Transform:
   m_ObjectHideFlags: 0
@@ -2789,6 +2782,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cbd820aea1981e43905356120627260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boardManipulator: {fileID: 1689814306}
+  toolData: {fileID: 11400000, guid: 03367c26bc3432f4ca4936a0c2dd0cd0, type: 2}
   infoText: {fileID: 840547881}
   dismissTutorialButton: {fileID: 1115531519}
 --- !u!114 &1447083626
@@ -2916,6 +2911,16 @@ PrefabInstance:
       propertyPath: tool
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: boardManipulator
+      value: 
+      objectReference: {fileID: 1689814306}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -2926,21 +2931,6 @@ PrefabInstance:
       propertyPath: Tool
       value: 12
       objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1689814306}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: GMTK2020.UI.ToolButton, GMTK2020
-      objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
-      value: 
-      objectReference: {fileID: 1487339152}
     - target: {fileID: 6788153932471032802, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3064,18 +3054,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1487339150}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1487339152 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1487339150}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0924db0c4c93d5e4e82c4029b9efcf3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1494876631
 GameObject:
   m_ObjectHideFlags: 0
@@ -3185,6 +3163,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1506328415}
   - component: {fileID: 1506328416}
+  - component: {fileID: 1506328417}
   m_Layer: 5
   m_Name: Tool Buttons
   m_TagString: Untagged
@@ -3247,6 +3226,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1506328417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506328414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 178efffd2f809f8439ae783946b672f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1570801437
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3451,10 +3442,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f30f257681185e744aa57aecff6dc0ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boardManipulator: {fileID: 1689814306}
   availableUsesText: {fileID: 1570801441}
   requiredChainLengthText: {fileID: 1570801442}
   tool: 9
-  boardManipulator: {fileID: 1689814306}
   rotationSenseIndicator: {fileID: 635027661}
   cwSprite: {fileID: 21300000, guid: 85580ad784ab13544a6243bceefd35ee, type: 3}
   ccwSprite: {fileID: 21300000, guid: 477a346ec13a776478829ac11be7d14a, type: 3}
@@ -3494,6 +3485,16 @@ PrefabInstance:
       propertyPath: tool
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: boardManipulator
+      value: 
+      objectReference: {fileID: 1689814306}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -3504,21 +3505,6 @@ PrefabInstance:
       propertyPath: Tool
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1689814306}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: GMTK2020.UI.ToolButton, GMTK2020
-      objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
-      value: 
-      objectReference: {fileID: 1643638793}
     - target: {fileID: 6788153932471032802, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3642,18 +3628,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1643638791}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1643638793 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1643638791}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0924db0c4c93d5e4e82c4029b9efcf3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1689814305
 GameObject:
   m_ObjectHideFlags: 0
@@ -3876,6 +3850,16 @@ PrefabInstance:
       propertyPath: tool
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: boardManipulator
+      value: 
+      objectReference: {fileID: 1689814306}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -3886,21 +3870,6 @@ PrefabInstance:
       propertyPath: Tool
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1689814306}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: GMTK2020.UI.ToolButton, GMTK2020
-      objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
-      value: 
-      objectReference: {fileID: 1894521962}
     - target: {fileID: 6788153932471032802, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4048,6 +4017,16 @@ PrefabInstance:
       propertyPath: tool
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: boardManipulator
+      value: 
+      objectReference: {fileID: 1689814306}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_text
@@ -4058,21 +4037,6 @@ PrefabInstance:
       propertyPath: Tool
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1689814306}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: GMTK2020.UI.ToolButton, GMTK2020
-      objectReference: {fileID: 0}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
-      value: 
-      objectReference: {fileID: 2028558048}
     - target: {fileID: 6788153932471032802, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4196,18 +4160,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 2028558046}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2028558048 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-    type: 3}
-  m_PrefabInstance: {fileID: 2028558046}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0924db0c4c93d5e4e82c4029b9efcf3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2048291899
 GameObject:
   m_ObjectHideFlags: 0
@@ -4759,21 +4711,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1506328415}
     m_Modifications:
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      propertyPath: unmaskableCanvas
+      value: 
+      objectReference: {fileID: 1494876634}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: boardManipulator
       value: 
       objectReference: {fileID: 1689814306}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
-      value: 
-      objectReference: {fileID: 6788153932243077280}
-    - target: {fileID: 6788153932471032801, guid: 7a1709738f09dfa41a33d8af3d3d425f,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: GMTK2020.UI.ToolButton, GMTK2020
-      objectReference: {fileID: 0}
     - target: {fileID: 6788153932471032802, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -90,7 +90,7 @@ namespace GMTK2020
             return false;
         }
 
-        public void StartNewTurn()
+        public void MakeToolsAvailable()
         {
             toolUsedThisTurn = false;
         }

@@ -1,17 +1,28 @@
 ﻿using UnityEngine;
 using GMTK2020.Data;
 using Random = System.Random;
+using UnityEngine.Audio;
+using System.Collections.Generic;
+using RotaryHeart.Lib.SerializableDictionary;
 
 namespace GMTK2020.Audio
 {
-    [RequireComponent(typeof(AudioSource))]
     public class SoundManager : MonoBehaviour
     {
+        private struct QueuedSoundEffect
+        {
+            public SoundEffect SoundEffect;
+            public AudioSource AudioSource;
+            public bool OneShot;
+        }
+
         public static SoundManager Instance { get; private set; }
 
         [SerializeField] private SoundEffectData soundEffects = null;
+        [SerializeField] private AudioMixer mixer = null;
+        [SerializeField] private SerializableDictionaryBase<SoundEffect, AudioSource> audioSources = null;
 
-        private AudioSource audioSource;
+        private Queue<QueuedSoundEffect> soundEffectQueue = new Queue<QueuedSoundEffect>();
 
         private Random rng;
 
@@ -26,23 +37,71 @@ namespace GMTK2020.Audio
 
             Instance = this;
 
-            audioSource = GetComponent<AudioSource>();
-
             rng = new Random(Time.frameCount);
         }
 
-        public void PlayEffect(SoundEffect effect, float pitchModifier = 1f)
+        private void Start()
         {
-            audioSource.pitch = 1f + (pitchModifier * 0.1f);
+            PlayerPreferences playerPreferences = PlayerPreferences.Instance;
 
-            AudioClip[] availableClips = soundEffects.Map[effect].Clips;
+            UpdateFXVolume(playerPreferences.SoundEffectVolume);
 
-            audioSource.PlayOneShot(availableClips.RandomChoice(rng));
+            playerPreferences.SoundEffectVolumeChanged += OnSoundEffectVolumeChanged;
         }
 
-        public void PlayEffectWithRandomPitch(SoundEffect effect)
+        private void Update()
         {
-            PlayEffect(effect, (float)rng.NextDouble() * 2 - 1);
+            if (soundEffectQueue.Count > 0)
+                PlayQueuedEffect(soundEffectQueue.Dequeue());
+        }
+
+        public void PlayEffect(SoundEffect effect)
+        {
+            soundEffectQueue.Enqueue(new QueuedSoundEffect
+            {
+                SoundEffect = effect,
+                AudioSource = audioSources[effect],
+                OneShot = true,
+            });
+        }
+
+        public void StartPlayingLoopEffect(AudioSource source, SoundEffect effect)
+        {
+            soundEffectQueue.Enqueue(new QueuedSoundEffect
+            {
+                SoundEffect = effect,
+                AudioSource = source,
+                OneShot = false,
+            });
+        }
+
+        private void OnSoundEffectVolumeChanged(float volume)
+        {
+            UpdateFXVolume(volume);
+        }
+
+        private void UpdateFXVolume(float volume)
+        {
+            mixer.SetFloat("FXVolume", Mathf.Log10(volume) * 20);
+        }
+
+        private void PlayQueuedEffect(QueuedSoundEffect effect)
+        {
+            AudioClip[] availableClips = soundEffects.Map[effect.SoundEffect].Clips;
+            AudioClip clip = availableClips.RandomChoice(rng);
+
+            if (effect.OneShot)
+                effect.AudioSource.PlayOneShot(clip);
+            else
+            {
+                effect.AudioSource.clip = clip;
+                effect.AudioSource.Play();
+            }
+        }
+
+        public void StopEffect(AudioSource source)
+        {
+            source.Stop();
         }
     }
 

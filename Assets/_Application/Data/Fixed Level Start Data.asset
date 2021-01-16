@@ -15,7 +15,7 @@ MonoBehaviour:
   Levels:
   - BoardData: {fileID: 11400000, guid: 308dacb3956da6e49bd154de128b9f88, type: 2}
     CrackedTiles:
-    - {x: 4, y: 2}
-    - {x: 0, y: 0}
+    - {x: 6, y: 4}
+    - {x: 3, y: 2}
   - BoardData: {fileID: 11400000, guid: bbaca48d2e0bffe4bbc8045bb4f2034c, type: 2}
     CrackedTiles: []

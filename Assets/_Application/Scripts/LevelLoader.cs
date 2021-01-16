@@ -45,7 +45,7 @@ namespace GMTK2020
 
             predictionEditor.Initialize(simulator);
             boardRenderer.RenderInitial(Level.Board);
-            playback.Initialize(Level.Board, simulator);
+            playback.Initialize(simulator);
         }
 
         private Level SetUpFixedLevelStart(FixedLevelStartData.FixedLevelStart levelData)

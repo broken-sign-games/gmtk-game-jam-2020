@@ -18,23 +18,37 @@ MonoBehaviour:
     ShowDismissButton: 0
     InteractableTools: 
     PlaybackButtonAvailable: 0
+    InteractableRects:
+    - _bottomLeft: {x: 3, y: 1}
+      _topRight: {x: 5, y: 1}
   - ID: 1
     Message: Hit the reaction button to kick things off.
     ShowDismissButton: 0
     InteractableTools: 
     PlaybackButtonAvailable: 1
+    InteractableRects: []
   - ID: 2
     Message: After a reaction, some vials may crack. If you don't match them within
       two turns, their contents will evaporate.
     ShowDismissButton: 1
     InteractableTools: 
     PlaybackButtonAvailable: 0
-  - ID: 3
-    Message: After each reaction, you can manipulate the board **once** to set up
-      further matches. Select the swap tool and swap these vials.
+    InteractableRects: []
+  - ID: 12
+    Message: After each reaction, you can manipulate the board <b>once</b> to set
+      up further matches. Select the swap tool.
     ShowDismissButton: 0
     InteractableTools: 0b000000
     PlaybackButtonAvailable: 0
+    InteractableRects: []
+  - ID: 3
+    Message: Swap these vials by swiping from one to the other.
+    ShowDismissButton: 0
+    InteractableTools: 
+    PlaybackButtonAvailable: 0
+    InteractableRects:
+    - _bottomLeft: {x: 3, y: 0}
+      _topRight: {x: 3, y: 1}
   - ID: 4
     Message: You can already open vials that will form a match after earlier matches
       resolve and predict chain reactions. This reduces the number of vials that
@@ -42,42 +56,75 @@ MonoBehaviour:
     ShowDismissButton: 0
     InteractableTools: 
     PlaybackButtonAvailable: 0
+    InteractableRects:
+    - _bottomLeft: {x: 2, y: 1}
+      _topRight: {x: 6, y: 1}
+    - _bottomLeft: {x: 4, y: 0}
+      _topRight: {x: 4, y: 3}
+    - _bottomLeft: {x: 5, y: 4}
+      _topRight: {x: 6, y: 4}
+    - _bottomLeft: {x: 7, y: 3}
+      _topRight: {x: 7, y: 3}
   - ID: 5
     Message: Let's kick off the chain reaction!
     ShowDismissButton: 0
     InteractableTools: 
     PlaybackButtonAvailable: 1
+    InteractableRects: []
   - ID: 6
     Message: Matching bigger shapes can unlock various tools to manipulate the board.
     ShowDismissButton: 1
-    InteractableTools: 
+    InteractableTools: 01000000
     PlaybackButtonAvailable: 0
-  - ID: 7
-    Message: Let's try out the new tool! You can use the hammer to remove vials from
-      the board without a match.
+    InteractableRects: []
+  - ID: 13
+    Message: Let's try out the new tool!
     ShowDismissButton: 0
     InteractableTools: 01000000
     PlaybackButtonAvailable: 0
+    InteractableRects: []
+  - ID: 7
+    Message: You can use the hammer to remove vials from the board without a match.
+    ShowDismissButton: 0
+    InteractableTools: 
+    PlaybackButtonAvailable: 0
+    InteractableRects:
+    - _bottomLeft: {x: 3, y: 0}
+      _topRight: {x: 3, y: 0}
   - ID: 8
     Message: You're on your own now, good luck!
     ShowDismissButton: 1
     InteractableTools: 
     PlaybackButtonAvailable: 0
+    InteractableRects: []
   - ID: 9
     Message: If any vials are still open when the chain reaction stops, their contents
       will evaporate. Empty vials can no longer participate in reactions.
     ShowDismissButton: 1
     InteractableTools: 
     PlaybackButtonAvailable: 0
+    InteractableRects: []
   - ID: 10
     Message: 'Tip: only open vials will participate in reactions. Sometimes it''s
       better to leave a vial closed to get a longer chain reaction.'
     ShowDismissButton: 0
     InteractableTools: 
     PlaybackButtonAvailable: 0
+    InteractableRects:
+    - _bottomLeft: {x: 3, y: 3}
+      _topRight: {x: 5, y: 3}
+    - _bottomLeft: {x: 4, y: 2}
+      _topRight: {x: 4, y: 5}
+    - _bottomLeft: {x: 4, y: 8}
+      _topRight: {x: 4, y: 8}
+    - _bottomLeft: {x: 5, y: 5}
+      _topRight: {x: 5, y: 5}
+    - _bottomLeft: {x: 6, y: 4}
+      _topRight: {x: 6, y: 4}
   - ID: 11
-    Message: Every {0} turns, the difficulty increases. Either by increasing the
-      number of cracking vials per turn, or by adding a new vial colour to the mix.
+    Message: Every 5 turns, the difficulty increases. Either by increasing the number
+      of cracking vials per turn, or by adding a new vial colour to the mix.
     ShowDismissButton: 1
     InteractableTools: 
     PlaybackButtonAvailable: 0
+    InteractableRects: []

@@ -2,7 +2,7 @@
 using GMTK2020.Rendering;
 using GMTK2020.TutorialSystem;
 using GMTK2020.UI;
-using GMTKJam2020.Input;
+using GMTK2020.Input;
 using RotaryHeart.Lib.SerializableDictionary;
 using System;
 using UnityEngine;
@@ -20,6 +20,7 @@ namespace GMTK2020
 
         public Tool ActiveTool { get; private set; }
         public event Action LastToolUsed;
+        public event Action<Tool> ActiveToolChanged;
 
         private InputActions inputs;
 
@@ -71,9 +72,6 @@ namespace GMTK2020
             UpdateUI();
         }
 
-        public void ToggleTool(ToolButton toolButton)
-            => ToggleTool(toolButton.Tool);
-
         public void ToggleTool(Tool tool)
         {
             if (tool == ActiveTool)
@@ -82,6 +80,10 @@ namespace GMTK2020
                 ActiveTool = tool;
 
             UpdateUI();
+
+            ActiveToolChanged?.Invoke(ActiveTool);
+
+            TutorialManager.Instance.CompleteActiveTutorial();
         }
 
         public bool AnyToolsAvailable() 
@@ -94,9 +96,9 @@ namespace GMTK2020
             UpdateUI();
         }
 
-        public void StartNewTurn()
+        public void MakeToolsAvailable()
         { 
-            toolbox.StartNewTurn();
+            toolbox.MakeToolsAvailable();
 
             UpdateUI();
         }

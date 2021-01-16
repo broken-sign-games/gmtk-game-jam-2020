@@ -1,4 +1,6 @@
 ﻿using GMTK2020.Data;
+using GMTK2020.UI;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,13 +8,16 @@ namespace GMTK2020.TutorialSystem
 {
     public class TutorialOverlay : MonoBehaviour
     {
-        [SerializeField] private SpriteRenderer overlaySprite = null;
+        [SerializeField] private PolygonCollider2D overlayCollider = null;
         [SerializeField] private TutorialMask tutorialMaskPrefab = null;
+        [SerializeField] private ToolPanel toolPanel = null;
 
         private TutorialManager tutorialManager;
 
         private List<TutorialMask> activeTutorialMasks;
         private Tutorial activeTutorial;
+
+        private Camera mainCamera;
 
         private void Awake()
         {
@@ -22,6 +27,20 @@ namespace GMTK2020.TutorialSystem
 
             tutorialManager.TutorialReady += OnTutorialReady;
             tutorialManager.TutorialCompleted += OnTutorialCompleted;
+        }
+
+        private void Start()
+        {
+            mainCamera = Camera.main;
+            FillScreen();
+        }
+
+        private void FillScreen()
+        {
+            float height = mainCamera.orthographicSize * 2;
+            float width = mainCamera.aspect * height;
+
+            overlayCollider.transform.localScale = new Vector2(width, height);
         }
 
         private void OnDestroy()
@@ -34,14 +53,45 @@ namespace GMTK2020.TutorialSystem
         {
             activeTutorial = tutorial;
 
-            overlaySprite.ActivateObject();
+            UpdateToolMasks();
+
+            overlayCollider.ActivateObject();
 
             foreach (GridRect rect in tutorial.InteractableRects)
             {
+                // TODO: Bit of a hack, because overlapping rects are hard to
+                // get to look nice.
+                foreach (Vector2Int pos in rect.GetPositions())
+                {
+                    TutorialMask mask = Instantiate(tutorialMaskPrefab, transform);
+                    mask.SetGridRect(new GridRect(pos));
+
+                    activeTutorialMasks.Add(mask);
+                }
+            }
+        }
+
+        private void UpdateToolMasks()
+        {
+            overlayCollider.pathCount = 1 + activeTutorial.InteractableTools.Count;
+
+            int pathID = 1;
+
+            foreach (Tool tool in activeTutorial.InteractableTools)
+            {
+                Vector2[] corners = toolPanel.GetButtonCornersInWorldSpace(tool);
+
+                Rect buttonRect = new Rect(corners[0], corners[2] - corners[0]);
+
                 TutorialMask mask = Instantiate(tutorialMaskPrefab, transform);
-                mask.SetRect(rect);
+                mask.SetWorldSpaceRect(buttonRect);
 
                 activeTutorialMasks.Add(mask);
+
+                for (int i = 0; i < corners.Length; ++i)
+                    corners[i] /= overlayCollider.transform.localScale;
+                overlayCollider.SetPath(pathID, corners);
+                ++pathID;
             }
         }
 
@@ -52,7 +102,8 @@ namespace GMTK2020.TutorialSystem
 
             activeTutorialMasks.Clear();
 
-            overlaySprite.DeactivateObject();
+            overlayCollider.DeactivateObject();
+            overlayCollider.pathCount = 1;
 
             activeTutorial = null;
         }

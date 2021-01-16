@@ -27,18 +27,17 @@ namespace GMTK2020
             AddCrack,
         }
 
+        public int DifficultyLevel { get; private set; } = 0;
         private DifficultyIncrease nextDifficultyIncrease = DifficultyIncrease.AddCrack;
         
         private bool ensureLatestColorDrops = false;
 
-        private int chainCount = 0;
+        private int turnCount = 0;
         public int ChainLength { get; private set; } = 0;
 
         private readonly Queue<Tile> fixedCrackQueue = new Queue<Tile>();
 
         private List<Tile> tutorialTilesToOpen = null;
-        private bool tutorialWaitingForRemoval = false;
-        private bool tutorialWaitingForSwap = false;
 
         public Simulator(Board initialBoard, LevelSpecification levelSpec)
         {
@@ -47,6 +46,8 @@ namespace GMTK2020
 
             colorCount = levelSpec.InitialColorCount;
             CracksPerChain = levelSpec.InitialCracksPerChain;
+
+            TutorialManager.Instance.TutorialReady += OnTutorialReady;
 
             // TODO: We probably want more control over the seed...
             rng = new Random(Time.frameCount);
@@ -59,47 +60,6 @@ namespace GMTK2020
                 Tile tile = board[pos];
                 fixedCrackQueue.Enqueue(tile);
             }
-        }
-
-        public void StartGame()
-        {
-            int gameCount = TutorialManager.GetGameCount();
-
-            switch (gameCount)
-            {
-            case 1:
-            {
-                List<GridRect> interactableRects = new List<GridRect> { new GridRect(new Vector2Int(3, 1), new Vector2Int(5, 1)) };
-                TutorialManager.Instance.ShowTutorialIfNew(TutorialID.OpenVials, interactableRects);
-                CreateListOfTilesToOpenForTutorial(interactableRects);
-
-                TutorialManager.Instance.ShowTutorialIfNew(TutorialID.StartReaction);
-                break;
-            }
-            case 2:
-            {
-                List<GridRect> interactableRects = new List<GridRect> { 
-                    new GridRect(new Vector2Int(3, 3), new Vector2Int(5, 3)),
-                    new GridRect(new Vector2Int(4, 2), new Vector2Int(4, 5)),
-                    new GridRect(new Vector2Int(4, 8), new Vector2Int(4, 8)),
-                    new GridRect(new Vector2Int(5, 5), new Vector2Int(5, 5)),
-                    new GridRect(new Vector2Int(6, 4), new Vector2Int(6, 4)),
-                };
-                CreateListOfTilesToOpenForTutorial(interactableRects);
-                TutorialManager.Instance.ShowTutorialIfNew(TutorialID.OmittingVials, interactableRects);
-                break;
-            }
-            }
-
-        }
-
-        private void CreateListOfTilesToOpenForTutorial(List<GridRect> interactableRects)
-        {
-            tutorialTilesToOpen = new List<Tile>();
-
-            foreach (GridRect rect in interactableRects)
-                foreach (Vector2Int pos in rect.GetPositions())
-                    tutorialTilesToOpen.Add(board[pos]);
         }
 
         public SimulationStep SimulateNextStep()
@@ -119,7 +79,7 @@ namespace GMTK2020
                 return new MatchStep(ChainLength, matchedTiles, movedTiles, horizontalMatches, verticalMatches);
             }
 
-            ++chainCount;
+            ++turnCount;
 
             HashSet<Tile> inertTiles = MakeMarkedAndCrackedTilesInert();
             HashSet<Tile> crackedTiles = CrackTiles();
@@ -131,6 +91,26 @@ namespace GMTK2020
             ChainLength = 0;
 
             return new CleanUpStep(newTiles, inertTiles, crackedTiles);
+        }
+
+        private void OnTutorialReady(Tutorial tutorial)
+        {
+            int rectCount = tutorial.InteractableRects?.Count ?? 0;
+
+            if (rectCount == 0)
+                return;
+
+            if (tutorial.InteractableTools.Count == 0)
+                RegisterTilesToOpenForTutorial(tutorial.InteractableRects);
+        }
+
+        private void RegisterTilesToOpenForTutorial(List<GridRect> interactableRects)
+        {
+            tutorialTilesToOpen = new List<Tile>();
+
+            foreach (GridRect rect in interactableRects)
+                foreach (Vector2Int pos in rect.GetPositions())
+                    tutorialTilesToOpen.Add(board[pos]);
         }
 
         private List<IEnumerable<Tile>> GetRawMatches()
@@ -324,9 +304,11 @@ namespace GMTK2020
 
         private void IncreaseDifficulty()
         {
-            if (chainCount % levelSpec.ChainsPerDifficultyIncrease != 0)
+            if (turnCount % levelSpec.ChainsPerDifficultyIncrease != 0)
                 return;
 
+            ++DifficultyLevel;
+            
             switch (nextDifficultyIncrease)
             {
             case DifficultyIncrease.AddColor:
@@ -453,11 +435,7 @@ namespace GMTK2020
             List<MovedTile> movedTiles = MoveTilesDown();
             List<MovedTile> newTiles = FillBoardWithTiles();
 
-            if (tutorialWaitingForRemoval)
-            {
-                tutorialWaitingForRemoval = false;
-                TutorialManager.Instance.CompleteActiveTutorial();
-            }
+            TutorialManager.Instance.CompleteActiveTutorial();
 
             return new RemovalStep(removedTiles, movedTiles, newTiles);
         }
@@ -608,6 +586,8 @@ namespace GMTK2020
                 board.MoveTile(tile2, pos1),
             };
 
+            TutorialManager.Instance.CompleteActiveTutorial();
+
             return new PermutationStep(movedTiles);
         }
 
@@ -623,12 +603,6 @@ namespace GMTK2020
 
             foreach (Tile tile in row2)
                 movedTiles.Add(board.MoveTile(tile, tile.Position.x, y1));
-
-            if (tutorialWaitingForSwap)
-            {
-                tutorialWaitingForSwap = false;
-                TutorialManager.Instance.CompleteActiveTutorial();
-            }
 
             return new PermutationStep(movedTiles);
         }
