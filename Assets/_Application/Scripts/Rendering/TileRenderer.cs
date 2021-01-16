@@ -132,7 +132,7 @@ namespace GMTK2020.Rendering
                 break;
             }
 
-            return vialTransform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0);
+            return PulseVial();
         }
 
         public Tween UpdatePrediction()
@@ -147,7 +147,7 @@ namespace GMTK2020.Rendering
                 Sequence seq = DOTween.Sequence().SetId(corkSprite);
                 seq.Append(corkSprite.transform.DOLocalMoveY(corkDistance, corkMoveDuration));
                 seq.Append(corkSprite.DOFade(0, corkFadeDuration));
-                seq.Insert(0, vialTransform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0));
+                seq.Insert(0, PulseVial());
 
                 Sequence glowSeq = DOTween.Sequence();
                 glowSeq.Append(glowSprite.DOFade(glowFlashOpacity, glowFadeDuration));
@@ -170,7 +170,7 @@ namespace GMTK2020.Rendering
                 Sequence seq = DOTween.Sequence().SetId(corkSprite);
                 seq.Append(corkSprite.DOFade(1, corkFadeDuration));
                 seq.Append(corkSprite.transform.DOLocalMoveY(0, corkMoveDuration).SetEase(Ease.OutBack));
-                seq.Insert(0, transform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0));
+                seq.Insert(0, PulseVial());
                 seq.Insert(0, glowSprite.DOFade(0, glowFadeDuration));
                 seq.Insert(0, tileHighlight.DOFade(0, glowFadeDuration));
 
@@ -182,9 +182,10 @@ namespace GMTK2020.Rendering
         {
             weakEvaporation.Stop();
             strongEvaporation.Stop();
-            liquidEvap.Play();
-            neckEvap.Play();
             bubbles.Stop();
+
+            liquidSprite.enabled = false;
+            wildcardIndicator.SetActive(false);
             vialTransform.localRotation = Quaternion.identity;
 
             SoundManager.Instance.PlayEffect(SoundEffect.VialEvaporated);
@@ -193,11 +194,20 @@ namespace GMTK2020.Rendering
 
             Sequence seq = DOTween.Sequence();
 
-            seq.Join(glowSprite.DOFade(0, glowFadeDuration));
-            seq.Join(tileHighlight.DOFade(0, glowFadeDuration));
+            if (tile.Marked)
+            {
+                liquidEvap.Play();
+                neckEvap.Play();
 
-            liquidSprite.enabled = false;
-            wildcardIndicator.SetActive(false);
+                seq.Join(glowSprite.DOFade(0, glowFadeDuration));
+                seq.Join(tileHighlight.DOFade(0, glowFadeDuration));
+            }
+            else
+            {
+                seq.Join(glowSprite.DOFade(0, glowFadeDuration));
+                seq.Join(tileHighlight.DOFade(0, glowFadeDuration));
+                seq.Join(PulseVial());
+            }
 
             return seq;
         }
@@ -411,6 +421,11 @@ namespace GMTK2020.Rendering
         public void ShowMissingPrediction()
         {
             missingPredictionIndicator.gameObject.SetActive(true);
+        }
+
+        private Tween PulseVial()
+        {
+            return vialTransform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0);
         }
     }
 }
