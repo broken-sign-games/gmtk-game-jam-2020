@@ -3,10 +3,19 @@
     public enum SoundEffect
     {
         Click,
-        SelectTile,
-        DeselectTile,
-        StepCorrect,
-        StepWrong,
-        Win,
+        VialOpened,
+        VialClosed,
+        VialCracked,
+        VialMatched,
+        VialEvaporated,
+        VialEvaporating,
+        VialDestroyed,
+        VialShifted,
+        WildcardCreated,
+        VialFalling,
+        VialLanded,
+        ToolSelected,
+        GameEnded,
+        VialBubbling,
     }
 }

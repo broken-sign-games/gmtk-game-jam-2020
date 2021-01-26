@@ -55,9 +55,6 @@ namespace GMTK2020
 
         public void StartReaction()
         {
-            // TODO: This should be triggered directly by the button instead
-            SoundManager.Instance.PlayEffect(SoundEffect.Click);
-
             reactionStarted = true;
         }
 
@@ -242,6 +239,7 @@ namespace GMTK2020
         {
             gameEnded = true;
 
+            SoundManager.Instance.PlayEffect(SoundEffect.GameEnded);
             runButton.interactable = false;
             scoreKeeper.UpdateHighscore();
             scoreRenderer.UpdateHighscore();

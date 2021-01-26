@@ -20,6 +20,7 @@ namespace GMTK2020
 
         public Tool ActiveTool { get; private set; }
         public event Action LastToolUsed;
+        public event Action<Tool> ActiveToolChanged;
 
         private InputActions inputs;
 
@@ -71,9 +72,6 @@ namespace GMTK2020
             UpdateUI();
         }
 
-        public void ToggleTool(ToolButton toolButton)
-            => ToggleTool(toolButton.Tool);
-
         public void ToggleTool(Tool tool)
         {
             if (tool == ActiveTool)
@@ -82,6 +80,8 @@ namespace GMTK2020
                 ActiveTool = tool;
 
             UpdateUI();
+
+            ActiveToolChanged?.Invoke(ActiveTool);
 
             TutorialManager.Instance.CompleteActiveTutorial();
         }

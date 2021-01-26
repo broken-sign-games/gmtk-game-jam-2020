@@ -1,4 +1,5 @@
-﻿using GMTK2020.Data;
+﻿using GMTK2020.Audio;
+using GMTK2020.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,9 +9,12 @@ namespace GMTK2020.UI
     [RequireComponent(typeof(Button))]
     public class ToolButton : MonoBehaviour
     {
+        [SerializeField] private BoardManipulator boardManipulator = null;
         [SerializeField] TextMeshProUGUI availableUsesText = null;
         [SerializeField] TextMeshProUGUI requiredChainLengthText = null;
         [SerializeField] Tool tool = Tool.SwapTiles;
+
+        protected BoardManipulator BoardManipulator => boardManipulator;
 
         public Tool Tool => tool;
 
@@ -20,6 +24,13 @@ namespace GMTK2020.UI
         {
             button = GetComponent<Button>();
             availableUsesText.text = "0";
+        }
+
+        public virtual void OnClick()
+        {
+            SoundManager.Instance.PlayEffect(SoundEffect.ToolSelected);
+
+            boardManipulator.ToggleTool(Tool);
         }
 
         public void UpdateUses(int uses)
