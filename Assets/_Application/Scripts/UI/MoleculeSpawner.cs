@@ -7,6 +7,7 @@ namespace GMTK2020.UI
     [RequireComponent(typeof(RectTransform))]
     public class MoleculeSpawner : MonoBehaviour
     {
+        [SerializeField] private int initialMolecules = 10;
         [SerializeField] private float spawnRate = 0.1f;
         [SerializeField] private float spawnOffset = 50;
         [SerializeField] private BackgroundMolecule[] moleculePrefabs = null;
@@ -15,21 +16,36 @@ namespace GMTK2020.UI
 
         private float lastSpawnTime = 0f;
         private Random rng;
-        private Vector2 canvasSize;
         
         private void Awake()
         {
             rectTransform = GetComponent<RectTransform>();
 
             rng = new Random();
+        }
 
-            canvasSize = rectTransform.rect.size;
+        private void Start()
+        {
+            Vector2 canvasSize = rectTransform.rect.size;
+
+            for (int i = 0; i < initialMolecules; ++i)
+            {
+                BackgroundMolecule molecule = Instantiate(moleculePrefabs[rng.Next(moleculePrefabs.Length)], rectTransform);
+
+                var moleculeTransform = molecule.GetComponent<RectTransform>();
+                moleculeTransform.anchoredPosition = new Vector2((float)rng.NextDouble(), (float)rng.NextDouble()) * canvasSize;
+
+                float direction = (float)rng.NextDouble() * Mathf.PI * 2;
+                molecule.Direction = new Vector2(Mathf.Cos(direction), Mathf.Sin(direction));
+            }
         }
 
         private void Update()
         {
             if (Time.time - lastSpawnTime < spawnRate)
                 return;
+
+            Vector2 canvasSize = rectTransform.rect.size;
 
             BackgroundMolecule molecule = Instantiate(moleculePrefabs[rng.Next(moleculePrefabs.Length)], rectTransform);
 
@@ -45,21 +61,19 @@ namespace GMTK2020.UI
             }
             else if (spawnLocationAlongBorder < canvasSize.x + canvasSize.y)
             {
-                spawnPosition = new Vector2(canvasSize.x + spawnOffset, spawnLocationAlongBorder);
+                spawnPosition = new Vector2(canvasSize.x + spawnOffset, spawnLocationAlongBorder - canvasSize.x);
                 direction = (float)rng.NextDouble() * 90 + 135;
             }
             else if (spawnLocationAlongBorder < 2 * canvasSize.x + canvasSize.y)
             {
-                spawnPosition = new Vector2(spawnLocationAlongBorder, canvasSize.y + spawnOffset);
+                spawnPosition = new Vector2(spawnLocationAlongBorder - canvasSize.x - canvasSize.y, canvasSize.y + spawnOffset);
                 direction = (float)rng.NextDouble() * 90 + 225;
             }
             else
             {
-                spawnPosition = new Vector2(-spawnOffset, spawnLocationAlongBorder);
+                spawnPosition = new Vector2(-spawnOffset, spawnLocationAlongBorder - 2 * canvasSize.x - canvasSize.y);
                 direction = (float)rng.NextDouble() * 90 + 315;
             }
-
-            Debug.Log(spawnPosition);
 
             var moleculeTransform = molecule.GetComponent<RectTransform>();
             moleculeTransform.anchoredPosition = spawnPosition;
