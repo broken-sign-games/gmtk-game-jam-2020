@@ -139,10 +139,8 @@ namespace GMTK2020
             rectTransform.GetWorldCorners(objectCorners);
 
             int visibleCorners = 0;
-            Vector3 tempScreenSpaceCorner; // Cached
             for (var i = 0; i < objectCorners.Length; i++) // For each corner in rectTransform
             {
-                //tempScreenSpaceCorner = camera.WorldToScreenPoint(objectCorners[i]); // Transform world space position of corner to screen space
                 if (screenBounds.Contains(objectCorners[i])) // If the corner is inside the screen
                 {
                     visibleCorners++;

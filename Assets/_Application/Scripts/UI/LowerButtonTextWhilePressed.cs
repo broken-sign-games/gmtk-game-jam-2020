@@ -6,8 +6,8 @@ namespace GMTK2020.UI
     [RequireComponent(typeof(BetterButton))]
     public class LowerButtonTextWhilePressed : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI buttonText;
-        [SerializeField] private float lowerBy;
+        [SerializeField] private TextMeshProUGUI buttonText = null;
+        [SerializeField] private float lowerBy = 5f;
 
         private Vector2 defaultPosition;
         private BetterButton button;

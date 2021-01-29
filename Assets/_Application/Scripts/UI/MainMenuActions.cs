@@ -11,17 +11,5 @@ namespace GMTK2020.UI
             SoundManager.Instance.PlayEffect(SoundEffect.Click);
             SceneLoader.Instance.LoadLevelScene();
         }
-
-        public void GoToOptions()
-        {
-            SoundManager.Instance.PlayEffect(SoundEffect.Click);
-            SceneLoader.Instance.LoadOptionsScene();
-        }
-
-        public void GoToCredits()
-        {
-            SoundManager.Instance.PlayEffect(SoundEffect.Click);
-            SceneLoader.Instance.LoadCreditsScene();
-        }
     } 
 }

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace GMTK2020.UI
 {
-    public class OptionsMenu : MonoBehaviour
+    public class OptionsMenuActions : MonoBehaviour
     {
         [SerializeField] private Slider musicVolumeSlider = null;
         [SerializeField] private Slider soundEffectVolumeSlider = null;
