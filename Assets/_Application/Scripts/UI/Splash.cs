@@ -40,7 +40,7 @@ namespace GMTK2020.UI
 
         private void LoadMainMenuScene()
         {
-            SceneLoader.Instance.LoadMainMenuScene();
+            SceneLoader.Instance.LoadMenuScene();
         }
     }
 }

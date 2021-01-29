@@ -33,8 +33,10 @@ namespace GMTK2020.UI
                 // we got here through a button press.
                 SoundManager.Instance.PlayEffect(SoundEffect.Click);
 
-                seq.Append(activeMenu.DOFade(0, fadeDuration));
-                seq.AppendCallback(() => activeMenu.DeactivateObject());
+                CanvasGroup oldMenu = activeMenu;
+
+                seq.Append(oldMenu.DOFade(0, fadeDuration));
+                seq.AppendCallback(() => oldMenu.DeactivateObject());
             }
 
             seq.AppendCallback(() => targetMenu.ActivateObject());

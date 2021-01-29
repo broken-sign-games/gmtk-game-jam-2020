@@ -6,7 +6,7 @@ namespace GMTK2020.SceneManagement
     {
         private void Start()
         {
-            SceneLoader.Instance.LoadMainMenuScene();
+            SceneLoader.Instance.LoadMenuScene();
             Destroy(gameObject);
         }
     } 

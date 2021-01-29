@@ -1308,10 +1308,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadingSceneName: LoadingScene
   splashSceneName: SplashScene
-  mainMenuSceneName: MainMenuScene
+  menuSceneName: MenuScene
   levelSceneName: LevelScene
-  optionsSceneName: OptionsScene
-  creditsSceneName: CreditsScene
 --- !u!4 &1285297247
 Transform:
   m_ObjectHideFlags: 0
