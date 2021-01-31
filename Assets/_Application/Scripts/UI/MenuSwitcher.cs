@@ -11,7 +11,12 @@ namespace GMTK2020.UI
         [SerializeField] private GameObject mainMenu = null;
         [SerializeField] private GameObject optionsMenu = null;
         [SerializeField] private GameObject creditsMenu = null;
+        [SerializeField] private CanvasGroup title = null;
 
+        [SerializeField] private float mainMenuTitlePosition = 216;
+        [SerializeField] private float creditsMenuTitlePosition = 300;
+
+        [SerializeField] private float titleMoveDuration = 0.5f;
         [SerializeField] private float startUpDelay = 0.5f;
         [SerializeField] private float fadeDuration = 1f;
         [SerializeField] private float pulseMagnitude = 1.1f;
@@ -48,7 +53,7 @@ namespace GMTK2020.UI
                 // we got here through a button press.
                 SoundManager.Instance.PlayEffect(SoundEffect.Click);
 
-                seq.Append(HideActiveMenu());
+                seq.Append(HideActiveMenu(targetMenu));
             }
 
             seq.Append(ShowNewMenu(targetMenu));
@@ -56,7 +61,7 @@ namespace GMTK2020.UI
             activeMenu = targetMenu;
         }
 
-        private Tween HideActiveMenu()
+        private Tween HideActiveMenu(GameObject targetMenu)
         {
             Sequence hideSeq = DOTween.Sequence();
 
@@ -64,11 +69,21 @@ namespace GMTK2020.UI
 
             float topY = menuElements[oldMenu].Select(canvasGroup => canvasGroup.transform.position.y).Max();
 
+            if (oldMenu != optionsMenu && targetMenu == optionsMenu)
+            {
+                topY = title.transform.position.y;
+                hideSeq.Insert(0, title.transform.DOPunchScale(Vector3.one * pulseMagnitude, fadeDuration, 0, 0));
+                hideSeq.Insert(fadeDuration / 2, title.DOFade(0, fadeDuration / 2));
+                hideSeq.AppendCallback(() => title.DeactivateObject());
+            }
+
+            float baseLength = hideSeq.Duration();
+
             foreach (CanvasGroup uiElement in menuElements[oldMenu])
             {
                 float delay = (topY - uiElement.transform.position.y) * delayFactor;
-                hideSeq.Insert(delay, uiElement.transform.DOPunchScale(Vector3.one * pulseMagnitude, fadeDuration, 0, 0));
-                hideSeq.Insert(delay + fadeDuration / 2, uiElement.DOFade(0, fadeDuration / 2));
+                hideSeq.Insert(baseLength + delay, uiElement.transform.DOPunchScale(Vector3.one * pulseMagnitude, fadeDuration, 0, 0));
+                hideSeq.Insert(baseLength + delay + fadeDuration / 2, uiElement.DOFade(0, fadeDuration / 2));
             }
 
             hideSeq.AppendCallback(() => oldMenu.Deactivate());
@@ -79,15 +94,36 @@ namespace GMTK2020.UI
         {
             Sequence showSeq = DOTween.Sequence();
 
+            float topY = menuElements[targetMenu].Select(canvasGroup => canvasGroup.transform.position.y).Max();
+
+            if (targetMenu != optionsMenu)
+            {
+                var titleRectTransform = title.GetComponent<RectTransform>();
+                float targetPosY = targetMenu == mainMenu ? mainMenuTitlePosition : creditsMenuTitlePosition;
+
+                if (title.gameObject.activeSelf)
+                {
+                    showSeq.Append(titleRectTransform.DOAnchorPosY(targetPosY, titleMoveDuration));
+                }
+                else
+                {
+                    titleRectTransform.anchoredPosition = new Vector2(0, targetPosY);
+                    topY = title.transform.position.y;
+                    showSeq.AppendCallback(() => title.ActivateObject());
+                    showSeq.Append(title.transform.DOPunchScale(Vector3.one * pulseMagnitude, fadeDuration, 0, 0));
+                    showSeq.Join(title.DOFade(1, fadeDuration / 2));
+                }
+            }
+
             showSeq.AppendCallback(() => targetMenu.Activate());
 
-            float topY = menuElements[targetMenu].Select(canvasGroup => canvasGroup.transform.position.y).Max();
+            float baseLength = showSeq.Duration();
 
             foreach (CanvasGroup uiElement in menuElements[targetMenu])
             {
                 float delay = (topY - uiElement.transform.position.y) * delayFactor;
-                showSeq.Insert(delay, uiElement.transform.DOPunchScale(Vector3.one * pulseMagnitude, fadeDuration, 0, 0));
-                showSeq.Insert(delay, uiElement.DOFade(1, fadeDuration / 2));
+                showSeq.Insert(baseLength + delay, uiElement.transform.DOPunchScale(Vector3.one * pulseMagnitude, fadeDuration, 0, 0));
+                showSeq.Insert(baseLength + delay, uiElement.DOFade(1, fadeDuration / 2));
             }
 
             return showSeq;
