@@ -47,6 +47,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5625625129155315993}
   - component: {fileID: 6556208306273568547}
+  - component: {fileID: 7276521471023655046}
   - component: {fileID: 4596746698307859109}
   m_Layer: 5
   m_Name: Twitter
@@ -82,6 +83,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7592714660695482611}
   m_CullTransparentMesh: 0
+--- !u!114 &7276521471023655046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7592714660695482611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 936d3cfa2a404474ea3192fb21a378b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  twitterHandle: 
 --- !u!114 &4596746698307859109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,7 +116,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '@menderbug'
+  m_text: '@'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f8511f8379e4e44ec994f87ee8088299, type: 2}
   m_sharedMaterial: {fileID: -8147196130309092465, guid: f8511f8379e4e44ec994f87ee8088299,

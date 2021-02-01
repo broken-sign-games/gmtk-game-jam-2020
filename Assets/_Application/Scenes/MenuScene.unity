@@ -2017,7 +2017,12 @@ PrefabInstance:
     - target: {fileID: 4596746698307859109, guid: 85b20c2878c32af44862e8bf4f8e39a6,
         type: 3}
       propertyPath: m_text
-      value: '@DJ_McMayhem'
+      value: '@'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276521471023655046, guid: 85b20c2878c32af44862e8bf4f8e39a6,
+        type: 3}
+      propertyPath: twitterHandle
+      value: DJ_McMayhem
       objectReference: {fileID: 0}
     - target: {fileID: 8207437414597224185, guid: 85b20c2878c32af44862e8bf4f8e39a6,
         type: 3}
@@ -2503,7 +2508,12 @@ PrefabInstance:
     - target: {fileID: 4596746698307859109, guid: 85b20c2878c32af44862e8bf4f8e39a6,
         type: 3}
       propertyPath: m_text
-      value: '@pixelgrapher'
+      value: '@'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276521471023655046, guid: 85b20c2878c32af44862e8bf4f8e39a6,
+        type: 3}
+      propertyPath: twitterHandle
+      value: pixelgrapher
       objectReference: {fileID: 0}
     - target: {fileID: 8207437414597224185, guid: 85b20c2878c32af44862e8bf4f8e39a6,
         type: 3}
@@ -4115,6 +4125,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276521471023655046, guid: 85b20c2878c32af44862e8bf4f8e39a6,
+        type: 3}
+      propertyPath: twitterHandle
+      value: menderbug
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 85b20c2878c32af44862e8bf4f8e39a6, type: 3}
