@@ -34,6 +34,12 @@ namespace GMTK2020.UI
                 [creditsMenu] = creditsMenu.GetComponentsInChildren<CanvasGroup>(true),
             };
 
+            title.alpha = 0;
+
+            foreach (CanvasGroup[] uiElements in menuElements.Values)
+                foreach (CanvasGroup uiElement in uiElements)
+                    uiElement.alpha = 0;
+
             DOTween.Sequence()
                 .AppendInterval(startUpDelay)
                 .AppendCallback(GoToMainMenu);
