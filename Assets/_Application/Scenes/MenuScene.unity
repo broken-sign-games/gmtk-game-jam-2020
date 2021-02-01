@@ -2169,6 +2169,11 @@ PrefabInstance:
       propertyPath: twitterHandle
       value: DJ_McMayhem
       objectReference: {fileID: 0}
+    - target: {fileID: 7592714660695482611, guid: 85b20c2878c32af44862e8bf4f8e39a6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8207437414597224185, guid: 85b20c2878c32af44862e8bf4f8e39a6,
         type: 3}
       propertyPath: m_text
