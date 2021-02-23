@@ -10,7 +10,8 @@ namespace GMTK2020.SceneManagement
         [SerializeField] private string loadingSceneName = "";
         [SerializeField] private string splashSceneName = "";
         [SerializeField] private string menuSceneName = "";
-        [SerializeField] private string levelSceneName = "";
+        [SerializeField] private string horizontalLevelSceneName = "";
+        [SerializeField] private string verticalLevelSceneName = "";
 
         public static SceneLoader Instance { get; private set; }
 
@@ -18,6 +19,8 @@ namespace GMTK2020.SceneManagement
         private Scene baseScene;
         private Scene? activeScene;
         private bool loading = false;
+
+        private bool horizontalAspectRatio;
 
         private void Awake()
         {
@@ -32,8 +35,13 @@ namespace GMTK2020.SceneManagement
             baseScene = SceneManager.GetSceneByBuildIndex(0);
         }
 
+        private void Start()
+        {
+            horizontalAspectRatio = Screen.width >= Screen.height;
+        }
+
         public async void LoadSplashScene() => await LoadSceneAsync(splashSceneName);
-        public async void LoadLevelScene() => await LoadSceneAsync(levelSceneName);
+        public async void LoadLevelScene() => await LoadSceneAsync(horizontalAspectRatio ? horizontalLevelSceneName : verticalLevelSceneName);
         public async void LoadMenuScene() => await LoadSceneAsync(menuSceneName);
 
         private async Task LoadSceneAsync(string sceneName, GameObject parameterObject = null)

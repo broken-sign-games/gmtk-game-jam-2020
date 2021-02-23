@@ -138,10 +138,17 @@ namespace GMTK2020
             Vector3[] objectCorners = new Vector3[4];
             rectTransform.GetWorldCorners(objectCorners);
 
+            RenderMode renderMode = rectTransform.GetComponentInParent<Canvas>().renderMode;
+
             int visibleCorners = 0;
-            for (var i = 0; i < objectCorners.Length; i++) // For each corner in rectTransform
+            for (var i = 0; i < objectCorners.Length; i++)
             {
-                if (screenBounds.Contains(objectCorners[i])) // If the corner is inside the screen
+                // Transform world space position of corner to screen space
+                Vector3 screenSpaceCorner = renderMode == RenderMode.ScreenSpaceOverlay 
+                    ? objectCorners[i]
+                    : camera.WorldToScreenPoint(objectCorners[i]);
+
+                if (screenBounds.Contains(screenSpaceCorner))
                 {
                     visibleCorners++;
                 }
