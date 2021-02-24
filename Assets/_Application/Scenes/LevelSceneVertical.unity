@@ -2994,7 +2994,7 @@ PrefabInstance:
     - target: {fileID: 5568551077276271653, guid: f3a10b8f87fa85042871fab7cdc13692,
         type: 3}
       propertyPath: orthographic size
-      value: 8.75
+      value: 8.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3a10b8f87fa85042871fab7cdc13692, type: 3}
@@ -3004,6 +3004,25 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 1472024595}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1472024597 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5568551077276271648, guid: f3a10b8f87fa85042871fab7cdc13692,
+    type: 3}
+  m_PrefabInstance: {fileID: 1472024595}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1472024598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1472024597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 035c6a07370506c43b38c259efeb68a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boardSprite: {fileID: 269216731733918283}
 --- !u!1001 &1487339150
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4643,39 +4662,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 269216730889641825, guid: bc878964d2e9bec47a62a49a07b5109a,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 269216730889641825, guid: bc878964d2e9bec47a62a49a07b5109a,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 269216730889641830, guid: bc878964d2e9bec47a62a49a07b5109a,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 54d0698b091464ab3b2532eefd7e644c,
-        type: 3}
-    - target: {fileID: 269216730889641830, guid: bc878964d2e9bec47a62a49a07b5109a,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 269216730889641830, guid: bc878964d2e9bec47a62a49a07b5109a,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 269216730889641830, guid: bc878964d2e9bec47a62a49a07b5109a,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc878964d2e9bec47a62a49a07b5109a, type: 3}
+--- !u!212 &269216731733918283 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 269216730889641830, guid: bc878964d2e9bec47a62a49a07b5109a,
+    type: 3}
+  m_PrefabInstance: {fileID: 269216731733918282}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2729287367561108022
 PrefabInstance:
   m_ObjectHideFlags: 0

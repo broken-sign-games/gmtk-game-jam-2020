@@ -13,8 +13,6 @@ namespace GMTK2020.Rendering
     public class BoardRenderer : MonoBehaviour
     {
         [SerializeField] private Camera mainCamera = null;
-        [SerializeField] private SpriteRenderer border = null;
-        [SerializeField] private SpriteRenderer gridLines = null;
         [SerializeField] private TileRenderer tileRendererPrefab = null;
 
         [SerializeField] private float postMatchDelay = 0.25f;
@@ -22,8 +20,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private float postInertDelay = 0.1f;
 
         private readonly Dictionary<Guid, TileRenderer> tileDictionary = new Dictionary<Guid, TileRenderer>();
-        private Board initialBoard;
-
+        
         int width;
         int height;
 
@@ -42,14 +39,8 @@ namespace GMTK2020.Rendering
 
             tileDictionary.Clear();
 
-            initialBoard = board;
-
             width = board.Width;
             height = board.Height;
-
-            border.size = new Vector2(width + 0.375f - 0.03125f, height + 0.375f - 0.03125f);
-            gridLines.size = new Vector2(width - 0.03125f, height - 0.03125f);
-            transform.localPosition = new Vector2(-(width - 1) / 2f, -(height - 1) / 2f);
 
             for (int x = 0; x < width; ++x)
                 for (int y = 0; y < height; ++y)
