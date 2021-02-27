@@ -202,6 +202,7 @@ namespace GMTK2020
 
                 KickOffAnimation(step);
                 ActiveTool = Tool.ToggleMarked;
+                ActiveToolChanged?.Invoke(ActiveTool);
 
                 UpdateUI();
 
@@ -226,6 +227,7 @@ namespace GMTK2020
 
                 KickOffAnimation(step);
                 ActiveTool = Tool.ToggleMarked;
+                ActiveToolChanged?.Invoke(ActiveTool);
 
                 UpdateUI();
 
