@@ -286,7 +286,7 @@ Transform:
   m_GameObject: {fileID: 149534257}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4, y: 4, z: 0}
-  m_LocalScale: {x: 25, y: 11.25, z: 1}
+  m_LocalScale: {x: 15, y: 25, z: 1}
   m_Children: []
   m_Father: {fileID: 172499789}
   m_RootOrder: 0
@@ -440,7 +440,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 1472024596}
-  m_PlaneDistance: 15
+  m_PlaneDistance: 5
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -467,7 +467,6 @@ RectTransform:
   - {fileID: 1201328549}
   - {fileID: 1144954185}
   - {fileID: 567954286}
-  - {fileID: 1447083624}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1033,7 +1032,7 @@ GameObject:
   - component: {fileID: 567954286}
   - component: {fileID: 567954287}
   m_Layer: 5
-  m_Name: Crack Counter
+  m_Name: Chain Counter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1049,7 +1048,9 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1244922091}
+  - {fileID: 1956283059}
   m_Father: {fileID: 153013530}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1070,7 +1071,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87c1b760b7b286444b678302d8dd7419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crackDisplay: {fileID: 0}
+  chainSegmentRoot: {fileID: 1244922091}
+  spikeBallRoot: {fileID: 1956283059}
+  spikeBallPrefab: {fileID: 2132401296300676638, guid: 2509843f671e6024595a994e38a52661,
+    type: 3}
+  chainSegmentPrefab: {fileID: 7382676850876056932, guid: d360bda51e591594895e1951b665182d,
+    type: 3}
+  segmentWidth: 144
+  spikeBallOffset: 72
 --- !u!1 &617991657
 GameObject:
   m_ObjectHideFlags: 0
@@ -1146,7 +1154,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 1
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 1521910581
   m_SortingOrder: -1000
   m_TargetDisplay: 0
@@ -1163,6 +1171,7 @@ RectTransform:
   m_Children:
   - {fileID: 1580122565}
   - {fileID: 1770765340}
+  - {fileID: 1447083624}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1910,7 +1919,7 @@ PrefabInstance:
     - target: {fileID: 2764046791568564156, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -5.000061
+      value: -5.000122
       objectReference: {fileID: 0}
     - target: {fileID: 2764046791568564156, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
@@ -1991,6 +2000,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6997312885830762489, guid: 3c35ede1d8d8469428a413be7f1cbe16,
+        type: 3}
+      propertyPath: lowerBy
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c35ede1d8d8469428a413be7f1cbe16, type: 3}
@@ -2841,6 +2855,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1206510495}
   m_CullTransparentMesh: 0
+--- !u!1 &1244922090
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1244922091}
+  m_Layer: 5
+  m_Name: Chain Segments
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1244922091
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1244922090}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 567954286}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1277534814
 GameObject:
   m_ObjectHideFlags: 0
@@ -2921,7 +2970,7 @@ MonoBehaviour:
   runButton: {fileID: 1201328553}
   retryButton: {fileID: 1144954186}
   boardManipulator: {fileID: 1689814306}
-  crackCounter: {fileID: 567954287}
+  chainCounter: {fileID: 567954287}
   baseScore: 100
 --- !u!4 &1284230306
 Transform:
@@ -2964,13 +3013,13 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1447083623}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -190.58823}
+  m_LocalPosition: {x: 0, y: 0, z: -768.9014}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 840547883}
   - {fileID: 190189648}
-  m_Father: {fileID: 153013530}
-  m_RootOrder: 6
+  m_Father: {fileID: 617991661}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -4425,6 +4474,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0924db0c4c93d5e4e82c4029b9efcf3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1956283058
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1956283059}
+  m_Layer: 5
+  m_Name: Spike Balls
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1956283059
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1956283058}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 567954286}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &2028558046
 PrefabInstance:
   m_ObjectHideFlags: 0

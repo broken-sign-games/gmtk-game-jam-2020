@@ -45,9 +45,6 @@ TagManager:
   - name: Background
     uniqueID: 1521910581
     locked: 0
-  - name: UI
-    uniqueID: 4057161333
-    locked: 0
   - name: Board
     uniqueID: 3624534889
     locked: 0
@@ -56,6 +53,9 @@ TagManager:
     locked: 0
   - name: Predictions
     uniqueID: 3436856807
+    locked: 0
+  - name: UI
+    uniqueID: 4057161333
     locked: 0
   - name: Tutorial Mask
     uniqueID: 1710855171

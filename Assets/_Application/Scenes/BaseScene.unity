@@ -1309,8 +1309,8 @@ MonoBehaviour:
   loadingSceneName: LoadingScene
   splashSceneName: SplashScene
   menuSceneName: MenuScene
-  verticalLevelSceneName: LevelSceneVertical
   horizontalLevelSceneName: LevelSceneHorizontal
+  verticalLevelSceneName: LevelSceneVertical
 --- !u!4 &1285297247
 Transform:
   m_ObjectHideFlags: 0

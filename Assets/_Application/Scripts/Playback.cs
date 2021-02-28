@@ -19,7 +19,7 @@ namespace GMTK2020
         [SerializeField] private Button runButton = null;
         [SerializeField] private Button retryButton = null;
         [SerializeField] private BoardManipulator boardManipulator = null;
-        [SerializeField] private CrackCounter crackCounter = null;
+        [SerializeField] private ChainCounter chainCounter = null;
 
         // TODO: This is probably not the best place to put this data.
         [SerializeField] private int baseScore = 100;
@@ -40,8 +40,8 @@ namespace GMTK2020
 
             scoreKeeper = new ScoreKeeper(baseScore);
             scoreRenderer.SetScoreKeeper(scoreKeeper);
-            crackCounter.SetAvoidedCracks(0);
-            crackCounter.SetMaxCracks(simulator.CracksPerChain);
+            chainCounter.SetMaxCracks(simulator.CracksPerChain);
+            chainCounter.ResetChain();
 
             boardManipulator.LastToolUsed += OnLastToolUsed;
 
@@ -157,6 +157,7 @@ namespace GMTK2020
 
                 if (matchStep != null)
                 {
+                    chainCounter.AddChain();
                     boardManipulator.RewardMatch(matchStep);
                     if (matchStep.MatchedTiles.Count > 3)
                         await ShowMatchShapeTutorial(matchStep);
@@ -165,8 +166,6 @@ namespace GMTK2020
                 {
                     await ShowIncorrectPredictionsTutorial(cleanUpStep.InertTiles);
                 }
-
-                crackCounter.SetAvoidedCracks(simulator.ChainLength);
                 
                 await boardRenderer.AnimateSimulationStepAsync(step);
 
@@ -224,8 +223,8 @@ namespace GMTK2020
             ++turnCount;
 
             runButton.interactable = true;
-            crackCounter.SetAvoidedCracks(0);
-            crackCounter.SetMaxCracks(simulator.CracksPerChain);
+            chainCounter.SetMaxCracks(simulator.CracksPerChain);
+            chainCounter.ResetChain();
             boardManipulator.UnlockPredictions();
         }
 
