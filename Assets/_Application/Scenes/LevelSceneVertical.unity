@@ -1079,6 +1079,10 @@ MonoBehaviour:
     type: 3}
   segmentWidth: 144
   spikeBallOffset: 72
+  maxVisibleChains: 6
+  spikeBallFlySpeed: 15
+  chainSlideSpeed: 432
+  spikeBallSpawnDelay: 0.125
 --- !u!1 &617991657
 GameObject:
   m_ObjectHideFlags: 0
@@ -4731,6 +4735,16 @@ PrefabInstance:
     - target: {fileID: 269216730235352568, guid: bc878964d2e9bec47a62a49a07b5109a,
         type: 3}
       propertyPath: postFallDelay
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 269216730235352568, guid: bc878964d2e9bec47a62a49a07b5109a,
+        type: 3}
+      propertyPath: chainCounter
+      value: 
+      objectReference: {fileID: 567954287}
+    - target: {fileID: 269216730235352568, guid: bc878964d2e9bec47a62a49a07b5109a,
+        type: 3}
+      propertyPath: anticipateSpikeBallDestructionBy
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 269216730235352570, guid: bc878964d2e9bec47a62a49a07b5109a,

@@ -41,7 +41,7 @@ namespace GMTK2020
             scoreKeeper = new ScoreKeeper(baseScore);
             scoreRenderer.SetScoreKeeper(scoreKeeper);
             chainCounter.SetMaxCracks(simulator.CracksPerChain);
-            chainCounter.ResetChain();
+            chainCounter.RenderInitialChain();
 
             boardManipulator.LastToolUsed += OnLastToolUsed;
 
@@ -90,7 +90,7 @@ namespace GMTK2020
                     break;
                 }
 
-                StartNewTurn();    
+                await StartNewTurn();    
             }
         }
 
@@ -157,7 +157,6 @@ namespace GMTK2020
 
                 if (matchStep != null)
                 {
-                    chainCounter.AddChain();
                     boardManipulator.RewardMatch(matchStep);
                     if (matchStep.MatchedTiles.Count > 3)
                         await ShowMatchShapeTutorial(matchStep);
@@ -218,13 +217,15 @@ namespace GMTK2020
             await tutorialManager.ShowTutorialIfNewAsync(TutorialID.DifficultyIncrease);
         }
 
-        private void StartNewTurn()
+        private async Task StartNewTurn()
         {
             ++turnCount;
 
             runButton.interactable = true;
             chainCounter.SetMaxCracks(simulator.CracksPerChain);
-            chainCounter.ResetChain();
+
+            await boardRenderer.AnimateNewTurn();
+
             boardManipulator.UnlockPredictions();
         }
 

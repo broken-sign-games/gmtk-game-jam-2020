@@ -1,12 +1,11 @@
 ﻿using DG.Tweening;
-using GMTK2020.Audio;
 using GMTK2020.Data;
+using GMTK2020.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace GMTK2020.Rendering
 {
@@ -14,10 +13,13 @@ namespace GMTK2020.Rendering
     {
         [SerializeField] private Camera mainCamera = null;
         [SerializeField] private TileRenderer tileRendererPrefab = null;
+        [SerializeField] private ChainCounter chainCounter = null;
 
         [SerializeField] private float postMatchDelay = 0.25f;
         [SerializeField] private float postFallDelay = 0.1f;
         [SerializeField] private float postInertDelay = 0.1f;
+        [SerializeField] private float spikeBallDelay = 0.25f;
+        [SerializeField] private float anticipateSpikeBallDestructionBy = 0.25f;
 
         private readonly Dictionary<Guid, TileRenderer> tileDictionary = new Dictionary<Guid, TileRenderer>();
         
@@ -55,6 +57,12 @@ namespace GMTK2020.Rendering
                     tileDictionary[tile.ID] = tileRenderer;
                 }
         }
+
+        public async Task AnimateNewTurn()
+        {
+            await CompletionOf(chainCounter.ResetChain());
+        }
+
         public async Task AnimateSimulationStepAsync(SimulationStep step)
         {
             switch (step)
@@ -130,6 +138,8 @@ namespace GMTK2020.Rendering
         {
             Sequence seq = DOTween.Sequence();
 
+            seq.Append(chainCounter.AddChain());
+
             foreach (Tile tile in matchedTiles)
             {
                 TileRenderer tileRenderer = tileDictionary[tile.ID];
@@ -199,11 +209,33 @@ namespace GMTK2020.Rendering
         {
             Sequence seq = DOTween.Sequence();
 
+            float delay = 0f;
+
             foreach (Tile tile in crackedTiles)
             {
+                if (tile.Cracks == 1)
+                    continue;
+
                 TileRenderer tileRenderer = tileDictionary[tile.ID];
 
-                seq.Insert(0, tileRenderer.UpdateCracks());
+                seq.Insert(delay, tileRenderer.UpdateCracks());
+
+                delay += spikeBallDelay;
+            }
+
+            foreach (Tile tile in crackedTiles)
+            {
+                if (tile.Cracks > 1)
+                    continue;
+
+                TileRenderer tileRenderer = tileDictionary[tile.ID];
+
+                Tween spikeBallTween = chainCounter.SendSpikeBall(tileRenderer.transform.position);
+                seq.Insert(delay, spikeBallTween);
+
+                seq.Insert(delay + spikeBallTween.Duration() - anticipateSpikeBallDestructionBy, tileRenderer.UpdateCracks());
+
+                delay += spikeBallDelay;
             }
 
             await CompletionOf(seq);

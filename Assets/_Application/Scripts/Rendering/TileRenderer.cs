@@ -116,23 +116,30 @@ namespace GMTK2020.Rendering
 
         public Tween UpdateCracks(bool playSound = true)
         {
+            Sequence seq = DOTween.Sequence();
+
             if (playSound)
-                SoundManager.Instance.PlayEffect(SoundEffect.VialCracked);
+                seq.AppendCallback(() => SoundManager.Instance.PlayEffect(SoundEffect.VialCracked));
 
-            glassSprite.sprite = tileData.VialSpriteMap[tile.Color][tile.Cracks];
-
-            switch (tile.Cracks)
+            seq.AppendCallback(() =>
             {
-            case 1:
-                weakEvaporation.Play();
-                break;
-            case 2:
-                weakEvaporation.Stop();
-                strongEvaporation.Play();
-                break;
-            }
+                glassSprite.sprite = tileData.VialSpriteMap[tile.Color][tile.Cracks];
+                
+                switch (tile.Cracks)
+                {
+                case 1:
+                    weakEvaporation.Play();
+                    break;
+                case 2:
+                    weakEvaporation.Stop();
+                    strongEvaporation.Play();
+                    break;
+                }
+            });
 
-            return PulseVial();
+            seq.Append(PulseVial());
+
+            return seq;
         }
 
         public Tween UpdatePrediction()
