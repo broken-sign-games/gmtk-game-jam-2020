@@ -55,6 +55,7 @@ namespace GMTK2020
         private void OnDestroy()
         {
             inputs.Gameplay.Select.performed -= OnSelect;
+            inputs.Gameplay.Select.canceled -= OnRelease;
         }
 
         private void Update()
@@ -117,7 +118,7 @@ namespace GMTK2020
             gameObject.SetActive(true);
         }
 
-        private void OnSelect(InputAction.CallbackContext obj)
+        private void OnSelect(InputAction.CallbackContext ctx)
         {
             if (!initialized || predictionsFinalised)
                 return;
@@ -178,7 +179,7 @@ namespace GMTK2020
             UseSwapTool(draggingFrom, gridPos);
         }
 
-        private void OnRelease(InputAction.CallbackContext obj)
+        private void OnRelease(InputAction.CallbackContext ctx)
         {
             if (!initialized || predictionsFinalised)
                 return;
