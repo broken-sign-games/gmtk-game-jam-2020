@@ -3828,6 +3828,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 328019e21279ff7438180e70d62a79d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 1472024596}
   boardRenderer: {fileID: 2077407154}
   tutorialOverlay: {fileID: 172499790}
   toolButtons:
@@ -3864,6 +3865,8 @@ MonoBehaviour:
     - {fileID: 627272588}
   rotate3x3Button: {fileID: 1570801440}
   toolData: {fileID: 11400000, guid: 03367c26bc3432f4ca4936a0c2dd0cd0, type: 2}
+  reference00: {fileID: 251966805}
+  reference11: {fileID: 105660594}
 --- !u!4 &1689814307
 Transform:
   m_ObjectHideFlags: 0

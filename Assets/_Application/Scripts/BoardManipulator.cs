@@ -12,11 +12,14 @@ namespace GMTK2020
 {
     public class BoardManipulator : MonoBehaviour
     {
+        [SerializeField] private Camera mainCamera = null;
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private TutorialOverlay tutorialOverlay = null;
         [SerializeField] private SerializableDictionaryBase<Tool, ToolButton> toolButtons = null;
         [SerializeField] private RotationButton rotate3x3Button = null;
         [SerializeField] private ToolData toolData = null;
+        [SerializeField] private Transform reference00 = null;
+        [SerializeField] private Transform reference11 = null;
 
         public Tool ActiveTool { get; private set; }
         public event Action LastToolUsed;
@@ -31,6 +34,9 @@ namespace GMTK2020
 
         private bool isDragging = false;
         private Vector2Int draggingFrom;
+
+        private int width;
+        private int height;
 
         private void Awake()
         {
@@ -64,8 +70,11 @@ namespace GMTK2020
                 OnDrag();
         }
 
-        public void Initialize(Simulator simulator)
+        public void Initialize(Simulator simulator, Board board)
         {
+            width = board.Width;
+            height = board.Height;
+
             toolbox = new Toolbox(toolData, simulator);
 
             initialized = true;
@@ -126,8 +135,8 @@ namespace GMTK2020
             Vector2 pointerPos = inputs.Gameplay.Point.ReadValue<Vector2>();
 
             Vector2Int? gridPosOrNull = ActiveTool == Tool.Rotate2x2
-                ? boardRenderer.PixelSpaceToHalfGridCoordinates(pointerPos)
-                : boardRenderer.PixelSpaceToGridCoordinates(pointerPos);
+                ? PixelSpaceToHalfGridCoordinates(pointerPos)
+                : PixelSpaceToGridCoordinates(pointerPos);
 
             if (gridPosOrNull is null)
                 return;
@@ -150,7 +159,7 @@ namespace GMTK2020
         {
             Vector2 pointerPos = inputs.Gameplay.Point.ReadValue<Vector2>();
 
-            Vector2Int? gridPosOrNull = boardRenderer.PixelSpaceToGridCoordinates(pointerPos);
+            Vector2Int? gridPosOrNull = PixelSpaceToGridCoordinates(pointerPos);
 
             if (gridPosOrNull is null)
             {
@@ -261,6 +270,34 @@ namespace GMTK2020
                     chainLength);
                 button.UpdateActive(tool == ActiveTool);
             }
+        }
+
+        private Vector2Int? PixelSpaceToGridCoordinates(Vector3 mousePosition)
+        {
+            Vector3 worldPos = mainCamera.ScreenToWorldPoint(mousePosition);
+            Vector3 localPos = worldPos - reference00.position;
+            Vector3 referenceScale = reference11.position - reference00.position;
+
+            var gridPos = new Vector2Int(Mathf.RoundToInt(localPos.x / referenceScale.x), Mathf.RoundToInt(localPos.y / referenceScale.y));
+
+            if (gridPos.x < 0 || gridPos.y < 0 || gridPos.x >= width || gridPos.y >= height)
+                return null;
+
+            return gridPos;
+        }
+
+        public Vector2Int? PixelSpaceToHalfGridCoordinates(Vector2 mousePosition)
+        {
+            Vector3 worldPos = mainCamera.ScreenToWorldPoint(mousePosition);
+            Vector3 localPos = worldPos - reference00.position;
+            Vector3 referenceScale = reference11.position - reference00.position;
+
+            var gridPos = new Vector2Int(Mathf.RoundToInt(localPos.x / referenceScale.x - 0.5f), Mathf.RoundToInt(localPos.y / referenceScale.y - 0.5f));
+
+            if (gridPos.x < 0 || gridPos.y < 0 || gridPos.x >= width - 1 || gridPos.y >= height - 1)
+                return null;
+
+            return gridPos;
         }
     }
 }

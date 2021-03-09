@@ -11,11 +11,8 @@ namespace GMTK2020.Rendering
 {
     public class BoardRenderer : MonoBehaviour
     {
-        [SerializeField] private Camera mainCamera = null;
         [SerializeField] private TileRenderer tileRendererPrefab = null;
         [SerializeField] private ChainCounter chainCounter = null;
-        [SerializeField] private Transform reference00 = null;
-        [SerializeField] private Transform reference11 = null;
 
         [SerializeField] private float postMatchDelay = 0.25f;
         [SerializeField] private float postFallDelay = 0.1f;
@@ -333,33 +330,6 @@ namespace GMTK2020.Rendering
         public void CancelAnimation()
         {
             cancelAnimation = true;
-        }
-
-        public Vector2Int? PixelSpaceToGridCoordinates(Vector3 mousePosition)
-        {
-            Vector3 worldPos = mainCamera.ScreenToWorldPoint(mousePosition);
-            Vector3 localPos = worldPos - reference00.position;
-            Vector3 referenceScale =  reference11.position - reference00.position;
-
-            var gridPos = new Vector2Int(Mathf.RoundToInt(localPos.x / referenceScale.x), Mathf.RoundToInt(localPos.y / referenceScale.y));
-
-            if (gridPos.x < 0 || gridPos.y < 0 || gridPos.x >= width || gridPos.y >= height)
-                return null;
-
-            return gridPos;
-        }
-
-        public Vector2Int? PixelSpaceToHalfGridCoordinates(Vector2 mousePosition)
-        {
-            Vector3 worldPos = mainCamera.ScreenToWorldPoint(mousePosition);
-            Vector3 localPos = worldPos - transform.position;
-
-            var gridPos = new Vector2Int(Mathf.RoundToInt(localPos.x - 0.5f), Mathf.RoundToInt(localPos.y - 0.5f));
-
-            if (gridPos.x < 0 || gridPos.y < 0 || gridPos.x >= width - 1 || gridPos.y >= height - 1)
-                return null;
-
-            return gridPos;
         }
 
         private Tween UpdatePrediction(Tile tile)
