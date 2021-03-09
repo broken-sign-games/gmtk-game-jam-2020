@@ -14,6 +14,8 @@ namespace GMTK2020.Rendering
         [SerializeField] private Camera mainCamera = null;
         [SerializeField] private TileRenderer tileRendererPrefab = null;
         [SerializeField] private ChainCounter chainCounter = null;
+        [SerializeField] private Transform reference00 = null;
+        [SerializeField] private Transform reference11 = null;
 
         [SerializeField] private float postMatchDelay = 0.25f;
         [SerializeField] private float postFallDelay = 0.1f;
@@ -336,9 +338,10 @@ namespace GMTK2020.Rendering
         public Vector2Int? PixelSpaceToGridCoordinates(Vector3 mousePosition)
         {
             Vector3 worldPos = mainCamera.ScreenToWorldPoint(mousePosition);
-            Vector3 localPos = worldPos - transform.position;
+            Vector3 localPos = worldPos - reference00.position;
+            Vector3 referenceScale =  reference11.position - reference00.position;
 
-            var gridPos = new Vector2Int(Mathf.RoundToInt(localPos.x), Mathf.RoundToInt(localPos.y));
+            var gridPos = new Vector2Int(Mathf.RoundToInt(localPos.x / referenceScale.x), Mathf.RoundToInt(localPos.y / referenceScale.y));
 
             if (gridPos.x < 0 || gridPos.y < 0 || gridPos.x >= width || gridPos.y >= height)
                 return null;
