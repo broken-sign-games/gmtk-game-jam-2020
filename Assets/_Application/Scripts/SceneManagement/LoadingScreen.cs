@@ -6,10 +6,17 @@ using UnityEngine.UI;
 
 namespace GMTK2020.SceneManagement
 {
+    [RequireComponent(typeof(Image))]
     public class LoadingScreen : MonoBehaviour
     {
-        [SerializeField] private Image loadingBackground = null;
         [SerializeField] private float fadeDuration = 1f;
+
+        private Image loadingBackground;
+
+        private void Awake()
+        {
+            loadingBackground = GetComponent<Image>();
+        }
 
         public Task Show()
         {

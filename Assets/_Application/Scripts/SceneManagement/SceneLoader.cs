@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RotaryHeart.Lib.SerializableDictionary;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,20 +8,27 @@ namespace GMTK2020.SceneManagement
 {
     public class SceneLoader : MonoBehaviour
     {
-        [SerializeField] private string loadingSceneName = "";
-        [SerializeField] private string splashSceneName = "";
-        [SerializeField] private string menuSceneName = "";
-        [SerializeField] private string horizontalLevelSceneName = "";
-        [SerializeField] private string verticalLevelSceneName = "";
+        [SerializeField] private SerializableDictionaryBase<SceneID, SceneReference> portraitScenes = null;
+        [SerializeField] private SerializableDictionaryBase<SceneID, SceneReference> landscapeScenes = null;
+        [SerializeField] private LoadingScreen loadingScreen = null;
 
         public static SceneLoader Instance { get; private set; }
 
-        private int loadingSceneIndex;
         private Scene baseScene;
         private Scene? activeScene;
         private bool loading = false;
 
-        private bool horizontalAspectRatio;
+        private IDictionary<SceneID, SceneReference> _activeSceneMap;
+        private IDictionary<SceneID, SceneReference> ActiveSceneMap
+        {
+            get
+            {
+                if (_activeSceneMap is null)
+                    _activeSceneMap = Screen.width >= Screen.height ? landscapeScenes : portraitScenes;
+
+                return _activeSceneMap;
+            }
+        }
 
         private void Awake()
         {
@@ -31,25 +39,13 @@ namespace GMTK2020.SceneManagement
             }
 
             Instance = this;
-            loadingSceneIndex = SceneUtility.GetBuildIndexByScenePath(loadingSceneName);
             baseScene = SceneManager.GetSceneByBuildIndex(0);
         }
 
-        private void Start()
-        {
-            horizontalAspectRatio = Screen.width >= Screen.height;
-        }
+        public async void LoadScene(SceneID sceneID) 
+            => await LoadSceneAsync(sceneID);
 
-        public async void LoadSplashScene() => await LoadSceneAsync(splashSceneName);
-        public async void LoadLevelScene() => await LoadSceneAsync(horizontalAspectRatio ? horizontalLevelSceneName : verticalLevelSceneName);
-        public async void LoadMenuScene() => await LoadSceneAsync(menuSceneName);
-
-        private async Task LoadSceneAsync(string sceneName, GameObject parameterObject = null)
-        {
-            await LoadSceneAsync(SceneUtility.GetBuildIndexByScenePath(sceneName), parameterObject);
-        }
-
-        private async Task LoadSceneAsync(int sceneBuildIndex, GameObject parameterObject = null)
+        private async Task LoadSceneAsync(SceneID sceneID, GameObject parameterObject = null)
         {
             if (loading)
             {
@@ -59,25 +55,21 @@ namespace GMTK2020.SceneManagement
 
             loading = true;
 
-            await SceneManager.LoadSceneAsync(loadingSceneIndex, LoadSceneMode.Additive);
+            SceneReference targetScene = ActiveSceneMap[sceneID];
 
-            LoadingScreen loadingScene = FindObjectOfType<LoadingScreen>();
-            await loadingScene.Show();
+            await loadingScreen.Show();
 
             if (parameterObject)
                 SceneManager.MoveGameObjectToScene(parameterObject, baseScene);
 
             await UnloadPreviousScene();
-
-            await LoadNewScene(sceneBuildIndex);
+            await LoadNewScene(targetScene);
 
             await Awaiters.NextFrame;
 
-            await loadingScene.Dismiss();
-
-            await SceneManager.UnloadSceneAsync(loadingScene.gameObject.scene);
-
             loading = false;
+
+            await loadingScreen.Dismiss();
         }
 
         private async Task UnloadPreviousScene()
@@ -88,11 +80,11 @@ namespace GMTK2020.SceneManagement
             await SceneManager.UnloadSceneAsync(activeScene.Value);
         }
 
-        private async Task LoadNewScene(int sceneBuildIndex)
+        private async Task LoadNewScene(SceneReference scene)
         {
-            await SceneManager.LoadSceneAsync(sceneBuildIndex, LoadSceneMode.Additive);
+            await SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
 
-            activeScene = SceneManager.GetSceneByBuildIndex(sceneBuildIndex);
+            activeScene = SceneManager.GetSceneByPath(scene);
             SceneManager.SetActiveScene(activeScene.Value);
         }
     }

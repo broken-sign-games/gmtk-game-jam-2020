@@ -15,10 +15,10 @@ EditorBuildSettings:
     path: Assets/_Application/Scenes/SplashScene.unity
     guid: 257b3e130b3409e4db0d1a11b127e9ec
   - enabled: 1
-    path: Assets/_Application/Scenes/LevelSceneHorizontal.unity
+    path: Assets/_Application/Scenes/LevelSceneLandscape.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/_Application/Scenes/LevelSceneVertical.unity
+    path: Assets/_Application/Scenes/LevelScenePortrait.unity
     guid: 235501c2b822c404ba32ce3e91748979
   - enabled: 1
     path: Assets/_Application/Scenes/MenuScene.unity

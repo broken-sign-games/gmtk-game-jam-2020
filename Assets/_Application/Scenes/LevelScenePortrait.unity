@@ -3160,7 +3160,8 @@ PrefabInstance:
       propertyPath: orthographic size
       value: 8.3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5568551077276271654, guid: f3a10b8f87fa85042871fab7cdc13692, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f3a10b8f87fa85042871fab7cdc13692, type: 3}
 --- !u!20 &1472024596 stripped
 Camera:
@@ -4481,7 +4482,8 @@ PrefabInstance:
       propertyPath: m_CullingMask.m_Bits
       value: 512
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5568551077276271654, guid: f3a10b8f87fa85042871fab7cdc13692, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f3a10b8f87fa85042871fab7cdc13692, type: 3}
 --- !u!114 &2077407154 stripped
 MonoBehaviour:

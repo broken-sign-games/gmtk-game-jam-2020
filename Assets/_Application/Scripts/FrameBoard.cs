@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GMTK2020
 {
     [RequireComponent(typeof(Camera))]
     public class FrameBoard : MonoBehaviour
     {
-        [SerializeField] private SpriteRenderer boardSprite;
+        [SerializeField] private SpriteRenderer boardSprite = null;
 
         private void Start()
         {

@@ -43,7 +43,7 @@ namespace GMTK2020.UI
         public void GoToMainMenu()
         {
             SoundManager.Instance.PlayEffect(SoundEffect.Click);
-            SceneLoader.Instance.LoadMenuScene();
+            SceneLoader.Instance.LoadScene(SceneID.Menu);
         }
     } 
 }

@@ -8,7 +8,7 @@ namespace GMTK2020.SceneManagement
         public void RestartLevel()
         {
             SoundManager.Instance.PlayEffect(SoundEffect.Click);
-            SceneLoader.Instance.LoadLevelScene();
+            SceneLoader.Instance.LoadScene(SceneID.Level);
         }
     }
 }
