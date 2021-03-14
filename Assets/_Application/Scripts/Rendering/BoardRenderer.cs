@@ -59,7 +59,7 @@ namespace GMTK2020.Rendering
 
         public async Task AnimateNewTurn()
         {
-            await CompletionOf(chainCounter.ResetChain());
+            await chainCounter.ResetChain().Completion();
         }
 
         public async Task AnimateSimulationStepAsync(SimulationStep step)
@@ -112,7 +112,7 @@ namespace GMTK2020.Rendering
             foreach (Tile tile in predictionStep.AffectedTiles)
                 seq.Join(UpdatePrediction(tile));
 
-            await CompletionOf(seq);
+            await seq.Completion();
         }
 
         private async Task AnimateRefillStepAsync(RefillStep refillStep)
@@ -121,7 +121,7 @@ namespace GMTK2020.Rendering
             foreach (Tile tile in refillStep.AffectedTiles)
                 seq.Join(RefillTile(tile));
 
-            await CompletionOf(seq);
+            await seq.Completion();
         }
 
         private async Task AnimateWildcardStepAsync(WildcardStep wildcardStep)
@@ -130,7 +130,7 @@ namespace GMTK2020.Rendering
             foreach (Tile tile in wildcardStep.AffectedTiles)
                 seq.Join(MakeWildcard(tile));
 
-            await CompletionOf(seq);
+            await seq.Completion();
         }
 
         private async Task AnimateMatchedTilesAsync(HashSet<Tile> matchedTiles)
@@ -148,7 +148,7 @@ namespace GMTK2020.Rendering
                 tileDictionary.Remove(tile.ID);
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postMatchDelay);
         }
@@ -165,7 +165,7 @@ namespace GMTK2020.Rendering
                 seq.Insert(0, tileRenderer.FallToCurrentPosition(movedTile.From));
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postFallDelay);
         }
@@ -183,7 +183,7 @@ namespace GMTK2020.Rendering
                 tileDictionary.Remove(tile.ID);
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postMatchDelay);
         }
@@ -199,7 +199,7 @@ namespace GMTK2020.Rendering
                 seq.Insert(0, tileRenderer.TransitionToInert());
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postInertDelay);
         }
@@ -237,7 +237,7 @@ namespace GMTK2020.Rendering
                 delay += spikeBallDelay;
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postInertDelay);
         }
@@ -256,7 +256,7 @@ namespace GMTK2020.Rendering
                 seq.Insert(0, tileRenderer.FallToCurrentPosition(movedTile.From));
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postFallDelay);
         }
@@ -283,7 +283,7 @@ namespace GMTK2020.Rendering
                 seq.Insert(0, tileRenderer.FallToCurrentPosition(movedTile.From));
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postFallDelay);
         }
@@ -300,7 +300,7 @@ namespace GMTK2020.Rendering
                 seq.Insert(0, tileRenderer.MoveToCurrentPosition(movedTile.From));
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postFallDelay);
         }
@@ -317,14 +317,9 @@ namespace GMTK2020.Rendering
                 seq.Insert(0, tileRenderer.RotateToCurrentPosition(movedTile.From, pivot, rotSense));
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postFallDelay);
-        }
-
-        System.Collections.IEnumerator CompletionOf(Tween tween)
-        {
-            yield return tween.WaitForCompletion();
         }
 
         public void CancelAnimation()

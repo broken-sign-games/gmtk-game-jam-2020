@@ -1,6 +1,7 @@
 ﻿using GMTK2020.Audio;
 using GMTK2020.Data;
 using GMTK2020.TutorialSystem;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace GMTK2020.UI
@@ -33,15 +34,19 @@ namespace GMTK2020.UI
             playback.StartReaction();
         }
 
-        private void OnTutorialReady(Tutorial tutorial)
+        private Task OnTutorialReady(Tutorial tutorial)
         {
             if (tutorial.PlaybackButtonAvailable)
                 transform.SetParent(unmaskableCanvas.transform);
+
+            return Task.CompletedTask;
         }
 
-        private void OnTutorialCompleted(Tutorial tutorial)
+        private Task OnTutorialCompleted(Tutorial tutorial)
         {
             transform.SetParent(maskableCanvas.transform);
+
+            return Task.CompletedTask;
         }
     } 
 }

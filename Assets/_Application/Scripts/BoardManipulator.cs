@@ -14,7 +14,7 @@ namespace GMTK2020
     {
         [SerializeField] private Camera mainCamera = null;
         [SerializeField] private BoardRenderer boardRenderer = null;
-        [SerializeField] private TutorialOverlay tutorialOverlay = null;
+        [SerializeField] private TutorialGridMaskManager tutorialOverlay = null;
         [SerializeField] private SerializableDictionaryBase<Tool, ToolButton> toolButtons = null;
         [SerializeField] private RotationButton rotate3x3Button = null;
         [SerializeField] private ToolData toolData = null;

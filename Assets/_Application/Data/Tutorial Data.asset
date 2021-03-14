@@ -35,7 +35,7 @@ MonoBehaviour:
     PlaybackButtonAvailable: 0
     InteractableRects: []
   - ID: 12
-    Message: After each reaction, you can manipulate the board <b>once</b> to set
+    Message: After each reaction, you can manipulate the board <u>once</u> to set
       up further matches. Select the swap tool.
     ShowDismissButton: 0
     InteractableTools: 0b000000

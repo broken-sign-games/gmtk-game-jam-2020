@@ -16,7 +16,7 @@ namespace GMTK2020.TutorialSystem
 
         public static TutorialManager Instance { get; private set; }
 
-        public delegate void TutorialHandler(Tutorial tutorial);
+        public delegate Task TutorialHandler(Tutorial tutorial);
         public event TutorialHandler TutorialReady;
         public event TutorialHandler TutorialCompleted;
 
@@ -72,7 +72,7 @@ namespace GMTK2020.TutorialSystem
             return ShowTutorialAsync(tutorial);
         }
 
-        public void CompleteActiveTutorial()
+        public async void CompleteActiveTutorial()
         {
             if (activeTutorial is null)
                 return;
@@ -80,8 +80,8 @@ namespace GMTK2020.TutorialSystem
             string prefsKey = TutorialIDToPrefsKey(activeTutorial.ID);
             PlayerPrefs.SetInt(prefsKey, 1);
             Tutorial completedTutorial = activeTutorial;
+            await InvokeTutorialHandlersAsync(TutorialCompleted, completedTutorial);
             activeTutorial = null;
-            TutorialCompleted(completedTutorial);
             activeTutorialTCS.TrySetResult(null);
         }
 
@@ -96,6 +96,19 @@ namespace GMTK2020.TutorialSystem
             TutorialReady?.Invoke(tutorial);
 
             return activeTutorialTCS.Task;
+        }
+
+        private async Task InvokeTutorialHandlersAsync(TutorialHandler handlers, Tutorial tutorial)
+        {
+            if (handlers == null)
+                return;
+
+            IEnumerable<Task> tasks = handlers
+                .GetInvocationList()
+                .Cast<TutorialHandler>()
+                .Select(handler => handler(tutorial));
+
+            await Task.WhenAll(tasks);
         }
 
         private bool TutorialWasAlreadyShown(TutorialID id)

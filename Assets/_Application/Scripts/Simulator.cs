@@ -3,6 +3,7 @@ using GMTK2020.TutorialSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using Random = System.Random;
 
@@ -93,15 +94,17 @@ namespace GMTK2020
             return new CleanUpStep(newTiles, inertTiles, crackedTiles);
         }
 
-        private void OnTutorialReady(Tutorial tutorial)
+        private Task OnTutorialReady(Tutorial tutorial)
         {
             int rectCount = tutorial.InteractableRects?.Count ?? 0;
 
             if (rectCount == 0)
-                return;
+                return Task.CompletedTask;
 
             if (tutorial.InteractableTools.Count == 0)
                 RegisterTilesToOpenForTutorial(tutorial.InteractableRects);
+
+            return Task.CompletedTask;
         }
 
         private void RegisterTilesToOpenForTutorial(List<GridRect> interactableRects)

@@ -166,4 +166,12 @@ namespace GMTK2020
             return CountCornersVisibleFrom(rectTransform, camera) > 0; // True if any corners are visible
         }
     }
+
+    public static class DOTweenExtensionMethods
+    {
+        public static System.Collections.IEnumerator Completion(this Tween tween)
+        {
+            yield return tween.WaitForCompletion();
+        }
+    }
 }
