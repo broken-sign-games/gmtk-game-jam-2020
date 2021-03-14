@@ -5,6 +5,5 @@
         Splash,
         Menu,
         Level,
-        Loading,
     }
 }

@@ -1538,8 +1538,8 @@ MonoBehaviour:
       elementIcon: {fileID: 0}
     reqReferences: {fileID: 0}
     isExpanded: 1
-    _keyValues: 00000000010000000200000003000000
-    _keys: 00000000010000000200000003000000
+    _keyValues: 000000000100000002000000
+    _keys: 000000000100000002000000
     _values:
     - sceneAsset: {fileID: 102900000, guid: 257b3e130b3409e4db0d1a11b127e9ec, type: 3}
       scenePath: Assets/_Application/Scenes/SplashScene.unity
@@ -1547,8 +1547,6 @@ MonoBehaviour:
       scenePath: Assets/_Application/Scenes/MenuScene.unity
     - sceneAsset: {fileID: 102900000, guid: 235501c2b822c404ba32ce3e91748979, type: 3}
       scenePath: Assets/_Application/Scenes/LevelScenePortrait.unity
-    - sceneAsset: {fileID: 102900000, guid: 0a21965b44d1a164b9312b4c4e4f31c5, type: 3}
-      scenePath: Assets/_Application/Scenes/LoadingScene.unity
   landscapeScenes:
     reorderableList:
       canAdd: 1
@@ -1572,8 +1570,8 @@ MonoBehaviour:
       elementIcon: {fileID: 0}
     reqReferences: {fileID: 0}
     isExpanded: 1
-    _keyValues: 00000000010000000200000003000000
-    _keys: 00000000010000000200000003000000
+    _keyValues: 000000000100000002000000
+    _keys: 000000000100000002000000
     _values:
     - sceneAsset: {fileID: 102900000, guid: 257b3e130b3409e4db0d1a11b127e9ec, type: 3}
       scenePath: Assets/_Application/Scenes/SplashScene.unity
@@ -1581,8 +1579,6 @@ MonoBehaviour:
       scenePath: Assets/_Application/Scenes/MenuScene.unity
     - sceneAsset: {fileID: 102900000, guid: 9fc0d4010bbf28b4594072e72b8655ab, type: 3}
       scenePath: Assets/_Application/Scenes/LevelSceneLandscape.unity
-    - sceneAsset: {fileID: 102900000, guid: 0a21965b44d1a164b9312b4c4e4f31c5, type: 3}
-      scenePath: Assets/_Application/Scenes/LoadingScene.unity
   loadingScreen: {fileID: 157738538}
 --- !u!4 &1285297247
 Transform:
