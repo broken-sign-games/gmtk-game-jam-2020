@@ -543,6 +543,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boardManipulator: {fileID: 0}
   availableUsesText: {fileID: 7410386414071070777}
+  mask: {fileID: 4454462421477941404}
+  raycastBlocker: {fileID: 0}
   tool: 1
   availableUsesDefaultFontSize: 45
   availableUsesUnlimitedFontSize: 60

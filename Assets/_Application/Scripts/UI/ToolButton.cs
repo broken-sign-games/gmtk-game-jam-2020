@@ -1,6 +1,8 @@
 ﻿using DG.Tweening;
 using GMTK2020.Audio;
 using GMTK2020.Data;
+using GMTK2020.TutorialSystem;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +16,7 @@ namespace GMTK2020.UI
     {
         [SerializeField] private BoardManipulator boardManipulator = null;
         [SerializeField] private TextMeshProUGUI availableUsesText = null;
+        [SerializeField] private Image mask = null;
         [SerializeField] private Tool tool = Tool.SwapTiles;
         [SerializeField] private int availableUsesDefaultFontSize = 45;
         [SerializeField] private int availableUsesUnlimitedFontSize = 60;
@@ -32,6 +35,9 @@ namespace GMTK2020.UI
         private Image buttonImage;
 
         private float initialYPos;
+        private TutorialManager tutorialManager;
+
+        private bool available;
 
         private void Awake()
         {
@@ -41,6 +47,16 @@ namespace GMTK2020.UI
             availableUsesText.text = "0";
 
             initialYPos = rectTransform.anchoredPosition.y;
+
+            tutorialManager = TutorialManager.Instance;
+            tutorialManager.TutorialReady += OnTutorialReady;
+            tutorialManager.TutorialCompleted += OnTutorialCompleted;
+        }
+
+        private void OnDestroy()
+        {
+            tutorialManager.TutorialReady -= OnTutorialReady;
+            tutorialManager.TutorialCompleted -= OnTutorialCompleted;
         }
 
         public virtual void OnClick()
@@ -68,6 +84,7 @@ namespace GMTK2020.UI
 
         public void UpdateAvailable(bool available)
         {
+            this.available = available;
             button.interactable = available;
         }
 
@@ -90,6 +107,24 @@ namespace GMTK2020.UI
             }
 
             buttonImage.sprite = active ? activeSprite : defaultSprite;
+        }
+
+        private Task OnTutorialReady(Tutorial tutorial)
+        {
+            if (tutorial.InteractableTools.Contains(Tool))
+                mask.enabled = true;
+            else
+                button.interactable = false;
+
+            return Task.CompletedTask;
+        }
+
+        private Task OnTutorialCompleted(Tutorial tutorial)
+        {
+            mask.enabled = false;
+            button.interactable = available;
+
+            return Task.CompletedTask;
         }
     } 
 }

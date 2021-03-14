@@ -3,19 +3,23 @@ using GMTK2020.Data;
 using GMTK2020.TutorialSystem;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GMTK2020.UI
 {
+    [RequireComponent(typeof(Button))]
     public class PlaybackButton : MonoBehaviour
     {
         [SerializeField] private Playback playback = null;
-        [SerializeField] private Canvas maskableCanvas = null;
-        [SerializeField] private Canvas unmaskableCanvas = null;
+        [SerializeField] private Image mask = null;
 
         private TutorialManager tutorialManager;
+        private Button button;
 
         private void Awake()
         {
+            button = GetComponent<Button>();
+
             tutorialManager = TutorialManager.Instance;
             tutorialManager.TutorialReady += OnTutorialReady;
             tutorialManager.TutorialCompleted += OnTutorialCompleted;
@@ -37,14 +41,17 @@ namespace GMTK2020.UI
         private Task OnTutorialReady(Tutorial tutorial)
         {
             if (tutorial.PlaybackButtonAvailable)
-                transform.SetParent(unmaskableCanvas.transform);
+                mask.enabled = true;
+            else
+                button.enabled = false;
 
             return Task.CompletedTask;
         }
 
         private Task OnTutorialCompleted(Tutorial tutorial)
         {
-            transform.SetParent(maskableCanvas.transform);
+            mask.enabled = false;
+            button.enabled = true;
 
             return Task.CompletedTask;
         }

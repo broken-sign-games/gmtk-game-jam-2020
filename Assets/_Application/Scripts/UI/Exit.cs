@@ -1,5 +1,6 @@
 ﻿using GMTK2020.Audio;
 using GMTK2020.SceneManagement;
+using GMTK2020.TutorialSystem;
 using UnityEngine;
 
 namespace GMTK2020.UI
@@ -19,6 +20,7 @@ namespace GMTK2020.UI
 
         public void GoToMainMenu()
         {
+            TutorialManager.Instance.CompleteActiveTutorial();
             SoundManager.Instance.PlayEffect(SoundEffect.Click);
             SceneLoader.Instance.LoadScene(SceneID.Menu);
         }

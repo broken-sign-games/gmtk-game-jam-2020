@@ -1,7 +1,10 @@
 ﻿using GMTK2020.Data;
 using GMTK2020.Input;
+using GMTK2020.TutorialSystem;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -26,6 +29,8 @@ namespace GMTK2020.UI
 
         private RectTransform rectTransform;
 
+        private TutorialManager tutorialManager;
+
         private void Awake()
         {
             rectTransform = GetComponent<RectTransform>();
@@ -49,6 +54,9 @@ namespace GMTK2020.UI
 
             inputs.Gameplay.Select.performed += OnSelect;
             inputs.Gameplay.Select.canceled += OnRelease;
+
+            tutorialManager = TutorialManager.Instance;
+            tutorialManager.TutorialReady += OnTutorialReady;
         }
 
         private void Start()
@@ -71,6 +79,8 @@ namespace GMTK2020.UI
         {
             inputs.Gameplay.Select.performed -= OnSelect;
             inputs.Gameplay.Select.canceled -= OnRelease;
+
+            tutorialManager.TutorialReady -= OnTutorialReady;
         }
 
         private void Update()
@@ -86,10 +96,10 @@ namespace GMTK2020.UI
             float newXPos = Mathf.Clamp(rectTransform.anchoredPosition.x + speed * Time.deltaTime, minXPos, 0);
             rectTransform.anchoredPosition = new Vector2(newXPos, rectTransform.anchoredPosition.y);
 
-            if (Mathf.Abs(speed) - deceleration < 0)
+            if (Mathf.Abs(speed) - deceleration * Time.deltaTime < 0)
                 speed = 0;
             else
-                speed -= Mathf.Sign(speed) * deceleration;
+                speed -= Mathf.Sign(speed) * deceleration * Time.deltaTime;
         }
 
         private void OnSelect(InputAction.CallbackContext ctx)
@@ -128,6 +138,23 @@ namespace GMTK2020.UI
             return corners
                 .Select(corner => (Vector2)corner)
                 .ToArray();
+        }
+
+        private Task OnTutorialReady(Tutorial tutorial)
+        {
+            if (tutorial.InteractableTools.Count == 0)
+                return Task.CompletedTask;
+
+            isDragging = false;
+
+            Tool targetTool = tutorial.InteractableTools[0];
+
+            float targetXPos = toolToIndex[targetTool] / (toolToIndex.Count - 1f) * minXPos;
+            float deltaXPos = targetXPos - rectTransform.anchoredPosition.x;
+
+            speed = Mathf.Sign(deltaXPos) * Mathf.Sqrt(2 * deceleration * Mathf.Abs(deltaXPos));
+
+            return Task.CompletedTask;
         }
     } 
 }

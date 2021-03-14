@@ -2758,8 +2758,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playback: {fileID: 1284230305}
-  maskableCanvas: {fileID: 153013529}
-  unmaskableCanvas: {fileID: 1494876634}
+  mask: {fileID: 1201328554}
 --- !u!114 &1201328552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2782,6 +2781,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f6f61b261c9ced64c939fe30ff387b1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1201328554 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4637632548970243562, guid: 3c35ede1d8d8469428a413be7f1cbe16,
+    type: 3}
+  m_PrefabInstance: {fileID: 1201328548}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1206510495
@@ -2914,7 +2925,7 @@ MonoBehaviour:
     type: 3}
   tutorialOverlay: {fileID: 697972098}
   overlayAlpha: 0.5
-  fadeDuration: 0.5
+  fadeDuration: 0.25
 --- !u!1 &1244922090
 GameObject:
   m_ObjectHideFlags: 0
@@ -3362,7 +3373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 178efffd2f809f8439ae783946b672f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deceleration: 30
+  deceleration: 500
   mainCamera: {fileID: 1472024596}
 --- !u!1 &1562234902
 GameObject:
@@ -3483,6 +3494,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5803336014859265969, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6788153931923824973, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
@@ -3673,6 +3689,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boardManipulator: {fileID: 1689814306}
   availableUsesText: {fileID: 1570801441}
+  mask: {fileID: 1570801443}
   tool: 9
   availableUsesDefaultFontSize: 45
   availableUsesUnlimitedFontSize: 60
@@ -3704,6 +3721,18 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1570801443 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4454462421477941404, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1570801437}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
