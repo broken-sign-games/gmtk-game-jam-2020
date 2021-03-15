@@ -13,6 +13,8 @@ namespace GMTK2020.Rendering
     {
         [SerializeField] private TileRenderer tileRendererPrefab = null;
         [SerializeField] private ChainCounter chainCounter = null;
+        [SerializeField] private Transform reference00 = null;
+        [SerializeField] private Transform reference11 = null;
 
         [SerializeField] private float postMatchDelay = 0.25f;
         [SerializeField] private float postFallDelay = 0.1f;
@@ -229,7 +231,10 @@ namespace GMTK2020.Rendering
 
                 TileRenderer tileRenderer = tileDictionary[tile.ID];
 
-                Tween spikeBallTween = chainCounter.SendSpikeBall(tileRenderer.transform.position);
+                Vector3 referenceScale = reference11.position - reference00.position;
+                Vector3 targetPos = reference00.position + new Vector3(tile.Position.x * referenceScale.x, tile.Position.y * referenceScale.y);
+
+                Tween spikeBallTween = chainCounter.SendSpikeBall(targetPos);
                 seq.Insert(delay, spikeBallTween);
 
                 seq.Insert(delay + spikeBallTween.Duration() - anticipateSpikeBallDestructionBy, tileRenderer.UpdateCracks());

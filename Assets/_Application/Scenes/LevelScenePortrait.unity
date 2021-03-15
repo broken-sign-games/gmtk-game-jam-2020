@@ -998,7 +998,7 @@ MonoBehaviour:
   segmentWidth: 144
   spikeBallOffset: 72
   maxVisibleChains: 6
-  spikeBallFlySpeed: 15
+  spikeBallFlySpeed: 12
   chainSlideSpeed: 432
   spikeBallSpawnDelay: 0.125
 --- !u!1 &617991657
