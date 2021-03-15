@@ -141,8 +141,6 @@ namespace GMTK2020
 
         private async Task PlayBackReactionAsync()
         {
-            runButton.interactable = false;
-            
             while (true)
             {
                 SimulationStep step = simulator.SimulateNextStep();

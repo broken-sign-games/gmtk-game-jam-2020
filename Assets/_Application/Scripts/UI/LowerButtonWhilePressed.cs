@@ -4,7 +4,7 @@ using UnityEngine.UI;
 namespace GMTK2020.UI
 {
     [RequireComponent(typeof(BetterButton))]
-    public class LowerButtonLabelWhilePressed : MonoBehaviour
+    public class LowerButtonWhilePressed : MonoBehaviour
     {
         [SerializeField] private Graphic buttonLabel = null;
         [SerializeField] private float lowerBy = 5f;
@@ -14,15 +14,18 @@ namespace GMTK2020.UI
         private Vector2 defaultPosition;
         private BetterButton button;
 
+        private RectTransform rectTransform;
+
         private void Start()
         {
+            rectTransform = GetComponent<RectTransform>();
             button = GetComponent<BetterButton>();
-            defaultPosition = buttonLabel.rectTransform.anchoredPosition;
+            defaultPosition = rectTransform.anchoredPosition;
         }
 
         private void Update()
         {
-            buttonLabel.rectTransform.anchoredPosition = button.IsPressed || !button.interactable
+            rectTransform.anchoredPosition = button.IsPressed
                 ? defaultPosition - new Vector2(0, lowerBy)
                 : defaultPosition;
 

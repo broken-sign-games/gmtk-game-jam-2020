@@ -33,6 +33,7 @@ namespace GMTK2020.UI
 
         public void OnClick()
         {
+            button.interactable = false;
             SoundManager.Instance.PlayEffect(SoundEffect.Click);
             tutorialManager.CompleteActiveTutorial();
             playback.StartReaction();
