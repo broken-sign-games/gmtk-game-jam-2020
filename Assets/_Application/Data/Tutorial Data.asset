@@ -28,8 +28,8 @@ MonoBehaviour:
     PlaybackButtonAvailable: 1
     InteractableRects: []
   - ID: 2
-    Message: After a reaction, some vials may crack. If you don't match them within
-      two turns, their contents will evaporate.
+    Message: After a reaction, spike balls may crack some vials. Match them within
+      two turns, or their contents will evaporate!
     ShowDismissButton: 1
     InteractableTools: 
     PlaybackButtonAvailable: 0
@@ -50,9 +50,8 @@ MonoBehaviour:
     - _bottomLeft: {x: 3, y: 0}
       _topRight: {x: 3, y: 1}
   - ID: 4
-    Message: You can already open vials that will form a match after earlier matches
-      resolve and predict chain reactions. This reduces the number of vials that
-      will crack and nets you more points.
+    Message: You can also open vials to predict chain reactions. This neutralises
+      spike balls and nets you more points!
     ShowDismissButton: 0
     InteractableTools: 
     PlaybackButtonAvailable: 0
@@ -123,7 +122,7 @@ MonoBehaviour:
       _topRight: {x: 6, y: 4}
   - ID: 11
     Message: Every 5 turns, the difficulty increases. Either by increasing the number
-      of cracking vials per turn, or by adding a new vial colour to the mix.
+      of spike balls or by adding a new vial colour to the mix.
     ShowDismissButton: 1
     InteractableTools: 
     PlaybackButtonAvailable: 0
