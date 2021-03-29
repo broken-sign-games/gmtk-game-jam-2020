@@ -1,6 +1,10 @@
 ﻿using DG.Tweening;
+using GMTK2020.Data;
+using GMTK2020.TutorialSystem;
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GMTK2020.UI
 {
@@ -22,6 +26,22 @@ namespace GMTK2020.UI
         private int nextSpikeBall;
 
         private ChainSegment lastSegment;
+
+        private TutorialManager tutorialManager;
+
+        private void Start()
+        {
+            tutorialManager = TutorialManager.Instance;
+
+            tutorialManager.TutorialReady += OnTutorialReady;
+            tutorialManager.TutorialCompleted += OnTutorialCompleted;
+        }
+
+        private void OnDestroy()
+        {
+            tutorialManager.TutorialReady -= OnTutorialReady;
+            tutorialManager.TutorialCompleted -= OnTutorialCompleted;
+        }
 
         public void SetMaxCracks(int maxCracks)
         {
@@ -123,5 +143,27 @@ namespace GMTK2020.UI
 
             return seq;
         }
-    } 
+
+        private Task OnTutorialReady(Tutorial tutorial)
+        {
+            if (!tutorial.HighlightSpikeBalls)
+                return Task.CompletedTask;
+
+            foreach (var spikeBall in spikeBallRoot.GetComponentsInChildren<SpikeBall>())
+                spikeBall.EnableMask();
+
+            return Task.CompletedTask;
+        }
+
+        private Task OnTutorialCompleted(Tutorial tutorial)
+        {
+            if (!tutorial.HighlightSpikeBalls)
+                return Task.CompletedTask;
+
+            foreach (var spikeBall in spikeBallRoot.GetComponentsInChildren<SpikeBall>())
+                spikeBall.DisableMask();
+
+            return Task.CompletedTask;
+        }
+    }
 }

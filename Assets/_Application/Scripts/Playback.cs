@@ -71,6 +71,9 @@ namespace GMTK2020
             {
                 reactionStarted = false;
 
+                if (simulator.DifficultyLevel > 0)
+                    await ShowDifficultyTutorialAsync();
+
                 await ShowInteractiveTutorialsAsync();
 
                 await Awaiters.Until(() => reactionStarted || gameEnded);
@@ -157,30 +160,25 @@ namespace GMTK2020
                 {
                     boardManipulator.RewardMatch(matchStep);
                     if (matchStep.MatchedTiles.Count > 3)
-                        await ShowMatchShapeTutorial(matchStep);
+                        await ShowMatchShapeTutorialAsync(matchStep);
                 }
-                else if (cleanUpStep != null && cleanUpStep.InertTiles.Count(tile => tile.Marked) > 0)
+                else if (cleanUpStep != null)
                 {
-                    await ShowIncorrectPredictionsTutorial(cleanUpStep.InertTiles);
+                    if (cleanUpStep.InertTiles.Count(tile => tile.Marked) > 0)
+                        await ShowIncorrectPredictionsTutorialAsync(cleanUpStep.InertTiles);
+
+                    if (cleanUpStep.CrackedTiles.Count > 0)
+                        await ShowCrackedVialsTutorialAsync(cleanUpStep.CrackedTiles);
                 }
                 
                 await boardRenderer.AnimateSimulationStepAsync(step);
-
-                if (cleanUpStep != null)
-                {
-                    if (cleanUpStep.CrackedTiles.Count > 0)
-                        await ShowCrackedVialsTutorial(cleanUpStep.CrackedTiles);
-
-                    if (simulator.DifficultyLevel > 0)
-                        await ShowDifficultyTutorial();
-                }
 
                 if (step.FinalStep)
                     break;
             }
         }
 
-        private async Task ShowMatchShapeTutorial(MatchStep matchStep)
+        private async Task ShowMatchShapeTutorialAsync(MatchStep matchStep)
         {
             var matchedRects = matchStep.LeftEndsOfHorizontalMatches
                 .Select(pos => new GridRect(pos, pos + new Vector2Int(2, 0)))
@@ -191,7 +189,7 @@ namespace GMTK2020
             await tutorialManager.ShowTutorialIfNewAsync(TutorialID.MatchShapes, matchedRects);
         }
 
-        private async Task ShowIncorrectPredictionsTutorial(HashSet<Tile> inertTiles)
+        private async Task ShowIncorrectPredictionsTutorialAsync(HashSet<Tile> inertTiles)
         {
             var inertRects = inertTiles
                 .Where(tile => tile.Marked)
@@ -201,7 +199,7 @@ namespace GMTK2020
             await tutorialManager.ShowTutorialIfNewAsync(TutorialID.IncorrectPredictions, inertRects);
         }
 
-        private async Task ShowCrackedVialsTutorial(HashSet<Tile> crackedTiles)
+        private async Task ShowCrackedVialsTutorialAsync(HashSet<Tile> crackedTiles)
         {
             var crackedRects = crackedTiles
                 .Select(tile => new GridRect(tile.Position))
@@ -210,7 +208,7 @@ namespace GMTK2020
             await tutorialManager.ShowTutorialIfNewAsync(TutorialID.CrackingVials, crackedRects);
         }
 
-        private async Task ShowDifficultyTutorial()
+        private async Task ShowDifficultyTutorialAsync()
         {
             await tutorialManager.ShowTutorialIfNewAsync(TutorialID.DifficultyIncrease);
         }

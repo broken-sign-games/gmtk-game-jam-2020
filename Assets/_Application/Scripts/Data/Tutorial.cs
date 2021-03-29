@@ -15,6 +15,7 @@ namespace GMTK2020.Data
         public bool ShowDismissButton;
         public List<Tool> InteractableTools;
         public bool PlaybackButtonAvailable;
+        public bool HighlightSpikeBalls;
         public List<GridRect> InteractableRects;
 
         public Tutorial()
@@ -28,6 +29,7 @@ namespace GMTK2020.Data
             ShowDismissButton = other.ShowDismissButton;
             InteractableTools = other.InteractableTools.ToList();
             PlaybackButtonAvailable = other.PlaybackButtonAvailable;
+            HighlightSpikeBalls = other.HighlightSpikeBalls;
             InteractableRects = other.InteractableRects.ToList();
         }
     }
