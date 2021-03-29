@@ -1721,7 +1721,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: 56a02faafd3c6134aa71d68a79e08330, type: 2}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.30588236}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2041,7 +2041,7 @@ PrefabInstance:
     - target: {fileID: 4637632548970243562, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4887437131268422574, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
@@ -2836,18 +2836,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playback: {fileID: 1284230305}
   mask: {fileID: 1201328554}
---- !u!114 &1201328552
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1201328550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 302ced0509fb2974e80458081cea3d2c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1201328553 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6589072882871653768, guid: 3c35ede1d8d8469428a413be7f1cbe16,
