@@ -110,7 +110,7 @@ namespace GMTK2020.TutorialSystem
             await Task.WhenAll(tasks);
         }
 
-        private bool TutorialWasAlreadyShown(TutorialID id)
+        public bool TutorialWasAlreadyShown(TutorialID id)
         {
             string prefsKey = TutorialIDToPrefsKey(id);
             return PlayerPrefs.GetInt(prefsKey, -1) >= 0;

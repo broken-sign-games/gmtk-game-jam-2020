@@ -158,7 +158,7 @@ namespace GMTK2020
 
                 if (matchStep != null)
                 {
-                    if (matchStep.MatchedTiles.Count > 3)
+                    if (!tutorialManager.TutorialWasAlreadyShown(TutorialID.MatchShapes) && WillAwardToolUse(matchStep))
                         await ShowMatchShapeTutorialAsync(matchStep);
 
                     boardManipulator.RewardMatch(matchStep);
@@ -177,6 +177,17 @@ namespace GMTK2020
                 if (step.FinalStep)
                     break;
             }
+        }
+
+        private bool WillAwardToolUse(MatchStep matchStep)
+        {
+            Vector2Int[] tiles = matchStep.LeftEndsOfHorizontalMatches
+                .SelectMany(pos => new[] { pos, pos + new Vector2Int(1, 0), pos + new Vector2Int(2, 0) })
+                .Concat(matchStep.BottomEndsOfVerticalMatches
+                    .SelectMany(pos => new[] { pos, pos + new Vector2Int(0, 1), pos + new Vector2Int(0, 2) }))
+                .ToArray();
+
+            return tiles.Length > tiles.Distinct().Count();
         }
 
         private async Task ShowMatchShapeTutorialAsync(MatchStep matchStep)
