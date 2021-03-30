@@ -23,6 +23,8 @@ namespace GMTK2020.UI
         [SerializeField] private float moveUpBy = 30;
         [SerializeField] private float overshootBy = 10;
         [SerializeField] private float moveDuration = 0.5f;
+        [SerializeField] private float pulseFactor = 1.2f;
+        [SerializeField] private float pulseDuration = 0.25f;
         [SerializeField] private Sprite defaultSprite = null;
         [SerializeField] private Sprite activeSprite = null;
 
@@ -38,6 +40,8 @@ namespace GMTK2020.UI
         private TutorialManager tutorialManager;
 
         private bool available;
+
+        private int? currentUses;
 
         private void Awake()
         {
@@ -74,12 +78,25 @@ namespace GMTK2020.UI
                 availableUsesText.fontSize = availableUsesUnlimitedFontSize;
                 availableUsesText.fontWeight = FontWeight.Bold;
             }
-            else
+            else if (!currentUses.HasValue)
             {
                 availableUsesText.text = uses.ToString();
                 availableUsesText.fontSize = availableUsesDefaultFontSize;
                 availableUsesText.fontWeight = FontWeight.Regular;
             }
+            else if (currentUses < uses)
+            {
+                Sequence seq = DOTween.Sequence();
+                seq.Append(availableUsesText.DOFontSize(availableUsesDefaultFontSize * pulseFactor, pulseDuration).SetEase(Ease.Linear));
+                seq.AppendCallback(() => availableUsesText.text = uses.ToString());
+                seq.Append(availableUsesText.DOFontSize(availableUsesDefaultFontSize, pulseDuration).SetEase(Ease.Linear));
+            }
+            else
+            {
+                availableUsesText.text = uses.ToString();
+            }
+
+            currentUses = uses;
         }
 
         public void UpdateAvailable(bool available)
