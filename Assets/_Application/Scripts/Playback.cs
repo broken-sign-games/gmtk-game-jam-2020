@@ -158,9 +158,10 @@ namespace GMTK2020
 
                 if (matchStep != null)
                 {
-                    boardManipulator.RewardMatch(matchStep);
                     if (matchStep.MatchedTiles.Count > 3)
                         await ShowMatchShapeTutorialAsync(matchStep);
+
+                    boardManipulator.RewardMatch(matchStep);
                 }
                 else if (cleanUpStep != null)
                 {
