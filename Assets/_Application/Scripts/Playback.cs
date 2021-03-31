@@ -85,15 +85,13 @@ namespace GMTK2020
 
                 await PlayBackReactionAsync();
 
-                boardManipulator.MakeToolsAvailable();
+                await StartNewTurn();
 
                 if (!simulator.FurtherMatchesPossible() && !boardManipulator.AnyToolsAvailable())
                 {
                     EndGame();
                     break;
                 }
-
-                await StartNewTurn();    
             }
         }
 
@@ -206,6 +204,7 @@ namespace GMTK2020
 
             await boardRenderer.AnimateNewTurn();
 
+            boardManipulator.MakeToolsAvailable();
             boardManipulator.UnlockPredictions();
         }
 

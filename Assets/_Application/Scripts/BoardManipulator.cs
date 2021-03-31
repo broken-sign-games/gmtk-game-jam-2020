@@ -96,7 +96,8 @@ namespace GMTK2020
 
             ActiveToolChanged?.Invoke(ActiveTool);
 
-            TutorialManager.Instance.CompleteActiveTutorial();
+            if (tool == ActiveTool)
+                TutorialManager.Instance.CompleteActiveTutorial();
         }
 
         public bool AnyToolsAvailable() 
