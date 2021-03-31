@@ -147,9 +147,10 @@ namespace GMTK2020.UI
 
             isDragging = false;
 
-            Tool targetTool = tutorial.InteractableTools[0];
+            int targetToolIndex = tutorial.InteractableTools
+                .Max(tool => toolToIndex[tool]);
 
-            float targetXPos = toolToIndex[targetTool] / (toolToIndex.Count - 1f) * minXPos;
+            float targetXPos = targetToolIndex / (toolToIndex.Count - 1f) * minXPos;
             float deltaXPos = targetXPos - rectTransform.anchoredPosition.x;
 
             speed = Mathf.Sign(deltaXPos) * Mathf.Sqrt(2 * deceleration * Mathf.Abs(deltaXPos));

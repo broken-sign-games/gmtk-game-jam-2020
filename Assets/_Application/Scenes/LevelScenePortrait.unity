@@ -3761,6 +3761,8 @@ MonoBehaviour:
   moveUpBy: 30
   overshootBy: 5
   moveDuration: 0.25
+  pulseFactor: 1.75
+  pulseDuration: 0.125
   defaultSprite: {fileID: 21300000, guid: 2744c9a94b1b848a5b3db88122f8eb31, type: 3}
   activeSprite: {fileID: 21300000, guid: 01216c68ba03842899b6bba5aec4bfda, type: 3}
   rotationSenseIndicator: {fileID: 1570801442}

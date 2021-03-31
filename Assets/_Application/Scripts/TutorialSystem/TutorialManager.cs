@@ -57,6 +57,12 @@ namespace GMTK2020.TutorialSystem
             => ShowTutorialIfNewAsync(id, new List<GridRect>());
 
         public Task ShowTutorialIfNewAsync(TutorialID id, List<GridRect> dynamicInteractableRects)
+            => ShowTutorialIfNewAsync(id, dynamicInteractableRects, new List<Tool>());
+
+        public Task ShowTutorialIfNewAsync(
+            TutorialID id, 
+            List<GridRect> dynamicInteractableRects, 
+            List<Tool> dynamicInteractableTools)
         {
             if (TutorialWasAlreadyShown(id))
                 return Task.CompletedTask;
@@ -67,6 +73,11 @@ namespace GMTK2020.TutorialSystem
                 tutorial.InteractableRects = dynamicInteractableRects;
             else
                 tutorial.InteractableRects.AddRange(dynamicInteractableRects);
+
+            if (tutorial.InteractableTools is null)
+                tutorial.InteractableTools = dynamicInteractableTools;
+            else
+                tutorial.InteractableTools.AddRange(dynamicInteractableTools);
 
             return ShowTutorialAsync(tutorial);
         }

@@ -7,6 +7,9 @@ using RotaryHeart.Lib.SerializableDictionary;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace GMTK2020
 {
@@ -99,11 +102,25 @@ namespace GMTK2020
         public bool AnyToolsAvailable() 
             => toolbox.AnyToolsAvailable();
 
-        public void RewardMatch(MatchStep matchStep)
+        public async Task RewardMatches(MatchStep matchStep)
         {
-            toolbox.RewardMatches(matchStep);
+            List<Tool> newTools = toolbox.RewardMatches(matchStep);
+
+            if (newTools.Count > 0)
+                await ShowMatchShapeTutorialAsync(matchStep, newTools);
 
             UpdateUI();
+        }
+
+        private async Task ShowMatchShapeTutorialAsync(MatchStep matchStep, List<Tool> newTools)
+        {
+            var matchedRects = matchStep.LeftEndsOfHorizontalMatches
+                .Select(pos => new GridRect(pos, pos + new Vector2Int(2, 0)))
+                .Concat(matchStep.BottomEndsOfVerticalMatches
+                    .Select(pos => new GridRect(pos, pos + new Vector2Int(0, 2))))
+                .ToList();
+
+            await TutorialManager.Instance.ShowTutorialIfNewAsync(TutorialID.MatchShapes, matchedRects, newTools);
         }
 
         public void MakeToolsAvailable()
@@ -255,7 +272,7 @@ namespace GMTK2020
             await boardRenderer.AnimateSimulationStepAsync(step);
         }
 
-        private void UpdateUI()
+        public void UpdateUI()
         {
             foreach ((Tool tool, ToolButton button) in toolButtons)
             {

@@ -153,17 +153,11 @@ namespace GMTK2020
                 // to sync the update with the match animation.
                 scoreRenderer.UpdateScore();
 
-                var matchStep = step as MatchStep;
-                var cleanUpStep = step as CleanUpStep;
-
-                if (matchStep != null)
+                if (step is MatchStep matchStep)
                 {
-                    if (!tutorialManager.TutorialWasAlreadyShown(TutorialID.MatchShapes) && WillAwardToolUse(matchStep))
-                        await ShowMatchShapeTutorialAsync(matchStep);
-
-                    boardManipulator.RewardMatch(matchStep);
+                    await boardManipulator.RewardMatches(matchStep);
                 }
-                else if (cleanUpStep != null)
+                else if (step is CleanUpStep cleanUpStep)
                 {
                     if (cleanUpStep.InertTiles.Count(tile => tile.Marked) > 0)
                         await ShowIncorrectPredictionsTutorialAsync(cleanUpStep.InertTiles);
@@ -177,28 +171,6 @@ namespace GMTK2020
                 if (step.FinalStep)
                     break;
             }
-        }
-
-        private bool WillAwardToolUse(MatchStep matchStep)
-        {
-            Vector2Int[] tiles = matchStep.LeftEndsOfHorizontalMatches
-                .SelectMany(pos => new[] { pos, pos + new Vector2Int(1, 0), pos + new Vector2Int(2, 0) })
-                .Concat(matchStep.BottomEndsOfVerticalMatches
-                    .SelectMany(pos => new[] { pos, pos + new Vector2Int(0, 1), pos + new Vector2Int(0, 2) }))
-                .ToArray();
-
-            return tiles.Length > tiles.Distinct().Count();
-        }
-
-        private async Task ShowMatchShapeTutorialAsync(MatchStep matchStep)
-        {
-            var matchedRects = matchStep.LeftEndsOfHorizontalMatches
-                .Select(pos => new GridRect(pos, pos + new Vector2Int(2, 0)))
-                .Concat(matchStep.BottomEndsOfVerticalMatches
-                    .Select(pos => new GridRect(pos, pos + new Vector2Int(0, 2))))
-                .ToList();
-
-            await tutorialManager.ShowTutorialIfNewAsync(TutorialID.MatchShapes, matchedRects);
         }
 
         private async Task ShowIncorrectPredictionsTutorialAsync(HashSet<Tile> inertTiles)
