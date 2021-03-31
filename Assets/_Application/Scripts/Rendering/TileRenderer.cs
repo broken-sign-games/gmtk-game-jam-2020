@@ -66,7 +66,7 @@ namespace GMTK2020.Rendering
 
         private void Update()
         {
-            if (!tile.Marked)
+            if (tile.Inert || !tile.Marked)
                 return;
 
             vialTransform.localRotation = Quaternion.Euler(0, 0, Mathf.Sin(Time.time * tiltFrequency) * tiltAmplitude);
