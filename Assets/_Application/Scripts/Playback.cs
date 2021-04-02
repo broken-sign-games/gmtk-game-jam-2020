@@ -138,6 +138,7 @@ namespace GMTK2020
                 return;
 
             await tutorialManager.ShowTutorialIfNewAsync(TutorialID.OmittingVials);
+            await tutorialManager.ShowTutorialIfNewAsync(TutorialID.StartReactionWithOmittedVials);
         }
 
         private async Task PlayBackReactionAsync()
