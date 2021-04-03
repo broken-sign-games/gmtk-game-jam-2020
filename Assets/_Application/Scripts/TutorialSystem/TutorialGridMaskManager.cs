@@ -88,6 +88,9 @@ namespace GMTK2020.TutorialSystem
             if (activeTutorial is null)
                 return true;
 
+            if (activeTutorial.LockBoard)
+                return false;
+
             foreach (GridRect rect in activeTutorial.InteractableRects)
                 if (rect.IsInsideRect(pos))
                     return true;

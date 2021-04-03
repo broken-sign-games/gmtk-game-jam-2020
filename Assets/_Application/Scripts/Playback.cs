@@ -137,6 +137,7 @@ namespace GMTK2020
             if (turnCount > 0)
                 return;
 
+            await tutorialManager.ShowTutorialIfNewAsync(TutorialID.OmittingVialsIntro);
             await tutorialManager.ShowTutorialIfNewAsync(TutorialID.OmittingVials);
             await tutorialManager.ShowTutorialIfNewAsync(TutorialID.StartReactionWithOmittedVials);
         }

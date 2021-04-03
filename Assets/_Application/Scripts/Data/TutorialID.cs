@@ -17,5 +17,6 @@
         SelectSwapTool,
         SelectRemoveTool,
         StartReactionWithOmittedVials,
+        OmittingVialsIntro,
     }
 }

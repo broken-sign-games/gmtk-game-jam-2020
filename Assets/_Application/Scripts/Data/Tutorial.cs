@@ -13,6 +13,7 @@ namespace GMTK2020.Data
         [TextArea]
         public string Message;
         public bool ShowDismissButton;
+        public bool LockBoard;
         public List<Tool> InteractableTools;
         public bool PlaybackButtonAvailable;
         public bool HighlightSpikeBalls;
@@ -27,6 +28,7 @@ namespace GMTK2020.Data
             ID = other.ID;
             Message = other.Message;
             ShowDismissButton = other.ShowDismissButton;
+            LockBoard = other.LockBoard;
             InteractableTools = other.InteractableTools.ToList();
             PlaybackButtonAvailable = other.PlaybackButtonAvailable;
             HighlightSpikeBalls = other.HighlightSpikeBalls;
