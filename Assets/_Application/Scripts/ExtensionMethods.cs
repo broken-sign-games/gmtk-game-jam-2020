@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -164,6 +165,28 @@ namespace GMTK2020
         public static bool IsVisibleFrom(this RectTransform rectTransform, Camera camera)
         {
             return CountCornersVisibleFrom(rectTransform, camera) > 0; // True if any corners are visible
+        }
+    }
+
+    public static class ParticleSystemExtensionMethods
+    {
+        public static void FixAlpha(ref this ParticleSystem.MinMaxGradient gradient, float alpha)
+        {
+            switch (gradient.mode)
+            {
+            case ParticleSystemGradientMode.Color:
+                Color color = gradient.color;
+                color.a = alpha;
+                gradient.color = color;
+                break;
+            case ParticleSystemGradientMode.RandomColor:
+                for (int i = 0; i < gradient.gradient.alphaKeys.Length; ++i)
+                    gradient.gradient.alphaKeys[i].alpha = alpha;
+                break;
+            default:
+                Debug.LogWarning($"FixAlpha not implemented for MinMaxGradient mode {Enum.GetName(typeof(ParticleSystemGradientMode), gradient.mode)}");
+                break;
+            }
         }
     }
 
