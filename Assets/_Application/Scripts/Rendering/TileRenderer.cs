@@ -456,16 +456,6 @@ namespace GMTK2020.Rendering
             return seq;
         }
 
-        public void ShowIncorrectPrediction()
-        {
-            incorrectBackground.gameObject.SetActive(true);
-        }
-
-        public void ShowMissingPrediction()
-        {
-            missingPredictionIndicator.gameObject.SetActive(true);
-        }
-
         private Tween PulseVial()
         {
             return vialTransform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0);
