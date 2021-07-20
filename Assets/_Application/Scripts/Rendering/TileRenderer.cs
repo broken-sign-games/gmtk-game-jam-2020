@@ -443,14 +443,15 @@ namespace GMTK2020.Rendering
                 puff.Play();
             shards.Play();
             SoundManager.Instance.PlayEffect(SoundEffect.VialDestroyed);
+
+            vialTransform.gameObject.SetActive(false);
+            corkSprite.gameObject.SetActive(false);
+
+            // We don't return this, because we don't want the animation to wait for the object destruction.
             Sequence seq = DOTween.Sequence();
-
-            seq.Append(vialTransform.DOScale(0, matchShrinkDuration).SetEase(Ease.OutBack));
-            seq.Join(corkSprite.transform.DOScale(0, matchShrinkDuration).SetEase(Ease.OutBack));
-            seq.Join(tileHighlight.DOFade(0, matchShrinkDuration));
-            seq.AppendCallback(() => Destroy(gameObject));
-
-            return seq;
+            seq.InsertCallback(2f, () => Destroy(gameObject));
+            
+            return tileHighlight.DOFade(0, matchShrinkDuration);
         }
 
         public Tween ShowCorrectPrediction()
