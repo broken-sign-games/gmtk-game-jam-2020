@@ -42,7 +42,7 @@ MonoBehaviour:
     - InitialUses: -1
       AwardedFor: 0
       Tooltip: 
-    - InitialUses: 0
+    - InitialUses: 5
       AwardedFor: 4
       Tooltip: Destroys a vial.
     - InitialUses: 0

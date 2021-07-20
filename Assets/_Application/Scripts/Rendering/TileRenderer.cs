@@ -21,6 +21,7 @@ namespace GMTK2020.Rendering
         [SerializeField] private ParticleSystem pop = null;
         [SerializeField] private ParticleSystem popRing = null;
         [SerializeField] private ParticleSystem puff = null;
+        [SerializeField] private ParticleSystem shards = null;
         [SerializeField] private ParticleSystem liquidEvap = null;
         [SerializeField] private ParticleSystem neckEvap = null;
         [SerializeField] private ParticleSystem dust = null;
@@ -438,7 +439,9 @@ namespace GMTK2020.Rendering
         {
             weakEvaporation.Stop();
             strongEvaporation.Stop();
-            puff.Play();
+            if (!tile.Inert)
+                puff.Play();
+            shards.Play();
             SoundManager.Instance.PlayEffect(SoundEffect.VialDestroyed);
             Sequence seq = DOTween.Sequence();
 
