@@ -17,9 +17,6 @@ namespace GMTK2020.Rendering
         [SerializeField] private SpriteMask liquidMask = null;
         [SerializeField] private SpriteMask rainbowRoot = null;
         [SerializeField] private SpriteRenderer rainbowSprite = null;
-
-        [SerializeField] private SpriteRenderer incorrectBackground = null;
-        [SerializeField] private SpriteRenderer missingPredictionIndicator = null;
         [SerializeField] private ParticleSystem bubbles = null;
         [SerializeField] private ParticleSystem pop = null;
         [SerializeField] private ParticleSystem popRing = null;
@@ -33,6 +30,8 @@ namespace GMTK2020.Rendering
         [SerializeField] private AudioSource bubblingAudioSource = null;
         [SerializeField] private AudioSource fallingAudioSource = null;
         [SerializeField] private AudioSource evaporatingAudioSource = null;
+
+        [SerializeField] private Sprite wildcardHighlight = null;
 
         [SerializeField] private float tileFadeDuration = 0.25f;
 
@@ -265,6 +264,9 @@ namespace GMTK2020.Rendering
             rainbowRoot.gameObject.SetActive(true);
 
             SetParticleColors(rainbowColors);
+
+            tileHighlight.color = new Color(1, 1, 1, 0);
+            tileHighlight.sprite = wildcardHighlight;
 
             SoundManager.Instance.PlayEffect(SoundEffect.WildcardCreated);
 
