@@ -25138,7 +25138,7 @@ MonoBehaviour:
   landingShakeStrength: {x: 0.1, y: 0, z: 0}
   landingShakeVibrato: 30
   landingShakeRandomness: 90
-  rainbowScrollSpeed: 1
+  rainbowScrollSpeed: 2
   tileData: {fileID: 11400000, guid: f963dc801adc7b84fa1b10998885ace9, type: 2}
   rainbowColors:
     m_Mode: 4
