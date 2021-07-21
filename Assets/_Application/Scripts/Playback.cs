@@ -20,6 +20,7 @@ namespace GMTK2020
         [SerializeField] private Button retryButton = null;
         [SerializeField] private BoardManipulator boardManipulator = null;
         [SerializeField] private ChainCounter chainCounter = null;
+        [SerializeField] private LevelCounter levelCounter = null;
 
         // TODO: This is probably not the best place to put this data.
         [SerializeField] private int baseScore = 100;
@@ -71,9 +72,6 @@ namespace GMTK2020
             {
                 reactionStarted = false;
 
-                if (simulator.DifficultyLevel > 0)
-                    await ShowDifficultyTutorialAsync();
-
                 await ShowInteractiveTutorialsAsync();
 
                 await Awaiters.Until(() => reactionStarted || gameEnded);
@@ -83,7 +81,14 @@ namespace GMTK2020
                 if (gameEnded)
                     break;
 
+                await levelCounter.IncrementTurns().Completion();
+
+                int previousLevel = simulator.DifficultyLevel;
+
                 await PlayBackReactionAsync();
+
+                if (simulator.DifficultyLevel > previousLevel)
+                    await levelCounter.IncrementLevel().Completion();
 
                 await StartNewTurn();
 
@@ -201,13 +206,14 @@ namespace GMTK2020
         {
             ++turnCount;
 
-            runButton.interactable = true;
             chainCounter.SetMaxCracks(simulator.CracksPerChain);
 
             await boardRenderer.AnimateNewTurn();
 
             boardManipulator.MakeToolsAvailable();
             boardManipulator.UnlockPredictions();
+
+            runButton.interactable = true;
         }
 
         private void OnLastToolUsed()
@@ -223,7 +229,6 @@ namespace GMTK2020
             SoundManager.Instance.PlayEffect(SoundEffect.GameEnded);
             runButton.interactable = false;
             scoreKeeper.UpdateHighscore();
-            scoreRenderer.UpdateHighscore();
             retryButton.ActivateObject();
         }
     }
