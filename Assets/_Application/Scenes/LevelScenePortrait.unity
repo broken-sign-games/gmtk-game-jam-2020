@@ -2893,7 +2893,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 13
+  m_text: 23
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0df791de72b1b634497d059d7644f828, type: 2}
   m_sharedMaterial: {fileID: -1338509449279783751, guid: 0df791de72b1b634497d059d7644f828,
@@ -3037,7 +3037,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1095167328}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3048,7 +3048,7 @@ RectTransform:
   - {fileID: 7028374837465617562}
   m_Father: {fileID: 1203539761}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -62, y: 3}
@@ -3412,7 +3412,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -22, y: -10}
+  m_AnchoredPosition: {x: -23, y: -10}
   m_SizeDelta: {x: 290, y: 135}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1203539762
@@ -3437,6 +3437,13 @@ MonoBehaviour:
   inactiveAlpha: 0.25
   fadeDuration: 0.25
   segmentPulseMagnitude: 0.15
+  dissipateDuration: 0.5
+  dissipateScale: 1.4
+  levelPulseMagnitude: 0.5
+  levelPulseDuration: 0.5
+  reappearDuration: 0.25
+  reappearScale: 0.5
+  reappearOffset: 0.15
 --- !u!1 &1206510495
 GameObject:
   m_ObjectHideFlags: 0
