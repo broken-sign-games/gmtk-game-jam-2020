@@ -100,6 +100,10 @@ namespace GMTK2020.UI
 
         public Tween ResetChain()
         {
+            // This can happen when there are fewer unbroken/nonempty vials than spike balls.
+            foreach (Transform spikeBall in spikeBallRoot)
+                Destroy(spikeBall.gameObject);
+
             Sequence seq = DOTween.Sequence();
 
             float chainTargetPos = -currentChainLength * segmentWidth;
