@@ -42,43 +42,71 @@ MonoBehaviour:
     - InitialUses: -1
       AwardedFor: 0
       Tooltip: 
+      EnabledSprite: {fileID: 0}
+      DisabledSprite: {fileID: 0}
     - InitialUses: 5
       AwardedFor: 4
       Tooltip: Destroys a vial.
+      EnabledSprite: {fileID: 21300000, guid: d85f7d985d4eb42c59b5c993a50892c1, type: 3}
+      DisabledSprite: {fileID: 21300000, guid: c18a46f05a119424a9739bfd00655f45, type: 3}
     - InitialUses: 0
       AwardedFor: 0
       Tooltip: 
+      EnabledSprite: {fileID: 0}
+      DisabledSprite: {fileID: 0}
     - InitialUses: 0
       AwardedFor: 0
       Tooltip: 
+      EnabledSprite: {fileID: 0}
+      DisabledSprite: {fileID: 0}
     - InitialUses: 0
       AwardedFor: 2
       Tooltip: Destroys a row of vials.
+      EnabledSprite: {fileID: 21300000, guid: 28ffc4c4c66ff493aafbf035f137ca8e, type: 3}
+      DisabledSprite: {fileID: 21300000, guid: 983dab3a550a0b14581ee67b4d6670ab, type: 3}
     - InitialUses: 0
       AwardedFor: 0
       Tooltip: 
+      EnabledSprite: {fileID: 0}
+      DisabledSprite: {fileID: 0}
     - InitialUses: 0
       AwardedFor: 0
       Tooltip: 
+      EnabledSprite: {fileID: 0}
+      DisabledSprite: {fileID: 0}
     - InitialUses: 0
       AwardedFor: 0
       Tooltip: 
+      EnabledSprite: {fileID: 0}
+      DisabledSprite: {fileID: 0}
     - InitialUses: 0
       AwardedFor: 0
       Tooltip: 
+      EnabledSprite: {fileID: 0}
+      DisabledSprite: {fileID: 0}
     - InitialUses: 0
       AwardedFor: 5
       Tooltip: Rotates a 3x3 block of vials by 90 degrees. Tap button again to change
         direction.
+      EnabledSprite: {fileID: 21300000, guid: 46bab865c861041a28e3db64a6f5e3c4, type: 3}
+      DisabledSprite: {fileID: 21300000, guid: 2ddce3de9cb4fec43beabd3654bcd918, type: 3}
     - InitialUses: 0
       AwardedFor: 3
       Tooltip: Turns one vial into a wildcard.
+      EnabledSprite: {fileID: 21300000, guid: 84949e869ce6042478878be58d8a3e11, type: 3}
+      DisabledSprite: {fileID: 21300000, guid: 8e506675671b4154ab9b5566c6b9eddc, type: 3}
     - InitialUses: -1
       AwardedFor: 1
       Tooltip: Swipe to swap to adjacent tiles.
+      EnabledSprite: {fileID: 21300000, guid: 5ce60aba920f245e9b6a479341a238e2, type: 3}
+      DisabledSprite: {fileID: 21300000, guid: fab29ac91b8e5254c85bd5188199a489, type: 3}
     - InitialUses: 0
       AwardedFor: 0
       Tooltip: 
+      EnabledSprite: {fileID: 0}
+      DisabledSprite: {fileID: 0}
     - InitialUses: 0
       AwardedFor: 6
       Tooltip: Destroys a 3x3 cross of vials.
+      EnabledSprite: {fileID: 21300000, guid: d2bc8b31589a24ba8a18ab80bf2f1963, type: 3}
+      DisabledSprite: {fileID: 21300000, guid: b324ba75e880f5a469c3f17bf52ee2c9, type: 3}

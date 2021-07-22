@@ -13,6 +13,8 @@ namespace GMTK2020.Data
             public int InitialUses = 0;
             public MatchShape AwardedFor = MatchShape.None;
             public string Tooltip = "";
+            public Sprite EnabledSprite = null;
+            public Sprite DisabledSprite = null;
         }
 
         public RewardStrategy RewardStrategy;

@@ -4262,7 +4262,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boardManipulator: {fileID: 1689814306}
   availableUsesText: {fileID: 1570801441}
+  toolData: {fileID: 11400000, guid: 03367c26bc3432f4ca4936a0c2dd0cd0, type: 2}
   mask: {fileID: 1570801443}
+  toolIcon: {fileID: 1570801442}
+  patternIcon: {fileID: 1570801444}
   tool: 9
   availableUsesDefaultFontSize: 45
   availableUsesUnlimitedFontSize: 60
@@ -4273,9 +4276,13 @@ MonoBehaviour:
   pulseDuration: 0.125
   defaultSprite: {fileID: 21300000, guid: 2744c9a94b1b848a5b3db88122f8eb31, type: 3}
   activeSprite: {fileID: 21300000, guid: 01216c68ba03842899b6bba5aec4bfda, type: 3}
+  enabledPatternColor: {r: 0.7058824, g: 0.59607846, b: 0.48627454, a: 1}
+  disabledPatternColor: {r: 0.5411765, g: 0.5411765, b: 0.5411765, a: 1}
   rotationSenseIndicator: {fileID: 1570801442}
-  cwSprite: {fileID: 21300000, guid: 46bab865c861041a28e3db64a6f5e3c4, type: 3}
-  ccwSprite: {fileID: 21300000, guid: 3857b85b29c72e24aa74af89e614c406, type: 3}
+  enabledCWSprite: {fileID: 21300000, guid: 46bab865c861041a28e3db64a6f5e3c4, type: 3}
+  disabledCWSprite: {fileID: 21300000, guid: 2ddce3de9cb4fec43beabd3654bcd918, type: 3}
+  enabledCCWSprite: {fileID: 21300000, guid: 3857b85b29c72e24aa74af89e614c406, type: 3}
+  disabledCCWSprite: {fileID: 21300000, guid: 0c49002a5676f694c968ae2864b333a7, type: 3}
 --- !u!114 &1570801441 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7410386414071070777, guid: 7a1709738f09dfa41a33d8af3d3d425f,
@@ -4308,6 +4315,18 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1570801444 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 358915185615045578, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1570801437}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 

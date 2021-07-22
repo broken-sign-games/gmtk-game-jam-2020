@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7176471, g: 0.59607846, b: 0.48235294, a: 1}
+  m_Color: {r: 0.7058824, g: 0.59607846, b: 0.48627454, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -433,7 +433,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 92}
+  m_SizeDelta: {x: 288, y: 244}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6788153932471032607
 CanvasRenderer:
@@ -543,7 +543,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boardManipulator: {fileID: 0}
   availableUsesText: {fileID: 7410386414071070777}
+  toolData: {fileID: 11400000, guid: 03367c26bc3432f4ca4936a0c2dd0cd0, type: 2}
   mask: {fileID: 4454462421477941404}
+  toolIcon: {fileID: 2091651223133000970}
+  patternIcon: {fileID: 358915185615045578}
   tool: 1
   availableUsesDefaultFontSize: 45
   availableUsesUnlimitedFontSize: 60
@@ -554,3 +557,5 @@ MonoBehaviour:
   pulseDuration: 0.125
   defaultSprite: {fileID: 21300000, guid: 2744c9a94b1b848a5b3db88122f8eb31, type: 3}
   activeSprite: {fileID: 21300000, guid: 01216c68ba03842899b6bba5aec4bfda, type: 3}
+  enabledPatternColor: {r: 0.7058824, g: 0.59607846, b: 0.48627454, a: 1}
+  disabledPatternColor: {r: 0.5411765, g: 0.5411765, b: 0.5411765, a: 1}

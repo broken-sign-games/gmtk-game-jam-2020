@@ -16,7 +16,10 @@ namespace GMTK2020.UI
     {
         [SerializeField] private BoardManipulator boardManipulator = null;
         [SerializeField] private TextMeshProUGUI availableUsesText = null;
+        [SerializeField] private ToolData toolData = null;
         [SerializeField] private Image mask = null;
+        [SerializeField] private Image toolIcon = null;
+        [SerializeField] private Image patternIcon = null;
         [SerializeField] private Tool tool = Tool.SwapTiles;
         [SerializeField] private int availableUsesDefaultFontSize = 45;
         [SerializeField] private int availableUsesUnlimitedFontSize = 60;
@@ -27,6 +30,10 @@ namespace GMTK2020.UI
         [SerializeField] private float pulseDuration = 0.25f;
         [SerializeField] private Sprite defaultSprite = null;
         [SerializeField] private Sprite activeSprite = null;
+        [SerializeField] private Color enabledPatternColor = Color.white;
+        [SerializeField] private Color disabledPatternColor = Color.white;
+
+        protected Image ToolIcon => toolIcon;
 
         protected BoardManipulator BoardManipulator => boardManipulator;
 
@@ -40,6 +47,7 @@ namespace GMTK2020.UI
         private TutorialManager tutorialManager;
 
         private bool available;
+        protected bool Available => available;
 
         private int? currentUses;
 
@@ -51,6 +59,8 @@ namespace GMTK2020.UI
             availableUsesText.text = "0";
 
             initialYPos = rectTransform.anchoredPosition.y;
+
+            toolIcon.sprite = toolData.Map[tool].EnabledSprite;
 
             tutorialManager = TutorialManager.Instance;
             tutorialManager.TutorialReady += OnTutorialReady;
@@ -99,10 +109,22 @@ namespace GMTK2020.UI
             currentUses = uses;
         }
 
-        public void UpdateAvailable(bool available)
+        public virtual void UpdateAvailable(bool available)
         {
             this.available = available;
             button.interactable = available;
+
+            toolIcon.sprite = available
+                ? toolData.Map[tool].EnabledSprite
+                : toolData.Map[tool].DisabledSprite;
+
+            patternIcon.color = available
+                ? enabledPatternColor
+                : disabledPatternColor;
+
+            availableUsesText.color = available
+                ? enabledPatternColor
+                : disabledPatternColor;
         }
 
         public void UpdateChainLength(int awarded, int available, int chainLength)
