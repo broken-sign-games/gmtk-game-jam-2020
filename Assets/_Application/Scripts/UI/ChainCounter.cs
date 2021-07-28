@@ -56,6 +56,9 @@ namespace GMTK2020.UI
             {
                 RectTransform spikeBall = Instantiate(spikeBallPrefab, spikeBallRoot);
                 spikeBall.anchoredPosition = new Vector2(xPos, 0);
+                // ewww
+                Image spikeSprite = spikeBall.GetComponent<Image>();
+                spikeSprite.SetAlpha(1);
                 xPos += segmentWidth;
             }
 
@@ -68,20 +71,19 @@ namespace GMTK2020.UI
         {
             Sequence seq = DOTween.Sequence();
 
+            ChainSegment newSegment = Instantiate(chainSegmentPrefab, chainSegmentRoot);
+            RectTransform rectTransform = newSegment.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = new Vector2(currentChainLength * segmentWidth, 0);
+
+            seq.Join(newSegment.AnimateAppearance(lastSegment));
+
             if (spikeBallRoot.childCount > 0)
             {
                 var spikeBall = spikeBallRoot.GetChild(0).GetComponent<SpikeBall>();
                 seq.Append(spikeBall.AnimateDestruction());
             }
 
-            if (lastSegment)
-                lastSegment.AddShadow();
-
-            ChainSegment newSegment = Instantiate(chainSegmentPrefab, chainSegmentRoot);
-            RectTransform rectTransform = newSegment.GetComponent<RectTransform>();
-            rectTransform.anchoredPosition = new Vector2(currentChainLength * segmentWidth, 0);
             lastSegment = newSegment;
-
             ++currentChainLength;
 
             return seq;
@@ -133,11 +135,8 @@ namespace GMTK2020.UI
             {
                 float _xPos = xPos;
 
-                seq.InsertCallback(delay, () =>
-                {
-                    RectTransform spikeBall = Instantiate(spikeBallPrefab, spikeBallRoot);
-                    spikeBall.anchoredPosition = new Vector2(_xPos, 0);
-                });
+                var spikeBall = Instantiate(spikeBallPrefab, spikeBallRoot).GetComponent<SpikeBall>();
+                seq.Insert(delay, spikeBall.AnimateAppearance(_xPos));
 
                 xPos += segmentWidth;
                 delay += spikeBallSpawnDelay;
