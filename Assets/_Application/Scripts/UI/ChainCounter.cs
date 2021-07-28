@@ -66,8 +66,13 @@ namespace GMTK2020.UI
 
         public Tween AddChain()
         {
+            Sequence seq = DOTween.Sequence();
+
             if (spikeBallRoot.childCount > 0)
-                Destroy(spikeBallRoot.GetChild(0).gameObject);
+            {
+                var spikeBall = spikeBallRoot.GetChild(0).GetComponent<SpikeBall>();
+                seq.Append(spikeBall.AnimateDestruction());
+            }
 
             if (lastSegment)
                 lastSegment.AddShadow();
@@ -79,7 +84,7 @@ namespace GMTK2020.UI
 
             ++currentChainLength;
 
-            return DOTween.Sequence();
+            return seq;
         }
 
         public Tween SendSpikeBall(Vector3 targetPosition)
