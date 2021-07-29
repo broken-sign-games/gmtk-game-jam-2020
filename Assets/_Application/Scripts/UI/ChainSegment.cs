@@ -24,8 +24,8 @@ namespace GMTK2020.UI
 
             var topRectTransform = wideLinkTop.GetComponent<RectTransform>();
             var bottomRectTransform = wideLinkBottom.GetComponent<RectTransform>();
-            seq.Append(topRectTransform.DOAnchorPosY(0, snapDuration).SetEase(Ease.InCubic));
-            seq.Join(bottomRectTransform.DOAnchorPosY(0, snapDuration).SetEase(Ease.InCubic));
+            seq.Join(topRectTransform.DOAnchorPosY(0, snapDuration).SetEase(Ease.InBack));
+            seq.Join(bottomRectTransform.DOAnchorPosY(0, snapDuration).SetEase(Ease.InBack));
             seq.Join(flatLink.DOFade(1f, snapDuration).SetEase(Ease.InCubic));
             if (previousSegment)
                 seq.Join(previousSegment.AddShadow());
