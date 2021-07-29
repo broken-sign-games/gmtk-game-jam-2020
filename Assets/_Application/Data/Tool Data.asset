@@ -44,7 +44,7 @@ MonoBehaviour:
       Tooltip: 
       EnabledSprite: {fileID: 0}
       DisabledSprite: {fileID: 0}
-    - InitialUses: 5
+    - InitialUses: 0
       AwardedFor: 4
       Tooltip: Destroys a vial.
       EnabledSprite: {fileID: 21300000, guid: d85f7d985d4eb42c59b5c993a50892c1, type: 3}

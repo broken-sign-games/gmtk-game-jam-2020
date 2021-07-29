@@ -72,7 +72,7 @@ namespace GMTK2020
             {
                 reactionStarted = false;
 
-                await ShowInteractiveTutorialsAsync();
+                await ShowInteractiveTutorialsOrEnableToolsAsync();
 
                 await Awaiters.Until(() => reactionStarted || gameEnded);
 
@@ -100,7 +100,7 @@ namespace GMTK2020
             }
         }
 
-        private async Task ShowInteractiveTutorialsAsync()
+        private async Task ShowInteractiveTutorialsOrEnableToolsAsync()
         {
             int gameCount = TutorialManager.GetGameCount();
 
@@ -111,6 +111,9 @@ namespace GMTK2020
                 break;
             case 2:
                 await ShowSecondGameTutorialAsync();
+                break;
+            default:
+                boardManipulator.MakeToolsAvailable();
                 break;
             }
         }
