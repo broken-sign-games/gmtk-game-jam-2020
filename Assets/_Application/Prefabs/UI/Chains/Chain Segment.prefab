@@ -433,5 +433,5 @@ MonoBehaviour:
   wideLinkTop: {fileID: 8227378302631380336}
   wideLinkBottom: {fileID: 5742990170332694731}
   wideLinkShadowed: {fileID: 4855609044459422866}
-  fadeInDuration: 0.1
-  snapDuration: 0.25
+  fadeInDuration: 0.15
+  snapDuration: 0.35

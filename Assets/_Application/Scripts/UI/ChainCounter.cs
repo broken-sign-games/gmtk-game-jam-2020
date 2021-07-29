@@ -71,11 +71,20 @@ namespace GMTK2020.UI
         {
             Sequence seq = DOTween.Sequence();
 
+            if (currentChainLength >= maxVisibleChains)
+            {
+                float chainTargetPos = (maxVisibleChains - currentChainLength - 1) * segmentWidth;
+                float chainMoveDistance = chainSegmentRoot.anchoredPosition.x - chainTargetPos;
+
+                seq.Append(chainSegmentRoot
+                    .DOAnchorPosX(chainTargetPos, chainMoveDistance / chainSlideSpeed * 2));
+            }
+
             ChainSegment newSegment = Instantiate(chainSegmentPrefab, chainSegmentRoot);
             RectTransform rectTransform = newSegment.GetComponent<RectTransform>();
             rectTransform.anchoredPosition = new Vector2(currentChainLength * segmentWidth, 0);
 
-            seq.Join(newSegment.AnimateAppearance(lastSegment));
+            seq.Append(newSegment.AnimateAppearance(lastSegment));
 
             if (spikeBallRoot.childCount > 0)
             {
