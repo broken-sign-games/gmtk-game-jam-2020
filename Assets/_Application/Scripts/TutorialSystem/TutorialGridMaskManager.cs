@@ -14,7 +14,7 @@ namespace GMTK2020.TutorialSystem
         [SerializeField] private RectTransform tutorialMaskPrefab = null;
         [SerializeField] private Image tutorialOverlay = null;
         [SerializeField] private float overlayAlpha = 0.5f;
-        [SerializeField] private float fadeDuration = 0.5f;
+        [SerializeField] private float fadeDuration = 0.25f;
 
         private TutorialManager tutorialManager;
 
