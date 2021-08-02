@@ -234,5 +234,12 @@ namespace GMTK2020
             scoreKeeper.UpdateHighscore();
             retryButton.ActivateObject();
         }
+
+        public void QuitGame()
+        {
+            gameEnded = true;
+            runButton.interactable = false;
+            scoreKeeper.UpdateHighscore();
+        }
     }
 }

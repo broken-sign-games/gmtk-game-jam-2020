@@ -2,8 +2,6 @@
 using GMTK2020.Audio;
 using GMTK2020.SceneManagement;
 using GMTK2020.TutorialSystem;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +13,7 @@ namespace GMTK2020.UI
         [SerializeField] private RectTransform gameMenu = null;
         [SerializeField] private RectTransform boardTransform = null;
         [SerializeField] private BoardManipulator boardManipulator = null;
+        [SerializeField] private Playback playback = null;
 
         [SerializeField] private float overlayAlpha = 0.5f;
         [SerializeField] private float fadeDuration = 0.25f;
@@ -35,6 +34,8 @@ namespace GMTK2020.UI
 
         public void ShowGameMenu()
         {
+            SoundManager.Instance.PlayEffect(SoundEffect.Click);
+
             menuOverlay.raycastTarget = true;
             boardManipulator.enabled = false;
 
@@ -48,6 +49,8 @@ namespace GMTK2020.UI
 
         public void DismissGameMenu()
         {
+            SoundManager.Instance.PlayEffect(SoundEffect.Click);
+
             foreach (var button in gameMenu.GetComponentsInChildren<Button>())
                 button.enabled = false;
 
@@ -62,8 +65,11 @@ namespace GMTK2020.UI
 
         public void GoToMainMenu()
         {
-            TutorialManager.Instance.CompleteActiveTutorial();
             SoundManager.Instance.PlayEffect(SoundEffect.Click);
+
+            TutorialManager.Instance.CompleteActiveTutorial();
+            playback.QuitGame();
+
             SceneLoader.Instance.LoadScene(SceneID.Menu);
         }
     } 

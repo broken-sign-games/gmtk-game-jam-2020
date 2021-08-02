@@ -1219,6 +1219,7 @@ MonoBehaviour:
   gameMenu: {fileID: 739474079}
   boardTransform: {fileID: 758889511}
   boardManipulator: {fileID: 1689814306}
+  playback: {fileID: 1284230305}
   overlayAlpha: 0.5
   fadeDuration: 0.25
   slideDuration: 0.5
