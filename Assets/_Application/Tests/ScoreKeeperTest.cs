@@ -2,7 +2,6 @@
 using GMTK2020.Data;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Dynamic;
 using UnityEngine;
 
 namespace Tests
@@ -17,7 +16,7 @@ namespace Tests
             var scoreKeeper = new ScoreKeeper(baseScore);
 
             var step = CreateMatchStep(1, nTiles);
-            int matchScore = scoreKeeper.ScoreStep(step);
+            int matchScore = scoreKeeper.ScoreStep(step, 0);
 
             return matchScore;
         }
@@ -30,10 +29,10 @@ namespace Tests
             var scoreKeeper = new ScoreKeeper(baseScore);
 
             for (int i = 0; i < nSteps - 1; ++i)
-                scoreKeeper.ScoreStep(CreateMatchStep(i+1, 0));
+                scoreKeeper.ScoreStep(CreateMatchStep(i+1, 0), 0);
 
             var step = CreateMatchStep(nSteps, nTiles);
-            int matchScore = scoreKeeper.ScoreStep(step);
+            int matchScore = scoreKeeper.ScoreStep(step, 0);
 
             return matchScore;
         }
@@ -60,7 +59,7 @@ namespace Tests
                     new Tile(3),
                 });
             
-            int cleanUpScore = scoreKeeper.ScoreStep(step);
+            int cleanUpScore = scoreKeeper.ScoreStep(step, 0);
 
             Assert.That(cleanUpScore, Is.EqualTo(0));
         }
@@ -73,16 +72,16 @@ namespace Tests
         {
             var scoreKeeper = new ScoreKeeper(baseScore);
 
-            scoreKeeper.ScoreStep(CreateMatchStep(1, 2));
-            scoreKeeper.ScoreStep(CreateMatchStep(2, 3));
+            scoreKeeper.ScoreStep(CreateMatchStep(1, 2), 0);
+            scoreKeeper.ScoreStep(CreateMatchStep(2, 3), 0);
 
-            scoreKeeper.ScoreStep(new CleanUpStep(new List<MovedTile>(), new HashSet<Tile>(), new HashSet<Tile>()));
+            scoreKeeper.ScoreStep(new CleanUpStep(new List<MovedTile>(), new HashSet<Tile>(), new HashSet<Tile>()), 0);
 
             for (int i = 0; i < nSteps - 1; ++i)
-                scoreKeeper.ScoreStep(CreateMatchStep(i + 1, 0));
+                scoreKeeper.ScoreStep(CreateMatchStep(i + 1, 0), 0);
 
             var step = CreateMatchStep(nSteps, nTiles);
-            int matchScore = scoreKeeper.ScoreStep(step);
+            int matchScore = scoreKeeper.ScoreStep(step, 0);
 
             return matchScore;
         }
@@ -92,17 +91,17 @@ namespace Tests
         {
             var scoreKeeper = new ScoreKeeper(10);
 
-            scoreKeeper.ScoreStep(CreateMatchStep(1, 3)); // 3 * 10 * 1 = 30
-            scoreKeeper.ScoreStep(CreateMatchStep(2, 4)); // 4 * 10 * 2 = 80
+            scoreKeeper.ScoreStep(CreateMatchStep(1, 3), 0); // 3 * 10 * 1 = 30
+            scoreKeeper.ScoreStep(CreateMatchStep(2, 4), 0); // 4 * 10 * 2 = 80
 
-            scoreKeeper.ScoreStep(CreateCleanUpStep());
+            scoreKeeper.ScoreStep(CreateCleanUpStep(), 0);
 
-            scoreKeeper.ScoreStep(CreateMatchStep(1, 5)); // 5 * 10 * 1 = 50
-            scoreKeeper.ScoreStep(CreateMatchStep(2, 2)); // 2 * 10 * 2 = 40
+            scoreKeeper.ScoreStep(CreateMatchStep(1, 5), 0); // 5 * 10 * 1 = 50
+            scoreKeeper.ScoreStep(CreateMatchStep(2, 2), 0); // 2 * 10 * 2 = 40
 
-            scoreKeeper.ScoreStep(CreateCleanUpStep());
+            scoreKeeper.ScoreStep(CreateCleanUpStep(), 0);
 
-            scoreKeeper.ScoreStep(CreateMatchStep(1, 1)); // 1 * 10 * 1 = 10
+            scoreKeeper.ScoreStep(CreateMatchStep(1, 1), 0); // 1 * 10 * 1 = 10
 
             Assert.That(scoreKeeper.Score, Is.EqualTo(210));
         }

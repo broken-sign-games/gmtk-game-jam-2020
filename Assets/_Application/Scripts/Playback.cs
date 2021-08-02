@@ -156,7 +156,7 @@ namespace GMTK2020
             {
                 SimulationStep step = simulator.SimulateNextStep();
 
-                scoreKeeper.ScoreStep(step);
+                scoreKeeper.ScoreStep(step, simulator.DifficultyLevel);
                 // We might need to tie this into the board renderer 
                 // to sync the update with the match animation.
                 scoreRenderer.UpdateScore();

@@ -29,12 +29,12 @@ namespace GMTK2020
                 Highscore = 0;
         }
 
-        public int ScoreStep(SimulationStep step)
+        public int ScoreStep(SimulationStep step, int level)
         {
             int stepScore = 0;
             switch (step)
             {
-            case MatchStep matchStep: stepScore = ScoreMatchStep(matchStep); break;
+            case MatchStep matchStep: stepScore = ScoreMatchStep(matchStep, level); break;
             case CleanUpStep cleanUpStep: stepScore = ScoreCleanUpStep(cleanUpStep); break;
             }
 
@@ -51,9 +51,9 @@ namespace GMTK2020
             PlayerPrefs.SetInt(HIGHSCORE_KEY, Highscore);
         }
 
-        private int ScoreMatchStep(MatchStep matchStep)
+        private int ScoreMatchStep(MatchStep matchStep, int level)
         {
-            return matchStep.MatchedTiles.Count * baseScore * matchStep.ChainLength;
+            return matchStep.MatchedTiles.Count * baseScore * matchStep.ChainLength * (level + 1);
         }
 
         private int ScoreCleanUpStep(CleanUpStep _)
