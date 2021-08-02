@@ -45,6 +45,8 @@ namespace GMTK2020
             chainCounter.RenderInitialChain();
 
             boardManipulator.LastToolUsed += OnLastToolUsed;
+            simulator.ReactionLocked += OnReactionLocked;
+            simulator.ReactionUnlocked += OnReactionUnlocked;
 
             KickOffGameplayLoop();
         }
@@ -52,6 +54,8 @@ namespace GMTK2020
         private void OnDestroy()
         {
             boardManipulator.LastToolUsed -= OnLastToolUsed;
+            simulator.ReactionLocked -= OnReactionLocked;
+            simulator.ReactionUnlocked -= OnReactionUnlocked;
         }
 
         public void StartReaction()
@@ -215,8 +219,6 @@ namespace GMTK2020
 
             boardManipulator.MakeToolsAvailable();
             boardManipulator.UnlockPredictions();
-
-            runButton.interactable = true;
         }
 
         private void OnLastToolUsed()
@@ -240,6 +242,16 @@ namespace GMTK2020
             gameEnded = true;
             runButton.interactable = false;
             scoreKeeper.UpdateHighscore();
+        }
+
+        private void OnReactionLocked()
+        {
+            runButton.interactable = false;
+        }
+
+        private void OnReactionUnlocked()
+        {
+            runButton.interactable = true;
         }
     }
 }

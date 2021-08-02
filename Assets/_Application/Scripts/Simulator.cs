@@ -15,6 +15,10 @@ namespace GMTK2020
 
         public const int MAX_CRACKS = 2;
 
+        public event Action ReactionUnlocked;
+        public event Action ReactionLocked;
+        private bool isReactionAllowed = false;
+
         private readonly Board board;
 
         private readonly Random rng;
@@ -440,6 +444,8 @@ namespace GMTK2020
 
             TutorialManager.Instance.CompleteActiveTutorial();
 
+            CheckWhetherReactionIsAllowed();
+
             return new RemovalStep(removedTiles, movedTiles, newTiles);
         }
 
@@ -451,6 +457,8 @@ namespace GMTK2020
                 throw new InvalidOperationException("Cannot refill full tile.");
 
             tile.Refill();
+
+            CheckWhetherReactionIsAllowed();
 
             return new RefillStep(new List<Tile> { tile });
         }
@@ -469,6 +477,8 @@ namespace GMTK2020
                     movedTiles.Add(board.MoveTile(shuffledTiles[i], x, y));
                     ++i;
                 }
+
+            CheckWhetherReactionIsAllowed();
 
             return new PermutationStep(movedTiles);
         }
@@ -497,6 +507,8 @@ namespace GMTK2020
 
                     ++i;
                 }
+
+            CheckWhetherReactionIsAllowed();
 
             Vector2 pivot = new Vector2(board.Width - 1, board.Height - 1) / 2f;
             return new RotationStep(pivot, rotSense, movedTiles);
@@ -535,6 +547,8 @@ namespace GMTK2020
 
                     ++i;
                 }
+
+            CheckWhetherReactionIsAllowed();
 
             Vector2 pivot = bottomLeft + 0.5f * Vector2.one;
             return new RotationStep(pivot, rotSense, movedTiles);
@@ -575,6 +589,8 @@ namespace GMTK2020
                     ++i;
                 }
 
+            CheckWhetherReactionIsAllowed();
+
             return new RotationStep(pivot, rotSense, movedTiles);
         }
 
@@ -590,6 +606,8 @@ namespace GMTK2020
             };
 
             TutorialManager.Instance.CompleteActiveTutorial();
+
+            CheckWhetherReactionIsAllowed();
 
             return new PermutationStep(movedTiles);
         }
@@ -607,6 +625,8 @@ namespace GMTK2020
             foreach (Tile tile in row2)
                 movedTiles.Add(board.MoveTile(tile, tile.Position.x, y1));
 
+            CheckWhetherReactionIsAllowed();
+
             return new PermutationStep(movedTiles);
         }
 
@@ -623,6 +643,8 @@ namespace GMTK2020
             foreach (Tile tile in column2)
                 movedTiles.Add(board.MoveTile(tile, x1, tile.Position.y));
 
+            CheckWhetherReactionIsAllowed();
+
             return new PermutationStep(movedTiles);
         }
 
@@ -637,6 +659,8 @@ namespace GMTK2020
                 throw new InvalidOperationException("Tile was already a wildcard");
             
             tile.MakeWildcard();
+
+            CheckWhetherReactionIsAllowed();
 
             return new WildcardStep(new List<Tile> { tile });
         }
@@ -656,7 +680,21 @@ namespace GMTK2020
                 TutorialManager.Instance.CompleteActiveTutorial();
             }
 
+            CheckWhetherReactionIsAllowed();
+
             return new PredictionStep(new List<Tile> { tile });
+        }
+
+        private void CheckWhetherReactionIsAllowed()
+        {
+            bool wasReactionAllowed = isReactionAllowed;
+
+            isReactionAllowed = GetRawMatches().Count > 0;
+
+            if (isReactionAllowed && !wasReactionAllowed)
+                ReactionUnlocked?.Invoke();
+            else if (wasReactionAllowed && !isReactionAllowed)
+                ReactionLocked?.Invoke();
         }
     }
 }

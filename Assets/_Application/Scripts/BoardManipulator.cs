@@ -27,7 +27,7 @@ namespace GMTK2020
         public Tool ActiveTool { get; private set; }
         public event Action LastToolUsed;
         public event Action<Tool> ActiveToolChanged;
-
+        
         private InputActions inputs;
 
         private Toolbox toolbox;
