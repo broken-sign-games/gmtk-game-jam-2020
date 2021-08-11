@@ -17,10 +17,10 @@ namespace GMTK2020
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private ScoreRenderer scoreRenderer = null;
         [SerializeField] private Button runButton = null;
-        [SerializeField] private Button retryButton = null;
         [SerializeField] private BoardManipulator boardManipulator = null;
         [SerializeField] private ChainCounter chainCounter = null;
         [SerializeField] private LevelCounter levelCounter = null;
+        [SerializeField] private InGameMenus menuManager = null;
 
         // TODO: This is probably not the best place to put this data.
         [SerializeField] private int baseScore = 100;
@@ -41,6 +41,7 @@ namespace GMTK2020
 
             scoreKeeper = new ScoreKeeper(baseScore);
             scoreRenderer.SetScoreKeeper(scoreKeeper);
+            scoreRenderer.UpdateHighscore();
             chainCounter.SetMaxCracks(simulator.CracksPerChain);
             chainCounter.RenderInitialChain();
 
@@ -234,7 +235,8 @@ namespace GMTK2020
             SoundManager.Instance.PlayEffect(SoundEffect.GameEnded);
             runButton.interactable = false;
             scoreKeeper.UpdateHighscore();
-            retryButton.ActivateObject();
+            scoreRenderer.UpdateHighscore();
+            menuManager.ShowGameOverMenu();
         }
 
         public void QuitGame()

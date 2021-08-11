@@ -11,6 +11,7 @@ namespace GMTK2020.UI
     {
         [SerializeField] private Image menuOverlay = null;
         [SerializeField] private RectTransform gameMenu = null;
+        [SerializeField] private RectTransform gameOverMenu = null;
         [SerializeField] private RectTransform boardTransform = null;
         [SerializeField] private BoardManipulator boardManipulator = null;
         [SerializeField] private Playback playback = null;
@@ -63,6 +64,19 @@ namespace GMTK2020.UI
             });
         }
 
+        public void ShowGameOverMenu()
+        {
+            menuOverlay.raycastTarget = true;
+            boardManipulator.enabled = false;
+
+            foreach (var button in gameOverMenu.GetComponentsInChildren<Button>())
+                button.enabled = true;
+
+            Sequence seq = DOTween.Sequence();
+            seq.Join(menuOverlay.DOFade(overlayAlpha, fadeDuration));
+            seq.Join(gameOverMenu.DOMove(boardTransform.position, slideDuration).SetEase(Ease.OutBack, slideOvershoot));
+        }
+
         public void GoToMainMenu()
         {
             SoundManager.Instance.PlayEffect(SoundEffect.Click);
@@ -71,6 +85,16 @@ namespace GMTK2020.UI
             playback.QuitGame();
 
             SceneLoader.Instance.LoadScene(SceneID.Menu);
+        }
+
+        public void RestartLevel()
+        {
+            SoundManager.Instance.PlayEffect(SoundEffect.Click);
+
+            TutorialManager.Instance.CompleteActiveTutorial();
+            playback.QuitGame();
+
+            SceneLoader.Instance.LoadScene(SceneID.Level);
         }
     } 
 }
