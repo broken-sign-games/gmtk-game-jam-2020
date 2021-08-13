@@ -33,6 +33,7 @@ namespace GMTK2020.UI
             if (scoreKeeper.Score > scoreKeeper.Highscore)
             {
                 scoreText.color = newHighscoreColor;
+                highscoreText.color = newHighscoreColor;
                 highscoreLabel.text = newHighscoreLabel;
             }
         }
