@@ -11,7 +11,7 @@ namespace GMTK2020.UI
         [SerializeField] private Color enabledColor = Color.white;
         [SerializeField] private Color disabledColor = Color.white;
 
-        private Vector2 defaultPosition;
+        private float defaultPositionY;
         private BetterButton button;
 
         private RectTransform rectTransform;
@@ -20,14 +20,16 @@ namespace GMTK2020.UI
         {
             rectTransform = GetComponent<RectTransform>();
             button = GetComponent<BetterButton>();
-            defaultPosition = rectTransform.anchoredPosition;
+            defaultPositionY = rectTransform.anchoredPosition.y;
         }
 
         private void Update()
         {
-            rectTransform.anchoredPosition = button.IsPressed
-                ? defaultPosition - new Vector2(0, lowerBy)
-                : defaultPosition;
+            float targetY = button.IsPressed
+                ? defaultPositionY - lowerBy
+                : defaultPositionY;
+
+            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, targetY);
 
             buttonLabel.color = button.interactable
                 ? enabledColor
