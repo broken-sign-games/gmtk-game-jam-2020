@@ -43,9 +43,13 @@ namespace GMTK2020.UI
             foreach (var button in gameMenu.GetComponentsInChildren<Button>())
                 button.enabled = true;
 
+            var corners = new Vector3[4];
+            boardTransform.GetWorldCorners(corners);
+            Vector2 boardCenter = (corners[0] + corners[2]) / 2;
+
             Sequence seq = DOTween.Sequence();
             seq.Join(menuOverlay.DOFade(overlayAlpha, fadeDuration));
-            seq.Join(gameMenu.DOMove(boardTransform.position, slideDuration).SetEase(Ease.OutBack, slideOvershoot));
+            seq.Join(gameMenu.DOMove(boardCenter, slideDuration).SetEase(Ease.OutBack, slideOvershoot));
         }
 
         public void DismissGameMenu()
@@ -72,9 +76,13 @@ namespace GMTK2020.UI
             foreach (var button in gameOverMenu.GetComponentsInChildren<Button>())
                 button.enabled = true;
 
+            var corners = new Vector3[4];
+            boardTransform.GetWorldCorners(corners);
+            Vector2 boardCenter = (corners[0] + corners[2]) / 2;
+
             Sequence seq = DOTween.Sequence();
             seq.Join(menuOverlay.DOFade(overlayAlpha, fadeDuration));
-            seq.Join(gameOverMenu.DOMove(boardTransform.position, slideDuration).SetEase(Ease.OutBack, slideOvershoot));
+            seq.Join(gameOverMenu.DOMove(boardCenter, slideDuration).SetEase(Ease.OutBack, slideOvershoot));
         }
 
         public void GoToMainMenu()

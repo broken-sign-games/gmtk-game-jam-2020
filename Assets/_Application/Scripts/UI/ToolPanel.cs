@@ -1,7 +1,6 @@
 ﻿using GMTK2020.Data;
 using GMTK2020.Input;
 using GMTK2020.TutorialSystem;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,6 +25,7 @@ namespace GMTK2020.UI
         private Vector2 lastPointerPos;
 
         private float minXPos;
+        private int screenWidth;
 
         private RectTransform rectTransform;
 
@@ -61,6 +61,12 @@ namespace GMTK2020.UI
 
         private void Start()
         {
+            UpdateScreenWidth();
+        }
+
+        private void UpdateScreenWidth()
+        {
+            screenWidth = Screen.width;
             var parent = rectTransform.parent as RectTransform;
             minXPos = parent.rect.width - rectTransform.rect.width;
         }
@@ -85,6 +91,11 @@ namespace GMTK2020.UI
 
         private void Update()
         {
+#if UNITY_EDITOR
+            if (screenWidth != Screen.width)
+                UpdateScreenWidth();
+#endif
+
             if (isDragging)
                 OnDrag();
 
