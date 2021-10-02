@@ -435,7 +435,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -600, y: 0}
+  m_AnchoredPosition: {x: -650, y: 0}
   m_SizeDelta: {x: 1500, y: 125}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &133486494
@@ -725,7 +725,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 270, y: -9.999939}
+  m_AnchoredPosition: {x: 98.5, y: -25.419983}
   m_SizeDelta: {x: 270, y: 135}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &356064437
@@ -1674,7 +1674,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -62.71, y: -10}
+  m_AnchoredPosition: {x: -184.3, y: -25.419983}
   m_SizeDelta: {x: 400, y: 135}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &737023734
@@ -1957,8 +1957,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 38
-  m_fontSizeBase: 38
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3691,12 +3691,12 @@ PrefabInstance:
     - target: {fileID: 2764046791568564156, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -380
+      value: -461
       objectReference: {fileID: 0}
     - target: {fileID: 2764046791568564156, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -10
+      value: -25.419983
       objectReference: {fileID: 0}
     - target: {fileID: 2764046791568564156, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
@@ -5809,12 +5809,12 @@ PrefabInstance:
     - target: {fileID: 2764046791568564156, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -10
+      value: 461
       objectReference: {fileID: 0}
     - target: {fileID: 2764046791568564156, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -240
+      value: -25.419983
       objectReference: {fileID: 0}
     - target: {fileID: 2764046791568564156, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
@@ -5829,7 +5829,7 @@ PrefabInstance:
     - target: {fileID: 2764046791568564156, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2764046791568564156, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
@@ -5839,7 +5839,7 @@ PrefabInstance:
     - target: {fileID: 2764046791568564156, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2764046791568564156, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
@@ -5849,12 +5849,12 @@ PrefabInstance:
     - target: {fileID: 2764046791568564156, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
       propertyPath: m_Pivot.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2764046791568564156, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
       propertyPath: m_Pivot.y
-      value: 0.5375
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2764046791568564157, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
@@ -6970,8 +6970,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -376}
-  m_SizeDelta: {x: 1024, y: 1024}
+  m_AnchoredPosition: {x: 0, y: -220}
+  m_SizeDelta: {x: 1180, y: 1180}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &2122376767
 MonoBehaviour:
@@ -6986,6 +6986,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   infoBox: {fileID: 1658330291}
-  maxBoardWidth: 1024
+  maxBoardWidth: 1180
   borderWidth: 20
   minInfoBoxHeight: 280
