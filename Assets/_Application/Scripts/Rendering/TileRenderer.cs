@@ -15,14 +15,13 @@ namespace GMTK2020.Rendering
         [SerializeField] private SpriteRenderer tileHighlight = null;
         [SerializeField] private SpriteMask vialMask = null;
         [SerializeField] private SpriteMask liquidMask = null;
-        [SerializeField] private GameObject wildcardIndicator = null;
-
-        [SerializeField] private SpriteRenderer incorrectBackground = null;
-        [SerializeField] private SpriteRenderer missingPredictionIndicator = null;
+        [SerializeField] private SpriteMask rainbowRoot = null;
+        [SerializeField] private SpriteRenderer rainbowSprite = null;
         [SerializeField] private ParticleSystem bubbles = null;
         [SerializeField] private ParticleSystem pop = null;
         [SerializeField] private ParticleSystem popRing = null;
         [SerializeField] private ParticleSystem puff = null;
+        [SerializeField] private ParticleSystem shards = null;
         [SerializeField] private ParticleSystem liquidEvap = null;
         [SerializeField] private ParticleSystem neckEvap = null;
         [SerializeField] private ParticleSystem dust = null;
@@ -32,6 +31,8 @@ namespace GMTK2020.Rendering
         [SerializeField] private AudioSource bubblingAudioSource = null;
         [SerializeField] private AudioSource fallingAudioSource = null;
         [SerializeField] private AudioSource evaporatingAudioSource = null;
+
+        [SerializeField] private Sprite wildcardHighlight = null;
 
         [SerializeField] private float tileFadeDuration = 0.25f;
 
@@ -60,16 +61,41 @@ namespace GMTK2020.Rendering
         [SerializeField] private int landingShakeVibrato = 10;
         [SerializeField] private float landingShakeRandomness = 90f;
 
+        [SerializeField] private float rainbowScrollSpeed = 1f;
+
         [SerializeField] private TileData tileData = null;
+
+        [SerializeField] private ParticleSystem.MinMaxGradient rainbowColors = default;
 
         private Tile tile;
 
+        private float rainbowLength;
+
+        private void Start()
+        {
+            // Assumes rainbow sprite is tiled to two periods
+            rainbowLength = rainbowSprite.size.y / 2;
+        }
+
         private void Update()
         {
-            if (!tile.Marked)
+            if (tile.Inert)
                 return;
 
-            vialTransform.localRotation = Quaternion.Euler(0, 0, Mathf.Sin(Time.time * tiltFrequency) * tiltAmplitude);
+            if (tile.Marked)
+                vialTransform.localRotation = Quaternion.Euler(0, 0, Mathf.Sin(Time.time * tiltFrequency) * tiltAmplitude);
+
+            if (tile.Wildcard)
+            {
+                float y = rainbowSprite.transform.localPosition.y;
+
+                y += rainbowScrollSpeed * Time.deltaTime;
+
+                if (y > rainbowLength / 2)
+                    y -= rainbowLength;
+
+                rainbowSprite.transform.localPosition = Vector3.up * y;
+            }
         }
 
         public void SetTile(Tile tile)
@@ -87,52 +113,65 @@ namespace GMTK2020.Rendering
             liquidMask.sprite = tileData.LiquidSpriteMap[tile.Color];
             glowSprite.sprite = tileData.GlowSpriteMap[tile.Color];
             glowSprite.color = tileData.GlowColor[tile.Color];
+            rainbowRoot.sprite = tileData.LiquidSpriteMap[tile.Color]; ;
 
             UpdateCracks(false);
 
             Color highlightColor = tileData.PopDropletColor[tile.Color];
             highlightColor.a = 0;
             tileHighlight.color = highlightColor;
+            
+            SetParticleColors(tileData.PopDropletColor[tile.Color]);
+        }
 
+        private void SetParticleColors(ParticleSystem.MinMaxGradient colors)
+        {
             ParticleSystem.MainModule mainPop = pop.main;
-            mainPop.startColor = tileData.PopDropletColor[tile.Color];
+            mainPop.startColor = colors;
             ParticleSystem.MainModule mainPopRing = popRing.main;
-            mainPopRing.startColor = tileData.PopDropletColor[tile.Color];
+            mainPopRing.startColor = colors;
             ParticleSystem.MainModule mainPuff = puff.main;
-            mainPuff.startColor = tileData.PopDropletColor[tile.Color];
-            ParticleSystem.MainModule mainWeakEvaporation = weakEvaporation.main;
-            Color evaporationColor = tileData.PopDropletColor[tile.Color];
-            evaporationColor.a = mainWeakEvaporation.startColor.color.a;
-            mainWeakEvaporation.startColor = evaporationColor;
-            ParticleSystem.MainModule mainStrongEvaporation = strongEvaporation.main;
-            evaporationColor = tileData.PopDropletColor[tile.Color];
-            evaporationColor.a = mainStrongEvaporation.startColor.color.a;
-            mainStrongEvaporation.startColor = tileData.PopDropletColor[tile.Color];
+            mainPuff.startColor = colors;
             ParticleSystem.MainModule mainLiquidEvap = liquidEvap.main;
-            mainLiquidEvap.startColor = tileData.PopDropletColor[tile.Color];
+            mainLiquidEvap.startColor = colors;
             ParticleSystem.MainModule mainNeckEvap = neckEvap.main;
-            mainNeckEvap.startColor = tileData.PopDropletColor[tile.Color];
+            mainNeckEvap.startColor = colors;
+
+            ParticleSystem.MainModule mainWeakEvaporation = weakEvaporation.main;
+            colors.FixAlpha(mainWeakEvaporation.startColor.color.a);
+            mainWeakEvaporation.startColor = colors;
+
+            ParticleSystem.MainModule mainStrongEvaporation = strongEvaporation.main;
+            colors.FixAlpha(mainStrongEvaporation.startColor.color.a);
+            mainStrongEvaporation.startColor = colors;
         }
 
         public Tween UpdateCracks(bool playSound = true)
         {
+            Sequence seq = DOTween.Sequence();
+
             if (playSound)
-                SoundManager.Instance.PlayEffect(SoundEffect.VialCracked);
+                seq.AppendCallback(() => SoundManager.Instance.PlayEffect(SoundEffect.VialCracked));
 
-            glassSprite.sprite = tileData.VialSpriteMap[tile.Color][tile.Cracks];
-
-            switch (tile.Cracks)
+            seq.AppendCallback(() =>
             {
-            case 1:
-                weakEvaporation.Play();
-                break;
-            case 2:
-                weakEvaporation.Stop();
-                strongEvaporation.Play();
-                break;
-            }
+                glassSprite.sprite = tileData.VialSpriteMap[tile.Color][tile.Cracks];
+                
+                switch (tile.Cracks)
+                {
+                case 1:
+                    weakEvaporation.Play();
+                    break;
+                case 2:
+                    weakEvaporation.Stop();
+                    strongEvaporation.Play();
+                    break;
+                }
+            });
 
-            return PulseVial();
+            seq.Append(PulseVial());
+
+            return seq;
         }
 
         public Tween UpdatePrediction()
@@ -185,7 +224,7 @@ namespace GMTK2020.Rendering
             bubbles.Stop();
 
             liquidSprite.enabled = false;
-            wildcardIndicator.SetActive(false);
+            rainbowRoot.gameObject.SetActive(false);
             vialTransform.localRotation = Quaternion.identity;
 
             SoundManager.Instance.PlayEffect(SoundEffect.VialEvaporated);
@@ -223,7 +262,12 @@ namespace GMTK2020.Rendering
 
         public Tween MakeWildcard()
         {
-            wildcardIndicator.SetActive(true);
+            rainbowRoot.gameObject.SetActive(true);
+
+            SetParticleColors(rainbowColors);
+
+            tileHighlight.color = new Color(1, 1, 1, 0);
+            tileHighlight.sprite = wildcardHighlight;
 
             SoundManager.Instance.PlayEffect(SoundEffect.WildcardCreated);
 
@@ -395,16 +439,19 @@ namespace GMTK2020.Rendering
         {
             weakEvaporation.Stop();
             strongEvaporation.Stop();
-            puff.Play();
+            if (!tile.Inert)
+                puff.Play();
+            shards.Play();
             SoundManager.Instance.PlayEffect(SoundEffect.VialDestroyed);
+
+            vialTransform.gameObject.SetActive(false);
+            corkSprite.gameObject.SetActive(false);
+
+            // We don't return this, because we don't want the animation to wait for the object destruction.
             Sequence seq = DOTween.Sequence();
-
-            seq.Append(vialTransform.DOScale(0, matchShrinkDuration).SetEase(Ease.OutBack));
-            seq.Join(corkSprite.transform.DOScale(0, matchShrinkDuration).SetEase(Ease.OutBack));
-            seq.Join(tileHighlight.DOFade(0, matchShrinkDuration));
-            seq.AppendCallback(() => Destroy(gameObject));
-
-            return seq;
+            seq.InsertCallback(2f, () => Destroy(gameObject));
+            
+            return tileHighlight.DOFade(0, matchShrinkDuration);
         }
 
         public Tween ShowCorrectPrediction()
@@ -413,16 +460,6 @@ namespace GMTK2020.Rendering
             seq.Join(glassSprite.DOFade(0.0f, tileFadeDuration));
             
             return seq;
-        }
-
-        public void ShowIncorrectPrediction()
-        {
-            incorrectBackground.gameObject.SetActive(true);
-        }
-
-        public void ShowMissingPrediction()
-        {
-            missingPredictionIndicator.gameObject.SetActive(true);
         }
 
         private Tween PulseVial()

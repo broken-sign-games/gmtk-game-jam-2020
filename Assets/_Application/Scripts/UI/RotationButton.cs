@@ -8,8 +8,10 @@ namespace GMTK2020.UI
     public class RotationButton : ToolButton
     {
         [SerializeField] private Image rotationSenseIndicator = null;
-        [SerializeField] private Sprite cwSprite = null;
-        [SerializeField] private Sprite ccwSprite = null;
+        [SerializeField] private Sprite enabledCWSprite = null;
+        [SerializeField] private Sprite disabledCWSprite = null;
+        [SerializeField] private Sprite enabledCCWSprite = null;
+        [SerializeField] private Sprite disabledCCWSprite = null;
         
         public RotationSense RotationSense { get; private set; } = RotationSense.CCW;
 
@@ -42,9 +44,19 @@ namespace GMTK2020.UI
                 BoardManipulator.ToggleTool(Tool);
         }
 
+        public override void UpdateAvailable(bool available)
+        {
+            base.UpdateAvailable(available);
+
+            UpdateRotationSenseIndicator();
+        }
+
         private void UpdateRotationSenseIndicator()
         {
-            rotationSenseIndicator.sprite = RotationSense == RotationSense.CW ? cwSprite : ccwSprite;
+            if (Available)
+                rotationSenseIndicator.sprite = RotationSense == RotationSense.CW ? enabledCWSprite : enabledCCWSprite;
+            else
+                rotationSenseIndicator.sprite = RotationSense == RotationSense.CW ? disabledCWSprite : disabledCCWSprite;
         }
     }
 }

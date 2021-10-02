@@ -43,7 +43,7 @@ namespace GMTK2020
             if (gameNumber <= fixedLevelStartData.Levels.Length)
                     simulator.SetFixedCracks(fixedLevelStartData.Levels[gameNumber-1].CrackedTiles);
 
-            predictionEditor.Initialize(simulator);
+            predictionEditor.Initialize(simulator, Level.Board);
             boardRenderer.RenderInitial(Level.Board);
             playback.Initialize(simulator);
         }

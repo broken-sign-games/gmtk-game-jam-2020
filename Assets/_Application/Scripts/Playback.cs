@@ -17,9 +17,10 @@ namespace GMTK2020
         [SerializeField] private BoardRenderer boardRenderer = null;
         [SerializeField] private ScoreRenderer scoreRenderer = null;
         [SerializeField] private Button runButton = null;
-        [SerializeField] private Button retryButton = null;
         [SerializeField] private BoardManipulator boardManipulator = null;
-        [SerializeField] private CrackCounter crackCounter = null;
+        [SerializeField] private ChainCounter chainCounter = null;
+        [SerializeField] private LevelCounter levelCounter = null;
+        [SerializeField] private InGameMenus menuManager = null;
 
         // TODO: This is probably not the best place to put this data.
         [SerializeField] private int baseScore = 100;
@@ -40,10 +41,13 @@ namespace GMTK2020
 
             scoreKeeper = new ScoreKeeper(baseScore);
             scoreRenderer.SetScoreKeeper(scoreKeeper);
-            crackCounter.SetAvoidedCracks(0);
-            crackCounter.SetMaxCracks(simulator.CracksPerChain);
+            scoreRenderer.UpdateHighscore();
+            chainCounter.SetMaxCracks(simulator.CracksPerChain);
+            chainCounter.RenderInitialChain();
 
             boardManipulator.LastToolUsed += OnLastToolUsed;
+            simulator.ReactionLocked += OnReactionLocked;
+            simulator.ReactionUnlocked += OnReactionUnlocked;
 
             KickOffGameplayLoop();
         }
@@ -51,6 +55,8 @@ namespace GMTK2020
         private void OnDestroy()
         {
             boardManipulator.LastToolUsed -= OnLastToolUsed;
+            simulator.ReactionLocked -= OnReactionLocked;
+            simulator.ReactionUnlocked -= OnReactionUnlocked;
         }
 
         public void StartReaction()
@@ -71,7 +77,7 @@ namespace GMTK2020
             {
                 reactionStarted = false;
 
-                await ShowInteractiveTutorialsAsync();
+                await ShowInteractiveTutorialsOrEnableToolsAsync();
 
                 await Awaiters.Until(() => reactionStarted || gameEnded);
 
@@ -80,21 +86,26 @@ namespace GMTK2020
                 if (gameEnded)
                     break;
 
+                await levelCounter.IncrementTurns().Completion();
+
+                int previousLevel = simulator.DifficultyLevel;
+
                 await PlayBackReactionAsync();
 
-                boardManipulator.MakeToolsAvailable();
+                if (simulator.DifficultyLevel > previousLevel)
+                    await levelCounter.IncrementLevel().Completion();
+
+                await StartNewTurn();
 
                 if (!simulator.FurtherMatchesPossible() && !boardManipulator.AnyToolsAvailable())
                 {
                     EndGame();
                     break;
                 }
-
-                StartNewTurn();    
             }
         }
 
-        private async Task ShowInteractiveTutorialsAsync()
+        private async Task ShowInteractiveTutorialsOrEnableToolsAsync()
         {
             int gameCount = TutorialManager.GetGameCount();
 
@@ -105,6 +116,9 @@ namespace GMTK2020
                 break;
             case 2:
                 await ShowSecondGameTutorialAsync();
+                break;
+            default:
+                boardManipulator.MakeToolsAvailable();
                 break;
             }
         }
@@ -136,66 +150,43 @@ namespace GMTK2020
             if (turnCount > 0)
                 return;
 
+            await tutorialManager.ShowTutorialIfNewAsync(TutorialID.OmittingVialsIntro);
             await tutorialManager.ShowTutorialIfNewAsync(TutorialID.OmittingVials);
+            await tutorialManager.ShowTutorialIfNewAsync(TutorialID.StartReactionWithOmittedVials);
         }
 
         private async Task PlayBackReactionAsync()
         {
-            runButton.interactable = false;
-            
             while (true)
             {
                 SimulationStep step = simulator.SimulateNextStep();
 
-                scoreKeeper.ScoreStep(step);
+                scoreKeeper.ScoreStep(step, simulator.DifficultyLevel);
                 // We might need to tie this into the board renderer 
                 // to sync the update with the match animation.
                 scoreRenderer.UpdateScore();
 
-                var matchStep = step as MatchStep;
-                var cleanUpStep = step as CleanUpStep;
-
-                if (matchStep != null)
+                if (step is MatchStep matchStep)
                 {
-                    boardManipulator.RewardMatch(matchStep);
-                    if (matchStep.MatchedTiles.Count > 3)
-                        await ShowMatchShapeTutorial(matchStep);
+                    await boardManipulator.RewardMatches(matchStep);
                 }
-                else if (cleanUpStep != null && cleanUpStep.InertTiles.Count(tile => tile.Marked) > 0)
+                else if (step is CleanUpStep cleanUpStep)
                 {
-                    await ShowIncorrectPredictionsTutorial(cleanUpStep.InertTiles);
-                }
+                    if (cleanUpStep.InertTiles.Count(tile => tile.Marked) > 0)
+                        await ShowIncorrectPredictionsTutorialAsync(cleanUpStep.InertTiles);
 
-                crackCounter.SetAvoidedCracks(simulator.ChainLength);
+                    if (cleanUpStep.CrackedTiles.Count > 0)
+                        await ShowCrackedVialsTutorialAsync(cleanUpStep.CrackedTiles);
+                }
                 
                 await boardRenderer.AnimateSimulationStepAsync(step);
-
-                if (cleanUpStep != null)
-                {
-                    if (cleanUpStep.CrackedTiles.Count > 0)
-                        await ShowCrackedVialsTutorial(cleanUpStep.CrackedTiles);
-
-                    if (simulator.DifficultyLevel > 0)
-                        await ShowDifficultyTutorial();
-                }
 
                 if (step.FinalStep)
                     break;
             }
         }
 
-        private async Task ShowMatchShapeTutorial(MatchStep matchStep)
-        {
-            var matchedRects = matchStep.LeftEndsOfHorizontalMatches
-                .Select(pos => new GridRect(pos, pos + new Vector2Int(2, 0)))
-                .Concat(matchStep.BottomEndsOfVerticalMatches
-                    .Select(pos => new GridRect(pos, pos + new Vector2Int(0, 2))))
-                .ToList();
-
-            await tutorialManager.ShowTutorialIfNewAsync(TutorialID.MatchShapes, matchedRects);
-        }
-
-        private async Task ShowIncorrectPredictionsTutorial(HashSet<Tile> inertTiles)
+        private async Task ShowIncorrectPredictionsTutorialAsync(HashSet<Tile> inertTiles)
         {
             var inertRects = inertTiles
                 .Where(tile => tile.Marked)
@@ -205,7 +196,7 @@ namespace GMTK2020
             await tutorialManager.ShowTutorialIfNewAsync(TutorialID.IncorrectPredictions, inertRects);
         }
 
-        private async Task ShowCrackedVialsTutorial(HashSet<Tile> crackedTiles)
+        private async Task ShowCrackedVialsTutorialAsync(HashSet<Tile> crackedTiles)
         {
             var crackedRects = crackedTiles
                 .Select(tile => new GridRect(tile.Position))
@@ -214,18 +205,20 @@ namespace GMTK2020
             await tutorialManager.ShowTutorialIfNewAsync(TutorialID.CrackingVials, crackedRects);
         }
 
-        private async Task ShowDifficultyTutorial()
+        private async Task ShowDifficultyTutorialAsync()
         {
             await tutorialManager.ShowTutorialIfNewAsync(TutorialID.DifficultyIncrease);
         }
 
-        private void StartNewTurn()
+        private async Task StartNewTurn()
         {
             ++turnCount;
 
-            runButton.interactable = true;
-            crackCounter.SetAvoidedCracks(0);
-            crackCounter.SetMaxCracks(simulator.CracksPerChain);
+            chainCounter.SetMaxCracks(simulator.CracksPerChain);
+
+            await boardRenderer.AnimateNewTurn();
+
+            boardManipulator.MakeToolsAvailable();
             boardManipulator.UnlockPredictions();
         }
 
@@ -243,7 +236,24 @@ namespace GMTK2020
             runButton.interactable = false;
             scoreKeeper.UpdateHighscore();
             scoreRenderer.UpdateHighscore();
-            retryButton.ActivateObject();
+            menuManager.ShowGameOverMenu();
+        }
+
+        public void QuitGame()
+        {
+            gameEnded = true;
+            runButton.interactable = false;
+            scoreKeeper.UpdateHighscore();
+        }
+
+        private void OnReactionLocked()
+        {
+            runButton.interactable = false;
+        }
+
+        private void OnReactionUnlocked()
+        {
+            runButton.interactable = true;
         }
     }
 }

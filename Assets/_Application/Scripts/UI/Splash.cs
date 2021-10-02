@@ -35,12 +35,8 @@ namespace GMTK2020.UI
         private void OnSelect(InputAction.CallbackContext obj)
         {
             SoundManager.Instance.PlayEffect(SoundEffect.Click);
-            LoadMainMenuScene();
-        }
 
-        private void LoadMainMenuScene()
-        {
-            SceneLoader.Instance.LoadMainMenuScene();
+            SceneLoader.Instance.LoadScene(SceneID.Menu);
         }
     }
 }

@@ -180,8 +180,10 @@ namespace GMTK2020
             return step;
         }
 
-        public void RewardMatches(MatchStep step)
+        public List<Tool> RewardMatches(MatchStep step)
         {
+            var previousToolUses = new Dictionary<Tool, int>(availableToolUses);
+
             foreach (Vector2Int match in step.LeftEndsOfHorizontalMatches)
             {
                 RewardShape(step.ChainLength, MatchShape.Row3);
@@ -264,6 +266,13 @@ namespace GMTK2020
                 if (step.BottomEndsOfVerticalMatches.Contains(match + new Vector2Int(0, 2)))
                     RewardShape(step.ChainLength, MatchShape.Row5);
             }
+
+            var newTools = new List<Tool>();
+            foreach ((Tool tool, int uses) in availableToolUses)
+                for (int i = previousToolUses[tool]; i < uses; ++i)
+                    newTools.Add(tool);
+
+            return newTools;
         }
 
         private void RewardShape(int chainLength, MatchShape shape)

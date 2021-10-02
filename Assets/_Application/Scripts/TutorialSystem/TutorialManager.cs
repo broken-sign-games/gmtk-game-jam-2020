@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace GMTK2020.TutorialSystem
 {
@@ -16,7 +15,7 @@ namespace GMTK2020.TutorialSystem
 
         public static TutorialManager Instance { get; private set; }
 
-        public delegate void TutorialHandler(Tutorial tutorial);
+        public delegate Task TutorialHandler(Tutorial tutorial);
         public event TutorialHandler TutorialReady;
         public event TutorialHandler TutorialCompleted;
 
@@ -58,6 +57,12 @@ namespace GMTK2020.TutorialSystem
             => ShowTutorialIfNewAsync(id, new List<GridRect>());
 
         public Task ShowTutorialIfNewAsync(TutorialID id, List<GridRect> dynamicInteractableRects)
+            => ShowTutorialIfNewAsync(id, dynamicInteractableRects, new List<Tool>());
+
+        public Task ShowTutorialIfNewAsync(
+            TutorialID id, 
+            List<GridRect> dynamicInteractableRects, 
+            List<Tool> dynamicInteractableTools)
         {
             if (TutorialWasAlreadyShown(id))
                 return Task.CompletedTask;
@@ -69,10 +74,15 @@ namespace GMTK2020.TutorialSystem
             else
                 tutorial.InteractableRects.AddRange(dynamicInteractableRects);
 
+            if (tutorial.InteractableTools is null)
+                tutorial.InteractableTools = dynamicInteractableTools;
+            else
+                tutorial.InteractableTools.AddRange(dynamicInteractableTools);
+
             return ShowTutorialAsync(tutorial);
         }
 
-        public void CompleteActiveTutorial()
+        public async void CompleteActiveTutorial()
         {
             if (activeTutorial is null)
                 return;
@@ -80,8 +90,8 @@ namespace GMTK2020.TutorialSystem
             string prefsKey = TutorialIDToPrefsKey(activeTutorial.ID);
             PlayerPrefs.SetInt(prefsKey, 1);
             Tutorial completedTutorial = activeTutorial;
+            await InvokeTutorialHandlersAsync(TutorialCompleted, completedTutorial);
             activeTutorial = null;
-            TutorialCompleted(completedTutorial);
             activeTutorialTCS.TrySetResult(null);
         }
 
@@ -98,7 +108,20 @@ namespace GMTK2020.TutorialSystem
             return activeTutorialTCS.Task;
         }
 
-        private bool TutorialWasAlreadyShown(TutorialID id)
+        private async Task InvokeTutorialHandlersAsync(TutorialHandler handlers, Tutorial tutorial)
+        {
+            if (handlers == null)
+                return;
+
+            IEnumerable<Task> tasks = handlers
+                .GetInvocationList()
+                .Cast<TutorialHandler>()
+                .Select(handler => handler(tutorial));
+
+            await Task.WhenAll(tasks);
+        }
+
+        public bool TutorialWasAlreadyShown(TutorialID id)
         {
             string prefsKey = TutorialIDToPrefsKey(id);
             return PlayerPrefs.GetInt(prefsKey, -1) >= 0;

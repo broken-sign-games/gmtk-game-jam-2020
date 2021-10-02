@@ -16,5 +16,7 @@
         DifficultyIncrease,
         SelectSwapTool,
         SelectRemoveTool,
+        StartReactionWithOmittedVials,
+        OmittingVialsIntro,
     }
 }

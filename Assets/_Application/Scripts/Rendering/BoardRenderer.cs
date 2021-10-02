@@ -1,29 +1,29 @@
 ﻿using DG.Tweening;
-using GMTK2020.Audio;
 using GMTK2020.Data;
+using GMTK2020.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace GMTK2020.Rendering
 {
     public class BoardRenderer : MonoBehaviour
     {
-        [SerializeField] private Camera mainCamera = null;
-        [SerializeField] private SpriteRenderer border = null;
-        [SerializeField] private SpriteRenderer gridLines = null;
         [SerializeField] private TileRenderer tileRendererPrefab = null;
+        [SerializeField] private ChainCounter chainCounter = null;
+        [SerializeField] private Transform reference00 = null;
+        [SerializeField] private Transform reference11 = null;
 
         [SerializeField] private float postMatchDelay = 0.25f;
         [SerializeField] private float postFallDelay = 0.1f;
         [SerializeField] private float postInertDelay = 0.1f;
+        [SerializeField] private float spikeBallDelay = 0.25f;
+        [SerializeField] private float anticipateSpikeBallDestructionBy = 0.25f;
 
         private readonly Dictionary<Guid, TileRenderer> tileDictionary = new Dictionary<Guid, TileRenderer>();
-        private Board initialBoard;
-
+        
         int width;
         int height;
 
@@ -42,14 +42,8 @@ namespace GMTK2020.Rendering
 
             tileDictionary.Clear();
 
-            initialBoard = board;
-
             width = board.Width;
             height = board.Height;
-
-            border.size = new Vector2(width + 0.375f - 0.03125f, height + 0.375f - 0.03125f);
-            gridLines.size = new Vector2(width - 0.03125f, height - 0.03125f);
-            transform.localPosition = new Vector2(-(width - 1) / 2f, -(height - 1) / 2f);
 
             for (int x = 0; x < width; ++x)
                 for (int y = 0; y < height; ++y)
@@ -64,6 +58,12 @@ namespace GMTK2020.Rendering
                     tileDictionary[tile.ID] = tileRenderer;
                 }
         }
+
+        public async Task AnimateNewTurn()
+        {
+            await chainCounter.ResetChain().Completion();
+        }
+
         public async Task AnimateSimulationStepAsync(SimulationStep step)
         {
             switch (step)
@@ -114,7 +114,7 @@ namespace GMTK2020.Rendering
             foreach (Tile tile in predictionStep.AffectedTiles)
                 seq.Join(UpdatePrediction(tile));
 
-            await CompletionOf(seq);
+            await seq.Completion();
         }
 
         private async Task AnimateRefillStepAsync(RefillStep refillStep)
@@ -123,7 +123,7 @@ namespace GMTK2020.Rendering
             foreach (Tile tile in refillStep.AffectedTiles)
                 seq.Join(RefillTile(tile));
 
-            await CompletionOf(seq);
+            await seq.Completion();
         }
 
         private async Task AnimateWildcardStepAsync(WildcardStep wildcardStep)
@@ -132,12 +132,14 @@ namespace GMTK2020.Rendering
             foreach (Tile tile in wildcardStep.AffectedTiles)
                 seq.Join(MakeWildcard(tile));
 
-            await CompletionOf(seq);
+            await seq.Completion();
         }
 
         private async Task AnimateMatchedTilesAsync(HashSet<Tile> matchedTiles)
         {
             Sequence seq = DOTween.Sequence();
+
+            seq.Append(chainCounter.AddChain());
 
             foreach (Tile tile in matchedTiles)
             {
@@ -148,7 +150,7 @@ namespace GMTK2020.Rendering
                 tileDictionary.Remove(tile.ID);
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postMatchDelay);
         }
@@ -165,7 +167,7 @@ namespace GMTK2020.Rendering
                 seq.Insert(0, tileRenderer.FallToCurrentPosition(movedTile.From));
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postFallDelay);
         }
@@ -183,7 +185,7 @@ namespace GMTK2020.Rendering
                 tileDictionary.Remove(tile.ID);
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postMatchDelay);
         }
@@ -199,7 +201,7 @@ namespace GMTK2020.Rendering
                 seq.Insert(0, tileRenderer.TransitionToInert());
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postInertDelay);
         }
@@ -208,14 +210,39 @@ namespace GMTK2020.Rendering
         {
             Sequence seq = DOTween.Sequence();
 
+            float delay = 0f;
+
             foreach (Tile tile in crackedTiles)
             {
+                if (tile.Cracks == 1)
+                    continue;
+
                 TileRenderer tileRenderer = tileDictionary[tile.ID];
 
-                seq.Insert(0, tileRenderer.UpdateCracks());
+                seq.Insert(delay, tileRenderer.UpdateCracks());
+
+                delay += spikeBallDelay;
             }
 
-            await CompletionOf(seq);
+            foreach (Tile tile in crackedTiles)
+            {
+                if (tile.Cracks > 1)
+                    continue;
+
+                TileRenderer tileRenderer = tileDictionary[tile.ID];
+
+                Vector3 referenceScale = reference11.position - reference00.position;
+                Vector3 targetPos = reference00.position + new Vector3(tile.Position.x * referenceScale.x, tile.Position.y * referenceScale.y);
+
+                Tween spikeBallTween = chainCounter.SendSpikeBall(targetPos);
+                seq.Insert(delay, spikeBallTween);
+
+                seq.Insert(delay + spikeBallTween.Duration() - anticipateSpikeBallDestructionBy, tileRenderer.UpdateCracks());
+
+                delay += spikeBallDelay;
+            }
+
+            await seq.Completion();
 
             await new WaitForSeconds(postInertDelay);
         }
@@ -234,7 +261,7 @@ namespace GMTK2020.Rendering
                 seq.Insert(0, tileRenderer.FallToCurrentPosition(movedTile.From));
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postFallDelay);
         }
@@ -261,7 +288,7 @@ namespace GMTK2020.Rendering
                 seq.Insert(0, tileRenderer.FallToCurrentPosition(movedTile.From));
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postFallDelay);
         }
@@ -278,7 +305,7 @@ namespace GMTK2020.Rendering
                 seq.Insert(0, tileRenderer.MoveToCurrentPosition(movedTile.From));
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postFallDelay);
         }
@@ -295,45 +322,14 @@ namespace GMTK2020.Rendering
                 seq.Insert(0, tileRenderer.RotateToCurrentPosition(movedTile.From, pivot, rotSense));
             }
 
-            await CompletionOf(seq);
+            await seq.Completion();
 
             await new WaitForSeconds(postFallDelay);
-        }
-
-        System.Collections.IEnumerator CompletionOf(Tween tween)
-        {
-            yield return tween.WaitForCompletion();
         }
 
         public void CancelAnimation()
         {
             cancelAnimation = true;
-        }
-
-        public Vector2Int? PixelSpaceToGridCoordinates(Vector3 mousePosition)
-        {
-            Vector3 worldPos = mainCamera.ScreenToWorldPoint(mousePosition);
-            Vector3 localPos = worldPos - transform.position;
-
-            var gridPos = new Vector2Int(Mathf.RoundToInt(localPos.x), Mathf.RoundToInt(localPos.y));
-
-            if (gridPos.x < 0 || gridPos.y < 0 || gridPos.x >= width || gridPos.y >= height)
-                return null;
-
-            return gridPos;
-        }
-
-        public Vector2Int? PixelSpaceToHalfGridCoordinates(Vector2 mousePosition)
-        {
-            Vector3 worldPos = mainCamera.ScreenToWorldPoint(mousePosition);
-            Vector3 localPos = worldPos - transform.position;
-
-            var gridPos = new Vector2Int(Mathf.RoundToInt(localPos.x - 0.5f), Mathf.RoundToInt(localPos.y - 0.5f));
-
-            if (gridPos.x < 0 || gridPos.y < 0 || gridPos.x >= width - 1 || gridPos.y >= height - 1)
-                return null;
-
-            return gridPos;
         }
 
         private Tween UpdatePrediction(Tile tile)

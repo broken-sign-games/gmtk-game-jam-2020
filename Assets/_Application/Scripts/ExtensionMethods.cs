@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -130,6 +131,70 @@ namespace GMTK2020
         public static void SetAlpha(this Image image, float alpha)
         {
             image.color = new Color(image.color.r, image.color.g, image.color.b, alpha);
+        }
+
+        private static int CountCornersVisibleFrom(this RectTransform rectTransform, Camera camera)
+        {
+            Rect screenBounds = new Rect(0f, 0f, Screen.width, Screen.height); // Screen space bounds (assumes camera renders across the entire screen)
+            Vector3[] objectCorners = new Vector3[4];
+            rectTransform.GetWorldCorners(objectCorners);
+
+            RenderMode renderMode = rectTransform.GetComponentInParent<Canvas>().renderMode;
+
+            int visibleCorners = 0;
+            for (var i = 0; i < objectCorners.Length; i++)
+            {
+                // Transform world space position of corner to screen space
+                Vector3 screenSpaceCorner = renderMode == RenderMode.ScreenSpaceOverlay 
+                    ? objectCorners[i]
+                    : camera.WorldToScreenPoint(objectCorners[i]);
+
+                if (screenBounds.Contains(screenSpaceCorner))
+                {
+                    visibleCorners++;
+                }
+            }
+            return visibleCorners;
+        }
+
+        public static bool IsFullyVisibleFrom(this RectTransform rectTransform, Camera camera)
+        {
+            return CountCornersVisibleFrom(rectTransform, camera) == 4; // True if all 4 corners are visible
+        }
+
+        public static bool IsVisibleFrom(this RectTransform rectTransform, Camera camera)
+        {
+            return CountCornersVisibleFrom(rectTransform, camera) > 0; // True if any corners are visible
+        }
+    }
+
+    public static class ParticleSystemExtensionMethods
+    {
+        public static void FixAlpha(ref this ParticleSystem.MinMaxGradient gradient, float alpha)
+        {
+            switch (gradient.mode)
+            {
+            case ParticleSystemGradientMode.Color:
+                Color color = gradient.color;
+                color.a = alpha;
+                gradient.color = color;
+                break;
+            case ParticleSystemGradientMode.RandomColor:
+                for (int i = 0; i < gradient.gradient.alphaKeys.Length; ++i)
+                    gradient.gradient.alphaKeys[i].alpha = alpha;
+                break;
+            default:
+                Debug.LogWarning($"FixAlpha not implemented for MinMaxGradient mode {Enum.GetName(typeof(ParticleSystemGradientMode), gradient.mode)}");
+                break;
+            }
+        }
+    }
+
+    public static class DOTweenExtensionMethods
+    {
+        public static System.Collections.IEnumerator Completion(this Tween tween)
+        {
+            yield return tween.WaitForCompletion();
         }
     }
 }

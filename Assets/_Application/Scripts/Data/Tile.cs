@@ -48,7 +48,6 @@ namespace GMTK2020.Data
         public void MakeInert()
         {
             Inert = true;
-            Marked = false;
             Wildcard = false;
         }
 

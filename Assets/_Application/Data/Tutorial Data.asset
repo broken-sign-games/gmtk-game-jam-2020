@@ -16,46 +16,57 @@ MonoBehaviour:
   - ID: 0
     Message: Open three matching vials in a row to prepare them for a reaction.
     ShowDismissButton: 0
+    LockBoard: 0
     InteractableTools: 
     PlaybackButtonAvailable: 0
+    HighlightSpikeBalls: 0
     InteractableRects:
     - _bottomLeft: {x: 3, y: 1}
       _topRight: {x: 5, y: 1}
   - ID: 1
     Message: Hit the reaction button to kick things off.
     ShowDismissButton: 0
+    LockBoard: 0
     InteractableTools: 
     PlaybackButtonAvailable: 1
+    HighlightSpikeBalls: 0
     InteractableRects: []
   - ID: 2
-    Message: After a reaction, some vials may crack. If you don't match them within
-      two turns, their contents will evaporate.
+    Message: After a reaction, spike balls may crack some vials. Match them within
+      two turns, or their contents will evaporate!
     ShowDismissButton: 1
+    LockBoard: 0
     InteractableTools: 
     PlaybackButtonAvailable: 0
+    HighlightSpikeBalls: 1
     InteractableRects: []
   - ID: 12
-    Message: After each reaction, you can manipulate the board <b>once</b> to set
+    Message: After each reaction, you can manipulate the board <u>once</u> to set
       up further matches. Select the swap tool.
     ShowDismissButton: 0
+    LockBoard: 0
     InteractableTools: 0b000000
     PlaybackButtonAvailable: 0
+    HighlightSpikeBalls: 0
     InteractableRects: []
   - ID: 3
     Message: Swap these vials by swiping from one to the other.
     ShowDismissButton: 0
+    LockBoard: 0
     InteractableTools: 
     PlaybackButtonAvailable: 0
+    HighlightSpikeBalls: 0
     InteractableRects:
     - _bottomLeft: {x: 3, y: 0}
       _topRight: {x: 3, y: 1}
   - ID: 4
-    Message: You can already open vials that will form a match after earlier matches
-      resolve and predict chain reactions. This reduces the number of vials that
-      will crack and nets you more points.
+    Message: You can also open vials to predict chain reactions. This neutralises
+      spike balls and nets you more points! Open all of these vials.
     ShowDismissButton: 0
+    LockBoard: 0
     InteractableTools: 
     PlaybackButtonAvailable: 0
+    HighlightSpikeBalls: 0
     InteractableRects:
     - _bottomLeft: {x: 2, y: 1}
       _topRight: {x: 6, y: 1}
@@ -68,63 +79,98 @@ MonoBehaviour:
   - ID: 5
     Message: Let's kick off the chain reaction!
     ShowDismissButton: 0
+    LockBoard: 0
     InteractableTools: 
     PlaybackButtonAvailable: 1
+    HighlightSpikeBalls: 0
     InteractableRects: []
   - ID: 6
     Message: Matching bigger shapes can unlock various tools to manipulate the board.
     ShowDismissButton: 1
-    InteractableTools: 01000000
+    LockBoard: 0
+    InteractableTools: 
     PlaybackButtonAvailable: 0
+    HighlightSpikeBalls: 0
     InteractableRects: []
   - ID: 13
     Message: Let's try out the new tool!
     ShowDismissButton: 0
+    LockBoard: 0
     InteractableTools: 01000000
     PlaybackButtonAvailable: 0
+    HighlightSpikeBalls: 0
     InteractableRects: []
   - ID: 7
     Message: You can use the hammer to remove vials from the board without a match.
     ShowDismissButton: 0
+    LockBoard: 0
     InteractableTools: 
     PlaybackButtonAvailable: 0
+    HighlightSpikeBalls: 0
     InteractableRects:
     - _bottomLeft: {x: 3, y: 0}
       _topRight: {x: 3, y: 0}
   - ID: 8
-    Message: You're on your own now, good luck!
+    Message: You're on your own now, good luck! Can you find another 3-chain?
     ShowDismissButton: 1
+    LockBoard: 0
     InteractableTools: 
     PlaybackButtonAvailable: 0
+    HighlightSpikeBalls: 0
     InteractableRects: []
   - ID: 9
     Message: If any vials are still open when the chain reaction stops, their contents
-      will evaporate. Empty vials can no longer participate in reactions.
+      will evaporate. They can no longer participate in matches.
     ShowDismissButton: 1
+    LockBoard: 0
     InteractableTools: 
     PlaybackButtonAvailable: 0
+    HighlightSpikeBalls: 0
     InteractableRects: []
-  - ID: 10
-    Message: 'Tip: only open vials will participate in reactions. Sometimes it''s
-      better to leave a vial closed to get a longer chain reaction.'
-    ShowDismissButton: 0
+  - ID: 15
+    Message: If we open vials for all possible matches, we won't be able to get a
+      chain reaction from this board.
+    ShowDismissButton: 1
+    LockBoard: 1
     InteractableTools: 
     PlaybackButtonAvailable: 0
+    HighlightSpikeBalls: 0
     InteractableRects:
     - _bottomLeft: {x: 3, y: 3}
       _topRight: {x: 5, y: 3}
-    - _bottomLeft: {x: 4, y: 2}
+    - _bottomLeft: {x: 4, y: 4}
+      _topRight: {x: 4, y: 6}
+  - ID: 10
+    Message: However, only opened vials will participate in reactions. Here it's
+      better to leave a vial closed to get a longer chain. Open these vials instead.
+    ShowDismissButton: 0
+    LockBoard: 0
+    InteractableTools: 
+    PlaybackButtonAvailable: 0
+    HighlightSpikeBalls: 0
+    InteractableRects:
+    - _bottomLeft: {x: 3, y: 3}
+      _topRight: {x: 6, y: 3}
+    - _bottomLeft: {x: 4, y: 1}
       _topRight: {x: 4, y: 5}
     - _bottomLeft: {x: 4, y: 8}
       _topRight: {x: 4, y: 8}
-    - _bottomLeft: {x: 5, y: 5}
-      _topRight: {x: 5, y: 5}
-    - _bottomLeft: {x: 6, y: 4}
-      _topRight: {x: 6, y: 4}
+    - _bottomLeft: {x: 5, y: 4}
+      _topRight: {x: 5, y: 4}
+  - ID: 14
+    Message: Start the chain reaction!
+    ShowDismissButton: 0
+    LockBoard: 0
+    InteractableTools: 
+    PlaybackButtonAvailable: 1
+    HighlightSpikeBalls: 0
+    InteractableRects: []
   - ID: 11
     Message: Every 5 turns, the difficulty increases. Either by increasing the number
-      of cracking vials per turn, or by adding a new vial colour to the mix.
+      of spike balls or by adding a new vial colour to the mix.
     ShowDismissButton: 1
+    LockBoard: 0
     InteractableTools: 
     PlaybackButtonAvailable: 0
+    HighlightSpikeBalls: 1
     InteractableRects: []

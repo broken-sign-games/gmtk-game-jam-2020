@@ -2,6 +2,7 @@
 using GMTK2020.Data;
 using GMTK2020.TutorialSystem;
 using System;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,7 +21,7 @@ namespace GMTK2020.UI
         private Tool activeTool = Tool.ToggleMarked;
         private Tutorial activeTutorial = null;
 
-        private void Start()
+        private void Awake()
         {
             tutorialManager = TutorialManager.Instance;
 
@@ -44,16 +45,20 @@ namespace GMTK2020.UI
             tutorialManager.CompleteActiveTutorial();
         }
 
-        private void OnTutorialReady(Tutorial tutorial)
+        private Task OnTutorialReady(Tutorial tutorial)
         {
             activeTutorial = tutorial;
             UpdateInfoBox();
+
+            return Task.CompletedTask;
         }
 
-        private void OnTutorialCompleted(Tutorial tutorial)
+        private Task OnTutorialCompleted(Tutorial tutorial)
         {
             activeTutorial = null;
             UpdateInfoBox();
+
+            return Task.CompletedTask;
         }
 
         private void OnActiveToolChanged(Tool tool)
