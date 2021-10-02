@@ -21,7 +21,7 @@ namespace GMTK2020.UI
         private Tool activeTool = Tool.ToggleMarked;
         private Tutorial activeTutorial = null;
 
-        private void Start()
+        private void Awake()
         {
             tutorialManager = TutorialManager.Instance;
 

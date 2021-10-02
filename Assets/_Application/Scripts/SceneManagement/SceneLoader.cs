@@ -14,6 +14,8 @@ namespace GMTK2020.SceneManagement
 
         public static SceneLoader Instance { get; private set; }
 
+        private Vector2Int resolution;
+
         private Scene baseScene;
         private Scene? activeScene;
         private bool loading = false;
@@ -24,7 +26,7 @@ namespace GMTK2020.SceneManagement
             get
             {
                 if (_activeSceneMap is null)
-                    _activeSceneMap = Screen.width >= Screen.height ? landscapeScenes : portraitScenes;
+                    UpdateResolution();
 
                 return _activeSceneMap;
             }
@@ -40,6 +42,20 @@ namespace GMTK2020.SceneManagement
 
             Instance = this;
             baseScene = SceneManager.GetSceneByBuildIndex(0);
+
+            UpdateResolution();
+        }
+
+        private void Update()
+        {
+            if (resolution.x != Screen.width || resolution.y != Screen.height)
+                UpdateResolution();
+        }
+
+        private void UpdateResolution()
+        {
+            resolution = new Vector2Int(Screen.width, Screen.height);
+            _activeSceneMap = Screen.width >= Screen.height ? landscapeScenes : portraitScenes;
         }
 
         public async void LoadScene(SceneID sceneID) 

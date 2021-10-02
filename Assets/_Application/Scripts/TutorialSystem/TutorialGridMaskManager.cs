@@ -21,8 +21,6 @@ namespace GMTK2020.TutorialSystem
         private List<RectTransform> activeTutorialMasks;
         private Tutorial activeTutorial;
 
-        private Vector2 gridCellSize;
-
         private void Awake()
         {
             activeTutorialMasks = new List<RectTransform>();
@@ -31,11 +29,6 @@ namespace GMTK2020.TutorialSystem
 
             tutorialManager.TutorialReady += OnTutorialReady;
             tutorialManager.TutorialCompleted += OnTutorialCompleted;
-        }
-
-        private void Start()
-        {
-            gridCellSize = reference11.localPosition - reference00.localPosition;
         }
 
         private void OnDestroy()
@@ -47,6 +40,8 @@ namespace GMTK2020.TutorialSystem
         private async Task OnTutorialReady(Tutorial tutorial)
         {
             activeTutorial = tutorial;
+
+            Vector2 gridCellSize = reference11.localPosition - reference00.localPosition;
 
             foreach (GridRect rect in tutorial.InteractableRects)
             {

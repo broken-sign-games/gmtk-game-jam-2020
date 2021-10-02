@@ -26,6 +26,7 @@ namespace GMTK2020.UI
 
         private float minXPos;
         private int screenWidth;
+        private bool enablePanning;
 
         private RectTransform rectTransform;
 
@@ -69,6 +70,23 @@ namespace GMTK2020.UI
             screenWidth = Screen.width;
             var parent = rectTransform.parent as RectTransform;
             minXPos = parent.rect.width - rectTransform.rect.width;
+
+            enablePanning = minXPos < 0;
+
+            if (!enablePanning)
+            {
+                rectTransform.anchorMin = new Vector2(0.5f, 0f);
+                rectTransform.anchorMax = new Vector2(0.5f, 0f);
+                rectTransform.pivot = new Vector2(0.5f, 0f);
+                speed = 0;
+            }
+            else
+            {
+                rectTransform.anchorMin = Vector2.zero;
+                rectTransform.anchorMax = Vector2.zero;
+                rectTransform.pivot = Vector2.zero;
+            }
+            rectTransform.anchoredPosition = Vector2.zero;
         }
 
         private void OnEnable()
@@ -99,7 +117,8 @@ namespace GMTK2020.UI
             if (isDragging)
                 OnDrag();
 
-            MovePanel();
+            if (enablePanning)
+                MovePanel();
         }
 
         private void MovePanel()
