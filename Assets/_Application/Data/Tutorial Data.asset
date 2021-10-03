@@ -111,7 +111,8 @@ MonoBehaviour:
     - _bottomLeft: {x: 3, y: 0}
       _topRight: {x: 3, y: 0}
   - ID: 8
-    Message: You're on your own now, good luck! Can you find another 3-chain?
+    Message: You're on your own now, good luck! Can you find another 3-chain? Maybe
+      try out the new tool.
     ShowDismissButton: 1
     LockBoard: 0
     InteractableTools: 

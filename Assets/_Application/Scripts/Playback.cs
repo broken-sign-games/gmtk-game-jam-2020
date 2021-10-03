@@ -138,8 +138,8 @@ namespace GMTK2020
                 await tutorialManager.ShowTutorialIfNewAsync(TutorialID.StartChainReaction);
                 break;
             case 2:
-                await tutorialManager.ShowTutorialIfNewAsync(TutorialID.SelectRemoveTool);
-                await tutorialManager.ShowTutorialIfNewAsync(TutorialID.RemoveTileTool);
+                //await tutorialManager.ShowTutorialIfNewAsync(TutorialID.SelectRemoveTool);
+                //await tutorialManager.ShowTutorialIfNewAsync(TutorialID.RemoveTileTool);
                 await tutorialManager.ShowTutorialIfNewAsync(TutorialID.EndOfMainTutorial);
                 break;
             }
