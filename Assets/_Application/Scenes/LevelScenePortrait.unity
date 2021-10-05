@@ -1376,6 +1376,7 @@ GameObject:
   m_Component:
   - component: {fileID: 567954286}
   - component: {fileID: 567954287}
+  - component: {fileID: 567954288}
   m_Layer: 5
   m_Name: Chain Counter
   m_TagString: Untagged
@@ -1428,6 +1429,20 @@ MonoBehaviour:
   spikeBallFlySpeed: 12
   chainSlideSpeed: 432
   spikeBallSpawnDelay: 0.125
+--- !u!114 &567954288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567954285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 492715cff07d1ed4f921d0ce425f6825, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxWidth: 900
+  rightBuffer: 180
 --- !u!1 &617991657
 GameObject:
   m_ObjectHideFlags: 0
