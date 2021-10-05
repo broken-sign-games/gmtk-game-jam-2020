@@ -11,5 +11,16 @@ namespace GMTK2020.UI
             SoundManager.Instance.PlayEffect(SoundEffect.Click);
             SceneLoader.Instance.LoadScene(SceneID.Level);
         }
+
+        public void StopOrQuit()
+        {
+            SoundManager.Instance.PlayEffect(SoundEffect.Click);
+
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
     } 
 }
