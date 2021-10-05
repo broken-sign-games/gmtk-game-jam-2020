@@ -233,9 +233,6 @@ namespace GMTK2020
                 ActiveToolChanged?.Invoke(ActiveTool);
 
                 UpdateUI();
-
-                if (!AnyToolsAvailable())
-                    LastToolUsed?.Invoke();
             }
             catch (InvalidOperationException)
             {
@@ -258,9 +255,6 @@ namespace GMTK2020
                 ActiveToolChanged?.Invoke(ActiveTool);
 
                 UpdateUI();
-
-                if (!AnyToolsAvailable())
-                    LastToolUsed?.Invoke();
             }
             catch (InvalidOperationException)
             {
@@ -271,6 +265,9 @@ namespace GMTK2020
         private async void KickOffAnimation(SimulationStep step)
         {
             await boardRenderer.AnimateSimulationStepAsync(step);
+
+            if (!AnyToolsAvailable())
+                LastToolUsed?.Invoke();
         }
 
         public void UpdateUI()
