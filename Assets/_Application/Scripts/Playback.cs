@@ -81,21 +81,29 @@ namespace GMTK2020
 
                 await Awaiters.Until(() => reactionStarted || gameEnded);
 
+                if (gameEnded) break;
+
                 boardManipulator.LockPredictions();
 
-                if (gameEnded)
-                    break;
-
                 await levelCounter.IncrementTurns().Completion();
+
+                if (gameEnded) break;
 
                 int previousLevel = simulator.DifficultyLevel;
 
                 await PlayBackReactionAsync();
 
+                if (gameEnded) break;
+
                 if (simulator.DifficultyLevel > previousLevel)
+                {
                     await levelCounter.IncrementLevel().Completion();
+                    if (gameEnded) break;
+                }
 
                 await StartNewTurn();
+
+                if (gameEnded) break;
 
                 if (!simulator.FurtherMatchesPossible() && !boardManipulator.AnyToolsAvailable())
                 {
@@ -169,19 +177,26 @@ namespace GMTK2020
                 if (step is MatchStep matchStep)
                 {
                     await boardManipulator.RewardMatches(matchStep);
+                    if (gameEnded) break;
                 }
                 else if (step is CleanUpStep cleanUpStep)
                 {
                     if (cleanUpStep.InertTiles.Count(tile => tile.Marked) > 0)
+                    {
                         await ShowIncorrectPredictionsTutorialAsync(cleanUpStep.InertTiles);
+                        if (gameEnded) break;
+                    }
 
                     if (cleanUpStep.CrackedTiles.Count > 0)
+                    {
                         await ShowCrackedVialsTutorialAsync(cleanUpStep.CrackedTiles);
+                        if (gameEnded) break;
+                    }
                 }
                 
                 await boardRenderer.AnimateSimulationStepAsync(step);
 
-                if (step.FinalStep)
+                if (step.FinalStep || gameEnded)
                     break;
             }
         }
