@@ -49,14 +49,16 @@ namespace GMTK2020.Editor
         }
 
         [MenuItem("Build/Build all _F7")]
-        public static void ExportPluginEntryPoint()
+        public static void BuildAllEntryPoint()
         {
             Debug.Log("Starting build...");
 
-            Debug.Log("Running EditMode tests...");
+            BuildAll();
 
-            testApi.RegisterCallbacks(testCallbacks);
-            RunTests(TestMode.EditMode);
+            //Debug.Log("Running EditMode tests...");
+
+            //testApi.RegisterCallbacks(testCallbacks);
+            //RunTests(TestMode.EditMode);
 
             // Callback will continue control flow in CheckEditModeTestResults
         }
@@ -91,6 +93,8 @@ namespace GMTK2020.Editor
             Build(BuildTarget.StandaloneWindows64);
             Build(BuildTarget.StandaloneOSX);
             Build(BuildTarget.StandaloneLinux64);
+            Build(BuildTarget.WebGL);
+            Build(BuildTarget.Android);
         }
 
         private static void Build(BuildTarget buildTarget)
@@ -127,9 +131,11 @@ namespace GMTK2020.Editor
                 return $"Builds/{BUILD_BASE_NAME}-linux/{BUILD_BASE_NAME}.x86_64";
             case BuildTarget.StandaloneOSX:
                 return $"Builds/{BUILD_BASE_NAME}-osx.app";
-            case BuildTarget.iOS:
             case BuildTarget.Android:
+                return $"Builds/{BUILD_BASE_NAME}-android.apk";
             case BuildTarget.WebGL:
+                return $"Builds/{BUILD_BASE_NAME}-webgl";
+            case BuildTarget.iOS:
                 throw new NotImplementedException("Build target not yet supported.");
             default:
                 throw new InvalidEnumArgumentException(nameof(buildTarget), (int)buildTarget, typeof(BuildTarget));
