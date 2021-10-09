@@ -464,7 +464,11 @@ namespace GMTK2020.Rendering
 
         private Tween PulseVial()
         {
-            return vialTransform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0);
+            Sequence seq = DOTween.Sequence();
+            seq.AppendCallback(() => vialTransform.localScale = Vector3.one);
+            seq.Append(vialTransform.DOPunchScale(Vector3.one * clickPulseScale, clickPulseDuration, 0, 0));
+
+            return seq;
         }
     }
 }
