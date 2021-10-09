@@ -45,7 +45,7 @@ namespace GMTK2020
         {
             inputs = new InputActions();
 
-            inputs.Gameplay.Select.performed += OnSelect;
+            inputs.Gameplay.Select.started += OnSelect;
             inputs.Gameplay.Select.canceled += OnRelease;
 
             ActiveTool = Tool.ToggleMarked;
