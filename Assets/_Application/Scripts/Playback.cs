@@ -21,6 +21,7 @@ namespace GMTK2020
         [SerializeField] private ChainCounter chainCounter = null;
         [SerializeField] private LevelCounter levelCounter = null;
         [SerializeField] private InGameMenus menuManager = null;
+        [SerializeField] private SessionMetrics sessionMetrics = null;
 
         // TODO: This is probably not the best place to put this data.
         [SerializeField] private int baseScore = 100;
@@ -169,6 +170,8 @@ namespace GMTK2020
             {
                 SimulationStep step = simulator.SimulateNextStep();
 
+                sessionMetrics.RegisterSimulationStep(step);
+
                 scoreKeeper.ScoreStep(step, simulator.DifficultyLevel);
                 // We might need to tie this into the board renderer 
                 // to sync the update with the match animation.
@@ -249,6 +252,7 @@ namespace GMTK2020
 
             SoundManager.Instance.PlayEffect(SoundEffect.GameEnded);
             runButton.interactable = false;
+            sessionMetrics.RegisterEndOfGame();
             scoreKeeper.UpdateHighscore();
             scoreRenderer.UpdateHighscore();
             menuManager.ShowGameOverMenu();

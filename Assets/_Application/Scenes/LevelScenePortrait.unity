@@ -1860,6 +1860,49 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 627272587}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &632628915
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 632628917}
+  - component: {fileID: 632628916}
+  m_Layer: 0
+  m_Name: Session Metrics
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &632628916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632628915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5b1cd9a343ccfd45bd56102327f9514, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &632628917
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632628915}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &697972096
 GameObject:
   m_ObjectHideFlags: 0
@@ -3502,6 +3545,7 @@ MonoBehaviour:
   chainCounter: {fileID: 567954287}
   levelCounter: {fileID: 1203539762}
   menuManager: {fileID: 418433965}
+  sessionMetrics: {fileID: 632628916}
   baseScore: 100
 --- !u!4 &1284230306
 Transform:
@@ -4332,6 +4376,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 1472024596}
   boardRenderer: {fileID: 2077407154}
+  sessionMetrics: {fileID: 632628916}
   tutorialOverlay: {fileID: 1215556402}
   toolButtons:
     reorderableList:
@@ -5603,6 +5648,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 153013530}
     m_Modifications:
+    - target: {fileID: 3509821119893912010, guid: dd8c7b30f1f9f664e9420e7b9799c49e,
+        type: 3}
+      propertyPath: sessionMetrics
+      value: 
+      objectReference: {fileID: 632628916}
     - target: {fileID: 7888305651296639658, guid: dd8c7b30f1f9f664e9420e7b9799c49e,
         type: 3}
       propertyPath: boardTransform
@@ -5728,5 +5778,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: In-Game Menus
       objectReference: {fileID: 0}
+    - target: {fileID: 8523819907580484244, guid: dd8c7b30f1f9f664e9420e7b9799c49e,
+        type: 3}
+      propertyPath: sessionMetrics
+      value: 
+      objectReference: {fileID: 632628916}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd8c7b30f1f9f664e9420e7b9799c49e, type: 3}

@@ -17,6 +17,7 @@ namespace GMTK2020
     {
         [SerializeField] private Camera mainCamera = null;
         [SerializeField] private BoardRenderer boardRenderer = null;
+        [SerializeField] private SessionMetrics sessionMetrics = null;
         [SerializeField] private TutorialGridMaskManager tutorialOverlay = null;
         [SerializeField] private SerializableDictionaryBase<Tool, ToolButton> toolButtons = null;
         [SerializeField] private RotationButton rotate3x3Button = null;
@@ -108,7 +109,10 @@ namespace GMTK2020
             List<Tool> newTools = toolbox.RewardMatches(matchStep);
 
             if (newTools.Count > 0)
+            {
+                sessionMetrics.RegisterToolRewards(newTools);
                 await ShowMatchShapeTutorialAsync(matchStep, newTools);
+            }
 
             UpdateUI();
         }
@@ -232,6 +236,8 @@ namespace GMTK2020
                 else
                     step = toolbox.UseTool(ActiveTool, gridPos);
 
+                sessionMetrics.RegisterToolUse(ActiveTool);
+
                 KickOffAnimation(step);
                 ActiveTool = Tool.ToggleMarked;
                 ActiveToolChanged?.Invoke(ActiveTool);
@@ -255,6 +261,8 @@ namespace GMTK2020
             try
             {
                 SimulationStep step = toolbox.UseSwapTool(ActiveTool, from, to);
+
+                sessionMetrics.RegisterToolUse(ActiveTool);
 
                 KickOffAnimation(step);
                 ActiveTool = Tool.ToggleMarked;

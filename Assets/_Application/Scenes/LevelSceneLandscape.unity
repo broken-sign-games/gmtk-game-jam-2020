@@ -131,6 +131,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1850605658}
     m_Modifications:
+    - target: {fileID: 3509821119893912010, guid: dd8c7b30f1f9f664e9420e7b9799c49e,
+        type: 3}
+      propertyPath: sessionMetrics
+      value: 
+      objectReference: {fileID: 262874730}
     - target: {fileID: 7888305651296639658, guid: dd8c7b30f1f9f664e9420e7b9799c49e,
         type: 3}
       propertyPath: boardTransform
@@ -256,6 +261,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: In-Game Menus
       objectReference: {fileID: 0}
+    - target: {fileID: 8523819907580484244, guid: dd8c7b30f1f9f664e9420e7b9799c49e,
+        type: 3}
+      propertyPath: sessionMetrics
+      value: 
+      objectReference: {fileID: 262874730}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd8c7b30f1f9f664e9420e7b9799c49e, type: 3}
 --- !u!224 &43081411 stripped
@@ -904,6 +914,49 @@ RectTransform:
   m_AnchoredPosition: {x: 725, y: -157.40002}
   m_SizeDelta: {x: 338.6, y: 135}
   m_Pivot: {x: 0, y: 1}
+--- !u!1 &262874729
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 262874731}
+  - component: {fileID: 262874730}
+  m_Layer: 0
+  m_Name: Session Metrics
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &262874730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 262874729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5b1cd9a343ccfd45bd56102327f9514, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &262874731
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 262874729}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &356064437
 GameObject:
   m_ObjectHideFlags: 0
@@ -2733,6 +2786,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 1557593270}
   boardRenderer: {fileID: 2116036405}
+  sessionMetrics: {fileID: 262874730}
   tutorialOverlay: {fileID: 1415787475}
   toolButtons:
     reorderableList:
@@ -5336,6 +5390,7 @@ MonoBehaviour:
   chainCounter: {fileID: 105137177}
   levelCounter: {fileID: 237832749}
   menuManager: {fileID: 43081414}
+  sessionMetrics: {fileID: 262874730}
   baseScore: 100
 --- !u!4 &2001402402
 Transform:
