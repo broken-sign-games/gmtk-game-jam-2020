@@ -1,12 +1,14 @@
 ﻿using DG.Tweening;
 using GMTK2020.Audio;
 using GMTK2020.Data;
+using System;
 using UnityEngine;
 
 namespace GMTK2020.Rendering
 {
     public class TileRenderer : MonoBehaviour
     {
+        [SerializeField] private Transform foregroundTransform = null;
         [SerializeField] private Transform vialTransform = null;
         [SerializeField] private SpriteRenderer glassSprite = null;
         [SerializeField] private SpriteRenderer liquidSprite = null;
@@ -45,10 +47,15 @@ namespace GMTK2020.Rendering
 
         [SerializeField] private float glowOpacity = 0.15f;
         [SerializeField] private float glowFlashOpacity = 0.4f;
+
         [SerializeField] private float glowFadeDuration = 0.1f;
 
         [SerializeField] private float tiltFrequency = 1f;
         [SerializeField] private float tiltAmplitude = 10f;
+
+        [SerializeField] private float swapScaleFrequency = 1f;
+        [SerializeField] private float swapScaleAmplitude = 1.2f;
+        [SerializeField] private Ease swapScaleEase = Ease.InOutSine;
 
         [SerializeField] private float matchShrinkDuration = 0.5f;
 
@@ -70,6 +77,8 @@ namespace GMTK2020.Rendering
         private Tile tile;
 
         private float rainbowLength;
+
+        private static readonly int SWAP_PULSE_ID = "SWAP_PULSE".GetHashCode();
 
         private void Start()
         {
@@ -215,6 +224,25 @@ namespace GMTK2020.Rendering
 
                 return seq;
             }
+        }
+        
+        public void IndicateStartOfSwap()
+        {
+            foregroundTransform.localScale = Vector3.one;
+            foregroundTransform
+                .DOScale(swapScaleAmplitude, swapScaleFrequency)
+                .SetSpeedBased()
+                .SetEase(swapScaleEase)
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetId(SWAP_PULSE_ID);
+        }
+
+        public void StopIndicatingSwap()
+        {
+            DOTween.Kill(SWAP_PULSE_ID);
+            foregroundTransform
+                .DOScale(1f, swapScaleFrequency)
+                .SetSpeedBased();
         }
 
         public Tween TransitionToInert()

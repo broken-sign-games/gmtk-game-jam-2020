@@ -23,11 +23,13 @@ namespace GMTK2020.Rendering
         [SerializeField] private float anticipateSpikeBallDestructionBy = 0.25f;
 
         private readonly Dictionary<Guid, TileRenderer> tileDictionary = new Dictionary<Guid, TileRenderer>();
-        
-        int width;
-        int height;
 
-        bool cancelAnimation = false;
+        private int width;
+        private int height;
+
+        private Board board;
+
+        private bool cancelAnimation = false;
 
         public void RenderInitial(Board board)
         {
@@ -41,6 +43,8 @@ namespace GMTK2020.Rendering
             }
 
             tileDictionary.Clear();
+
+            this.board = board;
 
             width = board.Width;
             height = board.Height;
@@ -57,6 +61,20 @@ namespace GMTK2020.Rendering
                     tileRenderer.SetTile(tile);
                     tileDictionary[tile.ID] = tileRenderer;
                 }
+        }
+
+        public void IndicateStartOfSwap(Vector2Int gridPos)
+        {
+            Tile tile = board[gridPos];
+            TileRenderer tileRenderer = tileDictionary[tile.ID];
+            tileRenderer.IndicateStartOfSwap();
+        }
+
+        public void StopIndicatingSwap(Vector2Int gridPos)
+        {
+            Tile tile = board[gridPos];
+            TileRenderer tileRenderer = tileDictionary[tile.ID];
+            tileRenderer.StopIndicatingSwap();
         }
 
         public async Task AnimateNewTurn()

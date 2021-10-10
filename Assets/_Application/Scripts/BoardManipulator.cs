@@ -168,6 +168,7 @@ namespace GMTK2020
             {
                 isDragging = true;
                 draggingFrom = gridPos;
+                boardRenderer.IndicateStartOfSwap(gridPos);
             }
             else
                 UseActiveTool(gridPos);
@@ -211,6 +212,9 @@ namespace GMTK2020
             if (!initialized || predictionsFinalised)
                 return;
 
+            if (isDragging)
+                boardRenderer.StopIndicatingSwap(draggingFrom);
+
             isDragging = false;
         }
 
@@ -242,6 +246,8 @@ namespace GMTK2020
 
         private void UseSwapTool(Vector2Int from, Vector2Int to)
         {
+            boardRenderer.StopIndicatingSwap(from);
+
             // TODO: Indicate this error to the user
             if (toolbox.GetAvailableUses(ActiveTool) == 0)
                 return;
