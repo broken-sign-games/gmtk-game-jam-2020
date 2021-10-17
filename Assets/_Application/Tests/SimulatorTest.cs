@@ -385,7 +385,7 @@ namespace Tests
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 { 0, 4, 0, 6, 1, 0, 0, 0, 6 },
                 { 0, 3, 0, 7, 9, 3, 4, 0, 7 },
-                { 4, 5, 5, 6, 2, 3, 5, 4, 1 },
+                { 4,-5,-5,-6, 2, 3, 5, 4, 1 },
                 { 1, 2, 3, 2, 1, 4, 2, 5, 6 },
             });
             expected[1, 1].MakeInert();
@@ -664,7 +664,7 @@ namespace Tests
                 { 1, 5, 2, 7, 2, 4, 4, 4, 9 },
                 { 1, 3, 2, 2, 5, 1, 3, 3, 3 },
                 { 7, 1, 3, 4, 3, 1, 2, 2, 1 },
-                { 8, 4, 7, 6, 1, 1, 2, 3, 6 },
+                { 8, 4,-7, 6, 1, 1, 2, 3, 6 },
                 { 2, 3, 1, 7, 9, 3, 4, 8, 7 },
                 { 4, 5, 5, 6, 2, 2, 5, 4, 1 },
                 { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
@@ -677,14 +677,13 @@ namespace Tests
                 { 1, 5, 2, 7, 2, 4, 4, 4, 9 },
                 { 1, 3, 2, 2, 5, 1, 3, 3, 3 },
                 { 7, 1, 3, 4, 3, 1, 2, 2, 1 },
-                { 8, 4, 7, 6, 1, 1, 2, 3, 6 },
+                { 8, 4,-7, 6, 1, 1, 2, 3, 6 },
                 { 2, 3, 1, 7, 9, 3, 4, 8, 7 },
                 { 4, 5, 5, 6, 2, 2, 5, 4, 1 },
                 { 1, 2, 3, 2, 1, 3, 2, 5, 6 },
             });
 
             Vector2Int pos = new Vector2Int(2, 3);
-            board[pos].Marked = true;
             board[pos].MakeInert();
 
             var simulator = new Simulator(board, GetLevelSpecification());
@@ -696,7 +695,7 @@ namespace Tests
 
             AssertThatBoardsAreEqual(board, expected);
 
-            Assert.That(board[pos].Marked, Is.False);
+            Assert.That(board[pos].Marked, Is.True);
             Assert.That(board[pos].Inert, Is.False);
         }
 

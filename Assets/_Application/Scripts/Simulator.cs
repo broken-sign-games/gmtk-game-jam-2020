@@ -52,7 +52,8 @@ namespace GMTK2020
             colorCount = levelSpec.InitialColorCount;
             CracksPerChain = levelSpec.InitialCracksPerChain;
 
-            TutorialManager.Instance.TutorialReady += OnTutorialReady;
+            if (TutorialManager.Instance)
+                TutorialManager.Instance.TutorialReady += OnTutorialReady;
 
             // TODO: We probably want more control over the seed...
             rng = new Random(Time.frameCount);
@@ -442,7 +443,7 @@ namespace GMTK2020
             List<MovedTile> movedTiles = MoveTilesDown();
             List<MovedTile> newTiles = FillBoardWithTiles();
 
-            TutorialManager.Instance.CompleteActiveTutorial();
+            TutorialManager.Instance?.CompleteActiveTutorial();
 
             CheckWhetherReactionIsAllowed();
 
@@ -605,7 +606,7 @@ namespace GMTK2020
                 board.MoveTile(tile2, pos1),
             };
 
-            TutorialManager.Instance.CompleteActiveTutorial();
+            TutorialManager.Instance?.CompleteActiveTutorial();
 
             CheckWhetherReactionIsAllowed();
 

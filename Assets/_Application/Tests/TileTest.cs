@@ -93,7 +93,7 @@ namespace Tests
         }
 
         [Test]
-        public void Making_tile_inert_unmarks_it()
+        public void Making_tile_does_not_unmark_it()
         {
             Tile tile = new Tile(3, Vector2Int.zero)
             {
@@ -101,7 +101,7 @@ namespace Tests
             };
             tile.MakeInert();
 
-            Assert.That(tile.Marked, Is.False);
+            Assert.That(tile.Marked, Is.True);
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace Tests
             tile.MakeInert();
             tile.Refill();
 
-            Assert.That(tile.Marked, Is.False);
+            Assert.That(tile.Marked, Is.True);
             Assert.That(tile.Inert, Is.False);
         }
 
