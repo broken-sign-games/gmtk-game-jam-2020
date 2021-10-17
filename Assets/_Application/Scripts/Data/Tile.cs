@@ -20,8 +20,6 @@ namespace GMTK2020.Data
             }
         }
 
-        public int Cracks { get; private set; }
-
         public bool Wildcard { get; private set; } = false;
 
         public Vector2Int Position { get; set; }
@@ -42,7 +40,6 @@ namespace GMTK2020.Data
             Marked = other.Marked;
             Position = other.Position;
             Wildcard = other.Wildcard;
-            Cracks = other.Cracks;
         }
 
         public void MakeInert()
@@ -61,13 +58,8 @@ namespace GMTK2020.Data
             Inert = false;
         }
 
-        public void AddCrack()
-        {
-            ++Cracks;
-        }
-
         public override string ToString()
-            => $"Tile: {Color} at {Position} ({(Inert ? "Inert" : Marked ? "Marked" : "Unmarked")}{(Wildcard ? ", Wildcard" : "")}{(Cracks > 0 ? $", {Cracks} crack(s)" : "")})";
+            => $"Tile: {Color} at {Position} ({(Inert ? "Inert" : Marked ? "Marked" : "Unmarked")}{(Wildcard ? ", Wildcard" : "")})";
 
         #region Equality pattern
         public override bool Equals(object other)
@@ -102,7 +94,6 @@ namespace GMTK2020.Data
                 && Position == other.Position
                 && Marked == other.Marked
                 && Wildcard == other.Wildcard
-                && Cracks == other.Cracks
                 && Inert == other.Inert;
         }
 
@@ -114,7 +105,6 @@ namespace GMTK2020.Data
             hash = hash * 7 + Marked.GetHashCode();
             hash = hash * 7 + Inert.GetHashCode();
             hash = hash * 7 + Wildcard.GetHashCode();
-            hash = hash * 7 + Cracks.GetHashCode();
             return hash;
         }
 

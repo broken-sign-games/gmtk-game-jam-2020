@@ -13,8 +13,6 @@ namespace GMTK2020
     {
         public const int MAX_SIMULATION_STEPS = 5;
 
-        public const int MAX_CRACKS = 2;
-
         public event Action ReactionUnlocked;
         public event Action ReactionLocked;
         private bool isReactionAllowed = false;
@@ -23,7 +21,6 @@ namespace GMTK2020
 
         private readonly Random rng;
         private int colorCount;
-        public int CracksPerChain { get; private set; }
         private readonly LevelSpecification levelSpec;
 
         private enum DifficultyIncrease
@@ -50,7 +47,6 @@ namespace GMTK2020
             this.levelSpec = levelSpec;
 
             colorCount = levelSpec.InitialColorCount;
-            CracksPerChain = levelSpec.InitialCracksPerChain;
 
             if (TutorialManager.Instance)
                 TutorialManager.Instance.TutorialReady += OnTutorialReady;
@@ -88,7 +84,6 @@ namespace GMTK2020
             ++turnCount;
 
             HashSet<Tile> inertTiles = MakeMarkedAndCrackedTilesInert();
-            HashSet<Tile> crackedTiles = CrackTiles();
             
             IncreaseDifficulty();
 
@@ -96,7 +91,7 @@ namespace GMTK2020
 
             ChainLength = 0;
 
-            return new CleanUpStep(newTiles, inertTiles, crackedTiles);
+            return new CleanUpStep(newTiles, inertTiles);
         }
 
         private Task OnTutorialReady(Tutorial tutorial)
@@ -260,7 +255,7 @@ namespace GMTK2020
 
             foreach (Tile tile in board)
             {
-                if (!tile.Inert && (tile.Marked || tile.Cracks >= MAX_CRACKS))
+                if (!tile.Inert && tile.Marked)
                 {
                     tile.MakeInert();
                     inertTiles.Add(tile);
@@ -268,46 +263,6 @@ namespace GMTK2020
             }
 
             return inertTiles;
-        }
-
-        private HashSet<Tile> CrackTiles()
-        {
-            var crackedTiles = new HashSet<Tile>();
-
-            // Increment cracks on non-inert cracked tiles
-            foreach (Tile tile in board)
-            {
-                if (tile.Cracks > 0 && !tile.Inert)
-                {
-                    tile.AddCrack();
-                    crackedTiles.Add(tile);
-                }
-            }
-
-            int tilesToCrack = CracksPerChain - ChainLength;
-            // Crack fixed tiles
-            while (fixedCrackQueue.Count > 0 && tilesToCrack > 0)
-            {
-                Tile tile = fixedCrackQueue.Dequeue();
-
-                if (board[tile.Position] != tile || tile.Inert || tile.Cracks > 0)
-                    continue;
-
-                tile.AddCrack();
-                crackedTiles.Add(tile);
-                --tilesToCrack;
-            }
-
-            // Crack random tiles
-            Tile[] eligibleTiles = board.Where(tile => tile.Cracks == 0 && !tile.Inert).ToArray();
-
-            foreach (Tile crackedTile in eligibleTiles.Shuffle(rng).Take(tilesToCrack))
-            {
-                crackedTile.AddCrack();
-                crackedTiles.Add(crackedTile);
-            }
-
-            return crackedTiles;
         }
 
         private void IncreaseDifficulty()
@@ -328,10 +283,7 @@ namespace GMTK2020
                 nextDifficultyIncrease = DifficultyIncrease.AddCrack;
                 break;
             case DifficultyIncrease.AddCrack:
-                if (CracksPerChain < levelSpec.MaxCracksPerChain)
-                {
-                    ++CracksPerChain;
-                }
+                // TODO: This will increase resource cost instead
                 nextDifficultyIncrease = DifficultyIncrease.AddColor;
                 break;
             default:

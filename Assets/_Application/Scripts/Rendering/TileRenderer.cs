@@ -122,9 +122,8 @@ namespace GMTK2020.Rendering
             liquidMask.sprite = tileData.LiquidSpriteMap[tile.Color];
             glowSprite.sprite = tileData.GlowSpriteMap[tile.Color];
             glowSprite.color = tileData.GlowColor[tile.Color];
-            rainbowRoot.sprite = tileData.LiquidSpriteMap[tile.Color]; ;
-
-            UpdateCracks(false);
+            rainbowRoot.sprite = tileData.LiquidSpriteMap[tile.Color];
+            glassSprite.sprite = tileData.VialSpriteMap[tile.Color];
 
             Color highlightColor = tileData.PopDropletColor[tile.Color];
             highlightColor.a = 0;
@@ -153,34 +152,6 @@ namespace GMTK2020.Rendering
             ParticleSystem.MainModule mainStrongEvaporation = strongEvaporation.main;
             colors.FixAlpha(mainStrongEvaporation.startColor.color.a);
             mainStrongEvaporation.startColor = colors;
-        }
-
-        public Tween UpdateCracks(bool playSound = true)
-        {
-            Sequence seq = DOTween.Sequence();
-
-            if (playSound)
-                seq.AppendCallback(() => SoundManager.Instance.PlayEffect(SoundEffect.VialCracked));
-
-            seq.AppendCallback(() =>
-            {
-                glassSprite.sprite = tileData.VialSpriteMap[tile.Color][tile.Cracks];
-                
-                switch (tile.Cracks)
-                {
-                case 1:
-                    weakEvaporation.Play();
-                    break;
-                case 2:
-                    weakEvaporation.Stop();
-                    strongEvaporation.Play();
-                    break;
-                }
-            });
-
-            seq.Append(PulseVial());
-
-            return seq;
         }
 
         public Tween UpdatePrediction()

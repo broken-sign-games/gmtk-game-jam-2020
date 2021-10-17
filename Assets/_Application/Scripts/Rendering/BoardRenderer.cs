@@ -106,7 +106,6 @@ namespace GMTK2020.Rendering
         private async Task AnimateCleanUpStepAsync(CleanUpStep step)
         {
             await AnimateInertTilesAsync(step.InertTiles);
-            await AnimateCrackedTilesAsync(step.CrackedTiles);
             await AnimateNewTilesAsync(step.NewTiles);
         }
 
@@ -217,47 +216,6 @@ namespace GMTK2020.Rendering
                 TileRenderer tileRenderer = tileDictionary[tile.ID];
 
                 seq.Insert(0, tileRenderer.TransitionToInert());
-            }
-
-            await seq.Completion();
-
-            await new WaitForSeconds(postInertDelay);
-        }
-
-        private async Task AnimateCrackedTilesAsync(HashSet<Tile> crackedTiles)
-        {
-            Sequence seq = DOTween.Sequence();
-
-            float delay = 0f;
-
-            foreach (Tile tile in crackedTiles)
-            {
-                if (tile.Cracks == 1)
-                    continue;
-
-                TileRenderer tileRenderer = tileDictionary[tile.ID];
-
-                seq.Insert(delay, tileRenderer.UpdateCracks());
-
-                delay += spikeBallDelay;
-            }
-
-            foreach (Tile tile in crackedTiles)
-            {
-                if (tile.Cracks > 1)
-                    continue;
-
-                TileRenderer tileRenderer = tileDictionary[tile.ID];
-
-                Vector3 referenceScale = reference11.position - reference00.position;
-                Vector3 targetPos = reference00.position + new Vector3(tile.Position.x * referenceScale.x, tile.Position.y * referenceScale.y);
-
-                Tween spikeBallTween = chainCounter.SendSpikeBall(targetPos);
-                seq.Insert(delay, spikeBallTween);
-
-                seq.Insert(delay + spikeBallTween.Duration() - anticipateSpikeBallDestructionBy, tileRenderer.UpdateCracks());
-
-                delay += spikeBallDelay;
             }
 
             await seq.Completion();

@@ -43,7 +43,6 @@ namespace GMTK2020
             scoreKeeper = new ScoreKeeper(baseScore);
             scoreRenderer.SetScoreKeeper(scoreKeeper);
             scoreRenderer.UpdateHighscore();
-            chainCounter.SetMaxCracks(simulator.CracksPerChain);
             chainCounter.RenderInitialChain();
 
             boardManipulator.LastToolUsed += OnLastToolUsed;
@@ -99,6 +98,9 @@ namespace GMTK2020
                 if (simulator.DifficultyLevel > previousLevel)
                 {
                     await levelCounter.IncrementLevel().Completion();
+                    if (gameEnded) break;
+
+                    await ShowDifficultyTutorialAsync();
                     if (gameEnded) break;
                 }
 
@@ -189,12 +191,6 @@ namespace GMTK2020
                         await ShowIncorrectPredictionsTutorialAsync(cleanUpStep.InertTiles);
                         if (gameEnded) break;
                     }
-
-                    if (cleanUpStep.CrackedTiles.Count > 0)
-                    {
-                        await ShowCrackedVialsTutorialAsync(cleanUpStep.CrackedTiles);
-                        if (gameEnded) break;
-                    }
                 }
                 
                 await boardRenderer.AnimateSimulationStepAsync(step);
@@ -214,15 +210,6 @@ namespace GMTK2020
             await tutorialManager.ShowTutorialIfNewAsync(TutorialID.IncorrectPredictions, inertRects);
         }
 
-        private async Task ShowCrackedVialsTutorialAsync(HashSet<Tile> crackedTiles)
-        {
-            var crackedRects = crackedTiles
-                .Select(tile => new GridRect(tile.Position))
-                .ToList();
-
-            await tutorialManager.ShowTutorialIfNewAsync(TutorialID.CrackingVials, crackedRects);
-        }
-
         private async Task ShowDifficultyTutorialAsync()
         {
             await tutorialManager.ShowTutorialIfNewAsync(TutorialID.DifficultyIncrease);
@@ -231,8 +218,6 @@ namespace GMTK2020
         private async Task StartNewTurn()
         {
             ++turnCount;
-
-            chainCounter.SetMaxCracks(simulator.CracksPerChain);
 
             await boardRenderer.AnimateNewTurn();
 
