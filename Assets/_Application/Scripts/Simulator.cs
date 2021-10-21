@@ -31,6 +31,9 @@ namespace GMTK2020
 
         public int DifficultyLevel { get; private set; } = 0;
         private DifficultyIncrease nextDifficultyIncrease = DifficultyIncrease.AddCrack;
+        private int remainingResource;
+        private int resourceCost;
+        
         
         private bool ensureLatestColorDrops = false;
 
@@ -47,6 +50,9 @@ namespace GMTK2020
             this.levelSpec = levelSpec;
 
             colorCount = levelSpec.InitialColorCount;
+
+            remainingResource = levelSpec.InitialResource;
+            resourceCost = levelSpec.InitialCracksPerChain;
 
             if (TutorialManager.Instance)
                 TutorialManager.Instance.TutorialReady += OnTutorialReady;
@@ -77,21 +83,25 @@ namespace GMTK2020
                 List<MovedTile> movedTiles = MoveTilesDown();
 
                 ++ChainLength;
+                ++remainingResource;
 
-                return new MatchStep(ChainLength, matchedTiles, movedTiles, horizontalMatches, verticalMatches);
+                return new MatchStep(ChainLength, 1, matchedTiles, movedTiles, horizontalMatches, verticalMatches);
             }
 
             ++turnCount;
 
             HashSet<Tile> inertTiles = MakeMarkedAndCrackedTilesInert();
-            
+
+            int previousResourceCost = resourceCost;
+
             IncreaseDifficulty();
 
             List<MovedTile> newTiles = FillBoardWithTiles();
 
             ChainLength = 0;
+            remainingResource -= previousResourceCost;
 
-            return new CleanUpStep(newTiles, inertTiles);
+            return new CleanUpStep(newTiles, inertTiles, previousResourceCost);
         }
 
         private Task OnTutorialReady(Tutorial tutorial)
@@ -170,6 +180,9 @@ namespace GMTK2020
 
             return matchedTiles;
         }
+
+        public bool AnyResourceLeft()
+            => remainingResource > 0;
 
         public bool FurtherMatchesPossible()
         {
@@ -284,6 +297,8 @@ namespace GMTK2020
                 break;
             case DifficultyIncrease.AddCrack:
                 // TODO: This will increase resource cost instead
+                if (resourceCost < levelSpec.MaxCracksPerChain)
+                    ++resourceCost;
                 nextDifficultyIncrease = DifficultyIncrease.AddColor;
                 break;
             default:

@@ -2,6 +2,7 @@
 using GMTK2020.Data;
 using GMTK2020.Rendering;
 using GMTK2020.TutorialSystem;
+using GMTK2020.UI;
 using UnityEngine;
 
 namespace GMTK2020
@@ -10,6 +11,7 @@ namespace GMTK2020
     {
         [SerializeField] private Playback playback = null;
         [SerializeField] private BoardRenderer boardRenderer = null;
+        [SerializeField] private ChainCounter chainCounter = null;
         [SerializeField] private BoardManipulator predictionEditor = null;
         [SerializeField] private LevelSequence levelSequence = null;
         [SerializeField] private FixedLevelStartData fixedLevelStartData = null;
@@ -37,6 +39,8 @@ namespace GMTK2020
             {
                 Level = new LevelGenerator(levelSpec).GenerateValidLevel();
             }
+
+            chainCounter.RenderInitialResource(levelSpec.InitialResource);
 
             Simulator simulator = new Simulator(Level.Board, levelSpec);
 

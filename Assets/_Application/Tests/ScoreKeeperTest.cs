@@ -53,7 +53,8 @@ namespace Tests
                     new Tile(0),
                     new Tile(1),
                     new Tile(2),
-                });
+                },
+                2);
             
             int cleanUpScore = scoreKeeper.ScoreStep(step, 0);
 
@@ -71,7 +72,7 @@ namespace Tests
             scoreKeeper.ScoreStep(CreateMatchStep(1, 2), 0);
             scoreKeeper.ScoreStep(CreateMatchStep(2, 3), 0);
 
-            scoreKeeper.ScoreStep(new CleanUpStep(new List<MovedTile>(), new HashSet<Tile>()), 0);
+            scoreKeeper.ScoreStep(new CleanUpStep(new List<MovedTile>(), new HashSet<Tile>(), 2), 0);
 
             for (int i = 0; i < nSteps - 1; ++i)
                 scoreKeeper.ScoreStep(CreateMatchStep(i + 1, 0), 0);
@@ -108,12 +109,12 @@ namespace Tests
             for (int x = 0; x < nMatchedTiles; ++x)
                 matchedTiles.Add(new Tile(0, new Vector2Int(x, 0)));
 
-            return new MatchStep(chainLength, matchedTiles, new List<MovedTile>(), new HashSet<Vector2Int>(), new HashSet<Vector2Int>());
+            return new MatchStep(chainLength, 1, matchedTiles, new List<MovedTile>(), new HashSet<Vector2Int>(), new HashSet<Vector2Int>());
         }
 
         private CleanUpStep CreateCleanUpStep()
         {
-            return new CleanUpStep(new List<MovedTile>(), new HashSet<Tile>());
+            return new CleanUpStep(new List<MovedTile>(), new HashSet<Tile>(), 2);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace GMTK2020.Data
         public override bool FinalStep => false;
 
         public int ChainLength { get; }
+        public int ResourceGained { get; }
 
         public HashSet<Tile> MatchedTiles { get; }
         public List<MovedTile> MovedTiles { get; }
@@ -21,8 +22,9 @@ namespace GMTK2020.Data
         public HashSet<Vector2Int> LeftEndsOfHorizontalMatches { get; }
         public HashSet<Vector2Int> BottomEndsOfVerticalMatches { get; }
 
-        public MatchStep(int chainLength, HashSet<Tile> matchedTiles, List<MovedTile> movingTiles, HashSet<Vector2Int> leftEndsOfHorizontalMatches, HashSet<Vector2Int> bottomEndsOfVerticalMatches)
+        public MatchStep(int chainLength, int resourceGained, HashSet<Tile> matchedTiles, List<MovedTile> movingTiles, HashSet<Vector2Int> leftEndsOfHorizontalMatches, HashSet<Vector2Int> bottomEndsOfVerticalMatches)
         {
+            ResourceGained = resourceGained;
             ChainLength = chainLength;
             MatchedTiles = matchedTiles;
             MovedTiles = movingTiles;
@@ -37,11 +39,13 @@ namespace GMTK2020.Data
 
         public List<MovedTile> NewTiles { get; }
         public HashSet<Tile> InertTiles { get; }
+        public int ResourceUsed { get; }
 
-        public CleanUpStep(List<MovedTile> newTiles, HashSet<Tile> inertTiles)
+        public CleanUpStep(List<MovedTile> newTiles, HashSet<Tile> inertTiles, int resourceUsed)
         {
             NewTiles = newTiles;
             InertTiles = inertTiles;
+            ResourceUsed = resourceUsed;
         }
     }
 

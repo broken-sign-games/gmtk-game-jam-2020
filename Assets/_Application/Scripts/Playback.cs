@@ -108,7 +108,7 @@ namespace GMTK2020
 
                 if (gameEnded) break;
 
-                if (!simulator.FurtherMatchesPossible() && !boardManipulator.AnyToolsAvailable())
+                if (!simulator.AnyResourceLeft())
                 {
                     EndGame();
                     break;
@@ -181,11 +181,13 @@ namespace GMTK2020
 
                 if (step is MatchStep matchStep)
                 {
+                    chainCounter.RegisterChangeInResource(matchStep.ResourceGained);
                     await boardManipulator.RewardMatches(matchStep);
                     if (gameEnded) break;
                 }
                 else if (step is CleanUpStep cleanUpStep)
                 {
+                    chainCounter.RegisterChangeInResource(-cleanUpStep.ResourceUsed);
                     if (cleanUpStep.InertTiles.Count(tile => tile.Marked) > 0)
                     {
                         await ShowIncorrectPredictionsTutorialAsync(cleanUpStep.InertTiles);
@@ -227,7 +229,8 @@ namespace GMTK2020
 
         private void OnLastToolUsed()
         {
-            if (!simulator.FurtherMatchesPossible())
+            // TODO: Probably just prevent using up last resource via tool instead.
+            if (!simulator.AnyResourceLeft())
                 EndGame();
         }
 

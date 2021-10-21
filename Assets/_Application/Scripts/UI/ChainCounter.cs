@@ -3,6 +3,7 @@ using GMTK2020.Data;
 using GMTK2020.TutorialSystem;
 using System;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,7 @@ namespace GMTK2020.UI
     {
         [SerializeField] private RectTransform chainSegmentRoot = null;
         [SerializeField] private ChainSegment chainSegmentPrefab = null;
+        [SerializeField] private TextMeshProUGUI resourceString = null;
         [SerializeField] private float segmentWidth = 144f;
         [SerializeField] private int maxVisibleChains = 6;
         [SerializeField] private float chainSlideSpeed = 5;
@@ -19,6 +21,16 @@ namespace GMTK2020.UI
         private int currentChainLength;
 
         private ChainSegment lastSegment;
+
+        private int currentResource;
+        private int initialResource;
+
+        public void RenderInitialResource(int initialResource)
+        {
+            this.initialResource = initialResource;
+            this.currentResource = initialResource;
+            UpdateResource();
+        }
 
         public void RenderInitialChain()
         {
@@ -77,6 +89,18 @@ namespace GMTK2020.UI
             });
 
             return seq;
+        }
+
+        public void RegisterChangeInResource(int delta)
+        {
+            currentResource += delta;
+            currentResource = Math.Max(0, currentResource);
+            UpdateResource();
+        }
+
+        private void UpdateResource()
+        {
+            resourceString.text = $"{currentResource} / {initialResource}";
         }
     }
 }

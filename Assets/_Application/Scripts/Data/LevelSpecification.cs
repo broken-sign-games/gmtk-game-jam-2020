@@ -12,5 +12,6 @@ namespace GMTK2020.Data
         public int MaxCracksPerChain;
         public int ChainsPerDifficultyIncrease;
         public int GuaranteedChain;
+        public int InitialResource;
     }
 }
