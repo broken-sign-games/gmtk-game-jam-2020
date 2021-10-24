@@ -2918,6 +2918,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 1557593270}
   boardRenderer: {fileID: 2116036405}
+  chainCounter: {fileID: 105137177}
   sessionMetrics: {fileID: 262874730}
   tutorialOverlay: {fileID: 1415787475}
   toolButtons:

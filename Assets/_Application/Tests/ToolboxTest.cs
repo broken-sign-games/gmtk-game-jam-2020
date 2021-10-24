@@ -248,11 +248,11 @@ namespace Tests
         private MatchStep MatchStepFromMatches(int chainLength, Vector2Int[] horizontalMatches, Vector2Int[] verticalMatches)
             => new MatchStep(
                 chainLength,
-                1,
                 new HashSet<Tile>(), 
                 new List<MovedTile>(), 
                 new HashSet<Vector2Int>(horizontalMatches), 
-                new HashSet<Vector2Int>(verticalMatches));
+                new HashSet<Vector2Int>(verticalMatches),
+                1);
 
         private static Board IntGridToBoard(int[,] intGrid)
         {

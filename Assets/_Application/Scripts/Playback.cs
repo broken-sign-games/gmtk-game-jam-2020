@@ -179,15 +179,14 @@ namespace GMTK2020
                 // to sync the update with the match animation.
                 scoreRenderer.UpdateScore();
 
+                chainCounter.RegisterChangeInResource(step.ChangeInResource);
                 if (step is MatchStep matchStep)
                 {
-                    chainCounter.RegisterChangeInResource(matchStep.ResourceGained);
                     await boardManipulator.RewardMatches(matchStep);
                     if (gameEnded) break;
                 }
                 else if (step is CleanUpStep cleanUpStep)
                 {
-                    chainCounter.RegisterChangeInResource(-cleanUpStep.ResourceUsed);
                     if (cleanUpStep.InertTiles.Count(tile => tile.Marked) > 0)
                     {
                         await ShowIncorrectPredictionsTutorialAsync(cleanUpStep.InertTiles);

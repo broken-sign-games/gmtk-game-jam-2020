@@ -17,6 +17,7 @@ namespace GMTK2020
     {
         [SerializeField] private Camera mainCamera = null;
         [SerializeField] private BoardRenderer boardRenderer = null;
+        [SerializeField] private ChainCounter chainCounter = null;
         [SerializeField] private SessionMetrics sessionMetrics = null;
         [SerializeField] private TutorialGridMaskManager tutorialOverlay = null;
         [SerializeField] private SerializableDictionaryBase<Tool, ToolButton> toolButtons = null;
@@ -236,6 +237,8 @@ namespace GMTK2020
                 else
                     step = toolbox.UseTool(ActiveTool, gridPos);
 
+                chainCounter.RegisterChangeInResource(step.ChangeInResource);
+
                 sessionMetrics.RegisterToolUse(ActiveTool);
 
                 KickOffAnimation(step);
@@ -261,6 +264,7 @@ namespace GMTK2020
             try
             {
                 SimulationStep step = toolbox.UseSwapTool(ActiveTool, from, to);
+                chainCounter.RegisterChangeInResource(step.ChangeInResource);
 
                 sessionMetrics.RegisterToolUse(ActiveTool);
 

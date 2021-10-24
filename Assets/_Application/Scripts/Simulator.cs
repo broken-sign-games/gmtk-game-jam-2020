@@ -85,7 +85,7 @@ namespace GMTK2020
                 ++ChainLength;
                 ++remainingResource;
 
-                return new MatchStep(ChainLength, 1, matchedTiles, movedTiles, horizontalMatches, verticalMatches);
+                return new MatchStep(ChainLength, matchedTiles, movedTiles, horizontalMatches, verticalMatches, 1);
             }
 
             ++turnCount;
@@ -101,7 +101,7 @@ namespace GMTK2020
             ChainLength = 0;
             remainingResource -= previousResourceCost;
 
-            return new CleanUpStep(newTiles, inertTiles, previousResourceCost);
+            return new CleanUpStep(newTiles, inertTiles, -previousResourceCost);
         }
 
         private Task OnTutorialReady(Tutorial tutorial)
@@ -412,9 +412,11 @@ namespace GMTK2020
 
             TutorialManager.Instance?.CompleteActiveTutorial();
 
+            --remainingResource;
+
             CheckWhetherReactionIsAllowed();
 
-            return new RemovalStep(removedTiles, movedTiles, newTiles);
+            return new RemovalStep(removedTiles, movedTiles, newTiles, -1);
         }
 
         public RefillStep RefillTile(Vector2Int pos)
@@ -426,9 +428,11 @@ namespace GMTK2020
 
             tile.Refill();
 
+            --remainingResource;
+
             CheckWhetherReactionIsAllowed();
 
-            return new RefillStep(new List<Tile> { tile });
+            return new RefillStep(new List<Tile> { tile }, -1);
         }
 
         public PermutationStep ShuffleBoard()
@@ -446,9 +450,11 @@ namespace GMTK2020
                     ++i;
                 }
 
+            --remainingResource;
+
             CheckWhetherReactionIsAllowed();
 
-            return new PermutationStep(movedTiles);
+            return new PermutationStep(movedTiles, -1);
         }
 
         public RotationStep RotateBoard(RotationSense rotSense)
@@ -476,10 +482,12 @@ namespace GMTK2020
                     ++i;
                 }
 
+            --remainingResource;
+
             CheckWhetherReactionIsAllowed();
 
             Vector2 pivot = new Vector2(board.Width - 1, board.Height - 1) / 2f;
-            return new RotationStep(pivot, rotSense, movedTiles);
+            return new RotationStep(pivot, rotSense, movedTiles, -1);
         }
 
         public RotationStep Rotate2x2Block(Vector2Int bottomLeft, RotationSense rotSense)
@@ -516,10 +524,12 @@ namespace GMTK2020
                     ++i;
                 }
 
+            --remainingResource;
+
             CheckWhetherReactionIsAllowed();
 
             Vector2 pivot = bottomLeft + 0.5f * Vector2.one;
-            return new RotationStep(pivot, rotSense, movedTiles);
+            return new RotationStep(pivot, rotSense, movedTiles, -1);
         }
 
         public RotationStep Rotate3x3Block(Vector2Int pivot, RotationSense rotSense)
@@ -557,9 +567,11 @@ namespace GMTK2020
                     ++i;
                 }
 
+            --remainingResource;
+
             CheckWhetherReactionIsAllowed();
 
-            return new RotationStep(pivot, rotSense, movedTiles);
+            return new RotationStep(pivot, rotSense, movedTiles, -1);
         }
 
         public PermutationStep SwapTiles(Vector2Int pos1, Vector2Int pos2)
@@ -575,9 +587,11 @@ namespace GMTK2020
 
             TutorialManager.Instance?.CompleteActiveTutorial();
 
+            --remainingResource;
+
             CheckWhetherReactionIsAllowed();
 
-            return new PermutationStep(movedTiles);
+            return new PermutationStep(movedTiles, 0);
         }
 
         public PermutationStep SwapRows(int y1, int y2)
@@ -593,9 +607,11 @@ namespace GMTK2020
             foreach (Tile tile in row2)
                 movedTiles.Add(board.MoveTile(tile, tile.Position.x, y1));
 
+            --remainingResource;
+
             CheckWhetherReactionIsAllowed();
 
-            return new PermutationStep(movedTiles);
+            return new PermutationStep(movedTiles, -1);
         }
 
         public PermutationStep SwapColumns(int x1, int x2)
@@ -611,9 +627,11 @@ namespace GMTK2020
             foreach (Tile tile in column2)
                 movedTiles.Add(board.MoveTile(tile, x1, tile.Position.y));
 
+            --remainingResource;
+
             CheckWhetherReactionIsAllowed();
 
-            return new PermutationStep(movedTiles);
+            return new PermutationStep(movedTiles, -1);
         }
 
         public WildcardStep CreateWildcard(Vector2Int pos)
@@ -628,9 +646,11 @@ namespace GMTK2020
             
             tile.MakeWildcard();
 
+            --remainingResource;
+
             CheckWhetherReactionIsAllowed();
 
-            return new WildcardStep(new List<Tile> { tile });
+            return new WildcardStep(new List<Tile> { tile }, -1);
         }
 
         public PredictionStep TogglePrediction(Vector2Int pos)
@@ -650,7 +670,7 @@ namespace GMTK2020
 
             CheckWhetherReactionIsAllowed();
 
-            return new PredictionStep(new List<Tile> { tile });
+            return new PredictionStep(new List<Tile> { tile }, 0);
         }
 
         private void CheckWhetherReactionIsAllowed()

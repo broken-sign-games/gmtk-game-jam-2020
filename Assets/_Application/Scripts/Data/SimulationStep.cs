@@ -7,6 +7,12 @@ namespace GMTK2020.Data
     public abstract class SimulationStep
     {
         public abstract bool FinalStep { get; }
+        public int ChangeInResource { get; }
+
+        public SimulationStep(int changeInResource)
+        {
+            ChangeInResource = changeInResource;
+        }
     }
 
     public class MatchStep : SimulationStep
@@ -14,7 +20,6 @@ namespace GMTK2020.Data
         public override bool FinalStep => false;
 
         public int ChainLength { get; }
-        public int ResourceGained { get; }
 
         public HashSet<Tile> MatchedTiles { get; }
         public List<MovedTile> MovedTiles { get; }
@@ -22,9 +27,9 @@ namespace GMTK2020.Data
         public HashSet<Vector2Int> LeftEndsOfHorizontalMatches { get; }
         public HashSet<Vector2Int> BottomEndsOfVerticalMatches { get; }
 
-        public MatchStep(int chainLength, int resourceGained, HashSet<Tile> matchedTiles, List<MovedTile> movingTiles, HashSet<Vector2Int> leftEndsOfHorizontalMatches, HashSet<Vector2Int> bottomEndsOfVerticalMatches)
+        public MatchStep(int chainLength, HashSet<Tile> matchedTiles, List<MovedTile> movingTiles, HashSet<Vector2Int> leftEndsOfHorizontalMatches, HashSet<Vector2Int> bottomEndsOfVerticalMatches, int changeInResource)
+            : base(changeInResource)
         {
-            ResourceGained = resourceGained;
             ChainLength = chainLength;
             MatchedTiles = matchedTiles;
             MovedTiles = movingTiles;
@@ -39,13 +44,12 @@ namespace GMTK2020.Data
 
         public List<MovedTile> NewTiles { get; }
         public HashSet<Tile> InertTiles { get; }
-        public int ResourceUsed { get; }
 
-        public CleanUpStep(List<MovedTile> newTiles, HashSet<Tile> inertTiles, int resourceUsed)
+        public CleanUpStep(List<MovedTile> newTiles, HashSet<Tile> inertTiles, int changeInResource)
+            : base(changeInResource)
         {
             NewTiles = newTiles;
             InertTiles = inertTiles;
-            ResourceUsed = resourceUsed;
         }
     }
 
@@ -57,7 +61,8 @@ namespace GMTK2020.Data
         public List<MovedTile> MovedTiles { get; }
         public List<MovedTile> NewTiles { get; }
 
-        public RemovalStep(HashSet<Tile> removedTiles, List<MovedTile> movedTiles, List<MovedTile> newTiles)
+        public RemovalStep(HashSet<Tile> removedTiles, List<MovedTile> movedTiles, List<MovedTile> newTiles, int changeInResource)
+            : base(changeInResource)
         {
             RemovedTiles = removedTiles;
             MovedTiles = movedTiles;
@@ -71,7 +76,8 @@ namespace GMTK2020.Data
 
         public List<MovedTile> MovedTiles { get; }
 
-        public PermutationStep(List<MovedTile> movedTiles)
+        public PermutationStep(List<MovedTile> movedTiles, int changeInResource)
+            : base(changeInResource)
         {
             MovedTiles = movedTiles;
         }
@@ -85,7 +91,8 @@ namespace GMTK2020.Data
         public RotationSense RotationSense { get; }
         public List<MovedTile> MovedTiles { get; }
 
-        public RotationStep(Vector2 pivot, RotationSense rotationSense, List<MovedTile> movedTiles)
+        public RotationStep(Vector2 pivot, RotationSense rotationSense, List<MovedTile> movedTiles, int changeInResource)
+            : base(changeInResource)
         {
             Pivot = pivot;
             RotationSense = rotationSense;
@@ -99,7 +106,8 @@ namespace GMTK2020.Data
 
         public List<Tile> AffectedTiles { get; }
 
-        public TileStateChangeStep(List<Tile> affectedTiles)
+        public TileStateChangeStep(List<Tile> affectedTiles, int changeInResource)
+            : base(changeInResource)
         {
             AffectedTiles = affectedTiles;
         }
@@ -107,16 +115,16 @@ namespace GMTK2020.Data
 
     public class PredictionStep : TileStateChangeStep
     {
-        public PredictionStep(List<Tile> affectedTiles) : base(affectedTiles) { }
+        public PredictionStep(List<Tile> affectedTiles, int changeInResource) : base(affectedTiles, changeInResource) { }
     }
 
     public class RefillStep : TileStateChangeStep
     {
-        public RefillStep(List<Tile> affectedTiles) : base(affectedTiles) { }
+        public RefillStep(List<Tile> affectedTiles, int changeInResource) : base(affectedTiles, changeInResource) { }
     }
 
     public class WildcardStep : TileStateChangeStep
     {
-        public WildcardStep(List<Tile> affectedTiles) : base(affectedTiles) { }
+        public WildcardStep(List<Tile> affectedTiles, int changeInResource) : base(affectedTiles, changeInResource) { }
     }
 }
