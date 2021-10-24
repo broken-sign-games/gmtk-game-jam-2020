@@ -125,7 +125,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 0
-  bundleVersion: 0.3
+  bundleVersion: 0.4-nospikes.1
   preloadedAssets:
   - {fileID: 11400000, guid: 33f8145719a27ba44bddce2baae4b57f, type: 2}
   metroInputSource: 0
