@@ -675,6 +675,9 @@ namespace GMTK2020
 
         private void CheckWhetherReactionIsAllowed()
         {
+            // Don't disallow reactions without matches.
+            return;
+
             bool wasReactionAllowed = isReactionAllowed;
 
             isReactionAllowed = GetRawMatches().Count > 0;

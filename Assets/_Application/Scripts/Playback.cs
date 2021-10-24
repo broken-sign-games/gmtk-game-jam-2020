@@ -224,6 +224,7 @@ namespace GMTK2020
 
             boardManipulator.MakeToolsAvailable();
             boardManipulator.UnlockPredictions();
+            runButton.interactable = true;
         }
 
         private void OnLastToolUsed()

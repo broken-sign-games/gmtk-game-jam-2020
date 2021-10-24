@@ -3301,7 +3301,7 @@ PrefabInstance:
     - target: {fileID: 6589072882871653768, guid: 3c35ede1d8d8469428a413be7f1cbe16,
         type: 3}
       propertyPath: m_Interactable
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c35ede1d8d8469428a413be7f1cbe16, type: 3}
@@ -4268,6 +4268,7 @@ MonoBehaviour:
   availableUsesDefaultFontSize: 45
   availableUsesUnlimitedFontSize: 60
   moveUpBy: 30
+  moveUsedDownBy: 90
   overshootBy: 5
   moveDuration: 0.25
   pulseFactor: 1.75
