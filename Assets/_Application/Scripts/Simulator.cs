@@ -184,6 +184,10 @@ namespace GMTK2020
         public bool AnyResourceLeft()
             => remainingResource > 0;
 
+        public bool EnoughResourceLeftForToolUse()
+            => remainingResource > 1;
+
+
         public bool FurtherMatchesPossible()
         {
             return GetPotentialMatches().Any(tiles => IsMatch(tiles, false));
@@ -586,8 +590,6 @@ namespace GMTK2020
             };
 
             TutorialManager.Instance?.CompleteActiveTutorial();
-
-            --remainingResource;
 
             CheckWhetherReactionIsAllowed();
 

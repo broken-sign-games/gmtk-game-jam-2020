@@ -78,20 +78,14 @@ namespace GMTK2020
             if (toolUsedThisTurn[tool])
                 return false;
 
+            if (tool != Tool.SwapTiles && !simulator.EnoughResourceLeftForToolUse())
+                return false;
+
             return availableToolUses[tool] != 0;
         }
 
         public bool WasToolUsedThisTurn(Tool tool) 
             => toolUsedThisTurn[tool];
-
-        public bool AnyToolsAvailable()
-        {
-            foreach ((Tool tool, int uses) in availableToolUses)
-                if (tool != Tool.ToggleMarked && !toolUsedThisTurn[tool] && uses != 0)
-                    return true;
-
-            return false;
-        }
 
         public void MakeToolsAvailable()
         {

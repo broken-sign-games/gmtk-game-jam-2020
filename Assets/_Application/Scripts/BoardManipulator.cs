@@ -27,7 +27,6 @@ namespace GMTK2020
         [SerializeField] private Transform reference11 = null;
 
         public Tool ActiveTool { get; private set; }
-        public event Action LastToolUsed;
         public event Action<Tool> ActiveToolChanged;
         
         private InputActions inputs;
@@ -101,9 +100,6 @@ namespace GMTK2020
             if (tool == ActiveTool)
                 TutorialManager.Instance.CompleteActiveTutorial();
         }
-
-        public bool AnyToolsAvailable() 
-            => toolbox.AnyToolsAvailable();
 
         public async Task RewardMatches(MatchStep matchStep)
         {
@@ -283,9 +279,6 @@ namespace GMTK2020
         private async void KickOffAnimation(SimulationStep step)
         {
             await boardRenderer.AnimateSimulationStepAsync(step);
-
-            if (!AnyToolsAvailable())
-                LastToolUsed?.Invoke();
         }
 
         public void UpdateUI()

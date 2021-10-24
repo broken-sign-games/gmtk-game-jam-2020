@@ -45,7 +45,6 @@ namespace GMTK2020
             scoreRenderer.UpdateHighscore();
             chainCounter.RenderInitialChain();
 
-            boardManipulator.LastToolUsed += OnLastToolUsed;
             simulator.ReactionLocked += OnReactionLocked;
             simulator.ReactionUnlocked += OnReactionUnlocked;
 
@@ -54,7 +53,6 @@ namespace GMTK2020
 
         private void OnDestroy()
         {
-            boardManipulator.LastToolUsed -= OnLastToolUsed;
             simulator.ReactionLocked -= OnReactionLocked;
             simulator.ReactionUnlocked -= OnReactionUnlocked;
         }
@@ -225,13 +223,6 @@ namespace GMTK2020
             boardManipulator.MakeToolsAvailable();
             boardManipulator.UnlockPredictions();
             runButton.interactable = true;
-        }
-
-        private void OnLastToolUsed()
-        {
-            // TODO: Probably just prevent using up last resource via tool instead.
-            if (!simulator.AnyResourceLeft())
-                EndGame();
         }
 
         private void EndGame()
