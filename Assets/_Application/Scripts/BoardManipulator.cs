@@ -233,6 +233,7 @@ namespace GMTK2020
                 else
                     step = toolbox.UseTool(ActiveTool, gridPos);
 
+                sessionMetrics.RegisterSimulationStep(step);
                 chainCounter.RegisterChangeInResource(step.ChangeInResource);
 
                 sessionMetrics.RegisterToolUse(ActiveTool);
@@ -260,6 +261,7 @@ namespace GMTK2020
             try
             {
                 SimulationStep step = toolbox.UseSwapTool(ActiveTool, from, to);
+                sessionMetrics.RegisterSimulationStep(step);
                 chainCounter.RegisterChangeInResource(step.ChangeInResource);
 
                 sessionMetrics.RegisterToolUse(ActiveTool);

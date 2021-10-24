@@ -10,6 +10,7 @@ namespace GMTK2020
         public float SessionTime { get; private set; }
         public int MaxChainLength { get; private set; }
         public int MaxMatchSize { get; private set; }
+        public int MaxResource { get; private set; }
         public int MistakeCount { get; private set; }
 
         private float startTime;
@@ -19,11 +20,15 @@ namespace GMTK2020
         private Dictionary<Tool, int> toolUnlocks;
         private Dictionary<Tool, int> toolUses;
 
+        private int currentResource;
+
         private void Awake()
         {
             startTime = Time.time;
             toolUnlocks = new Dictionary<Tool, int>();
             toolUses = new Dictionary<Tool, int>();
+
+            currentResource = MaxResource = 50; // T_T we really shouldn't duplicate let alone hardcode this here
 
             foreach (var tool in Utility.GetEnumValues<Tool>())
             {
@@ -46,6 +51,10 @@ namespace GMTK2020
 
         public void RegisterSimulationStep(SimulationStep step)
         {
+            currentResource += step.ChangeInResource;
+            if (currentResource > MaxResource)
+                MaxResource = currentResource;
+
             switch (step)
             {
             case MatchStep matchStep:

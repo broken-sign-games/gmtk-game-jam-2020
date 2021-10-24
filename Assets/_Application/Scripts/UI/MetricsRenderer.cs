@@ -11,6 +11,7 @@ namespace GMTK2020.UI
         [SerializeField] private TextMeshProUGUI maxChainText;
         [SerializeField] private TextMeshProUGUI maxMatchText;
         [SerializeField] private TextMeshProUGUI mistakesText;
+        [SerializeField] private TextMeshProUGUI maxResourceText;
         [SerializeField] private TextMeshProUGUI toolsGainedText;
         [SerializeField] private TextMeshProUGUI toolsUsedText;
 
@@ -26,6 +27,7 @@ namespace GMTK2020.UI
             maxChainText.text = sessionMetrics.MaxChainLength.ToString();
             maxMatchText.text = sessionMetrics.MaxMatchSize.ToString();
             mistakesText.text = sessionMetrics.MistakeCount.ToString();
+            maxResourceText.text = sessionMetrics.MaxResource.ToString();
             toolsGainedText.text = $"–/{sessionMetrics.GetToolUnlocks(Tool.PlusBomb)}/{sessionMetrics.GetToolUnlocks(Tool.Rotate3x3)}/{sessionMetrics.GetToolUnlocks(Tool.RemoveTile)}/{sessionMetrics.GetToolUnlocks(Tool.RemoveRow)}/{sessionMetrics.GetToolUnlocks(Tool.CreateWildcard)}";
             toolsUsedText.text = $"{sessionMetrics.GetToolUses(Tool.SwapTiles)}/{sessionMetrics.GetToolUses(Tool.PlusBomb)}/{sessionMetrics.GetToolUses(Tool.Rotate3x3)}/{sessionMetrics.GetToolUses(Tool.RemoveTile)}/{sessionMetrics.GetToolUses(Tool.RemoveRow)}/{sessionMetrics.GetToolUses(Tool.CreateWildcard)}";
         }

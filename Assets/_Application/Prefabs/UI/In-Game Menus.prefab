@@ -38,8 +38,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 535}
-  m_SizeDelta: {x: 650, y: 1070}
+  m_AnchoredPosition: {x: 0, y: 560}
+  m_SizeDelta: {x: 650, y: 1120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7888305651105770406
 CanvasRenderer:
@@ -561,8 +561,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 635}
-  m_SizeDelta: {x: 650, y: 1270}
+  m_AnchoredPosition: {x: 0, y: 660}
+  m_SizeDelta: {x: 650, y: 1320}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7888305652648990813
 CanvasRenderer:
@@ -667,7 +667,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Out of matches
+  m_text: Game Over
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0df791de72b1b634497d059d7644f828, type: 2}
   m_sharedMaterial: {fileID: -1338509449279783751, guid: 0df791de72b1b634497d059d7644f828,
@@ -1018,7 +1018,7 @@ PrefabInstance:
     - target: {fileID: 1076309379085329419, guid: f8a28354d7f56024e8b12dc6f0be8ac3,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 350
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 1076309379085329419, guid: f8a28354d7f56024e8b12dc6f0be8ac3,
         type: 3}
