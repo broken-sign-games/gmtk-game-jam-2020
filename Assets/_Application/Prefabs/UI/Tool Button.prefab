@@ -551,6 +551,7 @@ MonoBehaviour:
   availableUsesDefaultFontSize: 45
   availableUsesUnlimitedFontSize: 60
   moveUpBy: 20
+  moveUsedDownBy: 100
   overshootBy: 5
   moveDuration: 0.25
   pulseFactor: 1.75

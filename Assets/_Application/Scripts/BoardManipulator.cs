@@ -292,7 +292,7 @@ namespace GMTK2020
         {
             foreach ((Tool tool, ToolButton button) in toolButtons)
             {
-                button.UpdateUses(toolbox.GetAvailableUses(tool));
+                button.UpdateRemainingUses(toolbox.GetAvailableUses(tool));
                 button.UpdateAvailable(toolbox.IsToolAvailable(tool));
                 int awarded = toolbox.GetAwardedToolsForCurrentChainLength(tool);
                 int chainLength = toolbox.GetRequiredChainLength(tool);
@@ -301,7 +301,7 @@ namespace GMTK2020
                     awarded,
                     available,
                     chainLength);
-                button.UpdateActive(tool == ActiveTool);
+                button.UpdateActive(tool == ActiveTool, toolbox.WasToolUsedThisTurn(tool));
             }
         }
 

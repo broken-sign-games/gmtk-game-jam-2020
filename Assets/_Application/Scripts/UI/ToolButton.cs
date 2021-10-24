@@ -24,6 +24,7 @@ namespace GMTK2020.UI
         [SerializeField] private int availableUsesDefaultFontSize = 45;
         [SerializeField] private int availableUsesUnlimitedFontSize = 60;
         [SerializeField] private float moveUpBy = 30;
+        [SerializeField] private float moveUsedDownBy = 90;
         [SerializeField] private float overshootBy = 10;
         [SerializeField] private float moveDuration = 0.5f;
         [SerializeField] private float pulseFactor = 1.2f;
@@ -80,7 +81,7 @@ namespace GMTK2020.UI
             boardManipulator.ToggleTool(Tool);
         }
 
-        public void UpdateUses(int uses)
+        public void UpdateRemainingUses(int uses)
         {
             if (uses < 0)
             {
@@ -131,13 +132,18 @@ namespace GMTK2020.UI
         {
         }
 
-        public void UpdateActive(bool active)
+        public void UpdateActive(bool active, bool used)
         {
             if (active)
             {
                 rectTransform
                     .DOAnchorPosY(initialYPos + moveUpBy, moveDuration)
                     .SetEase(Ease.OutBack, overshoot: overshootBy);
+            }
+            else if (used)
+            {
+                rectTransform
+                    .DOAnchorPosY(initialYPos - moveUsedDownBy, moveDuration * 1.5f);
             }
             else
             {

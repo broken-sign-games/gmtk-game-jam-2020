@@ -1,6 +1,7 @@
 ﻿using GMTK2020.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace GMTK2020
@@ -15,7 +16,7 @@ namespace GMTK2020
         private Dictionary<Tool, int> requiredChainLength;
         private Dictionary<Tool, int> awardedToolsForCurrentChainLength;
 
-        bool toolUsedThisTurn = true;
+        private Dictionary<Tool, bool> toolUsedThisTurn;
 
         public Toolbox(ToolData toolData, Simulator simulator)
         {
@@ -25,6 +26,7 @@ namespace GMTK2020
             availableToolUses = new Dictionary<Tool, int>();
             shapeRewards = new Dictionary<MatchShape, Tool>();
             requiredChainLength = new Dictionary<Tool, int>();
+            toolUsedThisTurn = new Dictionary<Tool, bool>();
             awardedToolsForCurrentChainLength = new Dictionary<Tool, int>();
 
             foreach ((Tool tool, ToolData.SingleToolData data) in toolData.Map)
@@ -41,6 +43,7 @@ namespace GMTK2020
 
                 requiredChainLength[tool] = 1;
                 awardedToolsForCurrentChainLength[tool] = 0;
+                toolUsedThisTurn[tool] = false;
             }
         }
 
@@ -72,19 +75,19 @@ namespace GMTK2020
             if (tool == Tool.ToggleMarked)
                 return true;
 
-            if (toolUsedThisTurn)
+            if (toolUsedThisTurn[tool])
                 return false;
 
             return availableToolUses[tool] != 0;
         }
 
+        public bool WasToolUsedThisTurn(Tool tool) 
+            => toolUsedThisTurn[tool];
+
         public bool AnyToolsAvailable()
         {
-            if (toolUsedThisTurn)
-                return false;
-
             foreach ((Tool tool, int uses) in availableToolUses)
-                if (tool != Tool.ToggleMarked && uses != 0)
+                if (tool != Tool.ToggleMarked && !toolUsedThisTurn[tool] && uses != 0)
                     return true;
 
             return false;
@@ -92,7 +95,8 @@ namespace GMTK2020
 
         public void MakeToolsAvailable()
         {
-            toolUsedThisTurn = false;
+            foreach (Tool tool in toolUsedThisTurn.Keys.ToArray())
+                toolUsedThisTurn[tool] = false;
         }
 
         public SimulationStep UseTool(Tool tool, Vector2Int gridPos, RotationSense rotSense = RotationSense.CW)
@@ -135,7 +139,7 @@ namespace GMTK2020
                 --availableToolUses[tool];
 
             if (tool != Tool.ToggleMarked)
-                toolUsedThisTurn = true;
+                toolUsedThisTurn[tool] = true;
 
             return step;
         }
@@ -175,7 +179,7 @@ namespace GMTK2020
             if (availableToolUses[tool] > 0)
                 --availableToolUses[tool];
 
-            toolUsedThisTurn = true;
+            toolUsedThisTurn[tool] = true;
 
             return step;
         }

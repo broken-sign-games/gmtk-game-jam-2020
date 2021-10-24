@@ -4162,6 +4162,7 @@ MonoBehaviour:
   availableUsesDefaultFontSize: 45
   availableUsesUnlimitedFontSize: 60
   moveUpBy: 30
+  moveUsedDownBy: 90
   overshootBy: 5
   moveDuration: 0.25
   pulseFactor: 1.75
