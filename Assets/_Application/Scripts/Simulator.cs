@@ -420,7 +420,7 @@ namespace GMTK2020
 
             CheckWhetherReactionIsAllowed();
 
-            return new RemovalStep(removedTiles, movedTiles, newTiles, -1);
+            return new RemovalStep(removedTiles, movedTiles, newTiles, 0);
         }
 
         public RefillStep RefillTile(Vector2Int pos)
@@ -436,7 +436,7 @@ namespace GMTK2020
 
             CheckWhetherReactionIsAllowed();
 
-            return new RefillStep(new List<Tile> { tile }, -1);
+            return new RefillStep(new List<Tile> { tile }, 0);
         }
 
         public PermutationStep ShuffleBoard()
@@ -458,7 +458,7 @@ namespace GMTK2020
 
             CheckWhetherReactionIsAllowed();
 
-            return new PermutationStep(movedTiles, -1);
+            return new PermutationStep(movedTiles, 0);
         }
 
         public RotationStep RotateBoard(RotationSense rotSense)
@@ -491,7 +491,7 @@ namespace GMTK2020
             CheckWhetherReactionIsAllowed();
 
             Vector2 pivot = new Vector2(board.Width - 1, board.Height - 1) / 2f;
-            return new RotationStep(pivot, rotSense, movedTiles, -1);
+            return new RotationStep(pivot, rotSense, movedTiles, 0);
         }
 
         public RotationStep Rotate2x2Block(Vector2Int bottomLeft, RotationSense rotSense)
@@ -533,7 +533,7 @@ namespace GMTK2020
             CheckWhetherReactionIsAllowed();
 
             Vector2 pivot = bottomLeft + 0.5f * Vector2.one;
-            return new RotationStep(pivot, rotSense, movedTiles, -1);
+            return new RotationStep(pivot, rotSense, movedTiles, 0);
         }
 
         public RotationStep Rotate3x3Block(Vector2Int pivot, RotationSense rotSense)
@@ -575,7 +575,7 @@ namespace GMTK2020
 
             CheckWhetherReactionIsAllowed();
 
-            return new RotationStep(pivot, rotSense, movedTiles, -1);
+            return new RotationStep(pivot, rotSense, movedTiles, 0);
         }
 
         public PermutationStep MoveBlockToTop(Vector2Int center)
@@ -623,7 +623,7 @@ namespace GMTK2020
 
             CheckWhetherReactionIsAllowed();
 
-            return new PermutationStep(movedTiles, -1);
+            return new PermutationStep(movedTiles, 0);
         }
 
         public PermutationStep SwapTiles(Vector2Int pos1, Vector2Int pos2)
@@ -661,7 +661,7 @@ namespace GMTK2020
 
             CheckWhetherReactionIsAllowed();
 
-            return new PermutationStep(movedTiles, -1);
+            return new PermutationStep(movedTiles, 0);
         }
 
         public PermutationStep SwapColumns(int x1, int x2)
@@ -681,7 +681,7 @@ namespace GMTK2020
 
             CheckWhetherReactionIsAllowed();
 
-            return new PermutationStep(movedTiles, -1);
+            return new PermutationStep(movedTiles, 0);
         }
 
         public WildcardStep CreateWildcard(Vector2Int pos)
@@ -700,7 +700,7 @@ namespace GMTK2020
 
             CheckWhetherReactionIsAllowed();
 
-            return new WildcardStep(new List<Tile> { tile }, -1);
+            return new WildcardStep(new List<Tile> { tile }, 0);
         }
 
         public PredictionStep TogglePrediction(Vector2Int pos)

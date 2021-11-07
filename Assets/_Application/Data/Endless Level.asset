@@ -15,8 +15,8 @@ MonoBehaviour:
   Size: {x: 9, y: 9}
   InitialColorCount: 5
   MaxColorCount: 7
-  InitialCracksPerChain: 2
-  MaxCracksPerChain: 5
+  InitialCracksPerChain: 3
+  MaxCracksPerChain: 6
   ChainsPerDifficultyIncrease: 5
   GuaranteedChain: 3
   InitialResource: 50
