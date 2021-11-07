@@ -28,8 +28,8 @@ namespace GMTK2020.UI
             maxMatchText.text = sessionMetrics.MaxMatchSize.ToString();
             mistakesText.text = sessionMetrics.MistakeCount.ToString();
             maxResourceText.text = sessionMetrics.MaxResource.ToString();
-            toolsGainedText.text = $"–/{sessionMetrics.GetToolUnlocks(Tool.PlusBomb)}/{sessionMetrics.GetToolUnlocks(Tool.Rotate3x3)}/{sessionMetrics.GetToolUnlocks(Tool.RemoveTile)}/{sessionMetrics.GetToolUnlocks(Tool.RemoveRow)}/{sessionMetrics.GetToolUnlocks(Tool.CreateWildcard)}";
-            toolsUsedText.text = $"{sessionMetrics.GetToolUses(Tool.SwapTiles)}/{sessionMetrics.GetToolUses(Tool.PlusBomb)}/{sessionMetrics.GetToolUses(Tool.Rotate3x3)}/{sessionMetrics.GetToolUses(Tool.RemoveTile)}/{sessionMetrics.GetToolUses(Tool.RemoveRow)}/{sessionMetrics.GetToolUses(Tool.CreateWildcard)}";
+            toolsGainedText.text = $"–/{sessionMetrics.GetToolUnlocks(Tool.PlusBomb)}/{sessionMetrics.GetToolUnlocks(Tool.Rotate3x3)}/{sessionMetrics.GetToolUnlocks(Tool.Balloon)}/{sessionMetrics.GetToolUnlocks(Tool.RemoveTile)}/{sessionMetrics.GetToolUnlocks(Tool.CreateWildcard)}";
+            toolsUsedText.text = $"{sessionMetrics.GetToolUses(Tool.SwapTiles)}/{sessionMetrics.GetToolUses(Tool.PlusBomb)}/{sessionMetrics.GetToolUses(Tool.Rotate3x3)}/{sessionMetrics.GetToolUses(Tool.Balloon)}/{sessionMetrics.GetToolUses(Tool.RemoveTile)}/{sessionMetrics.GetToolUses(Tool.CreateWildcard)}";
         }
     } 
 }

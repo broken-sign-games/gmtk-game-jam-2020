@@ -578,6 +578,54 @@ namespace GMTK2020
             return new RotationStep(pivot, rotSense, movedTiles, -1);
         }
 
+        public PermutationStep MoveBlockToTop(Vector2Int center)
+        {
+            var movedTiles = new List<MovedTile>();
+
+            var risingTiles = new List<Tile>();
+            var affectedColumns = new HashSet<int>();
+            var affectedRows = new HashSet<int>();
+            int maxY = 0;
+
+            for (int y = -1; y <= 1; ++y)
+                for (int x = -1; x <= 1; ++x)
+                {
+                    Vector2Int pos = center + new Vector2Int(x, y);
+                    if (board.IsInBounds(pos))
+                    {
+                        risingTiles.Add(board[pos]);
+                        affectedColumns.Add(pos.x);
+                        affectedRows.Add(pos.y);
+                        if (pos.y > maxY)
+                            maxY = pos.y;
+                    }
+                }
+
+            // Drop tiles above block
+            int dropDistance = affectedRows.Count;
+
+            foreach (int y in board.GetYs(VerticalOrder.BottomToTop))
+            {
+                if (y <= maxY)
+                    continue;
+
+                foreach (int x in affectedColumns)
+                {
+                    movedTiles.Add(board.MoveTile(board[x, y], x, y - dropDistance));
+                }
+            }
+
+            // Float block to the top
+            int riseDistance = board.Height - maxY - 1;
+
+            foreach (Tile tile in risingTiles)
+                movedTiles.Add(board.MoveTile(tile, tile.Position + new Vector2Int(0, riseDistance)));
+
+            CheckWhetherReactionIsAllowed();
+
+            return new PermutationStep(movedTiles, -1);
+        }
+
         public PermutationStep SwapTiles(Vector2Int pos1, Vector2Int pos2)
         {
             Tile tile1 = board[pos1];

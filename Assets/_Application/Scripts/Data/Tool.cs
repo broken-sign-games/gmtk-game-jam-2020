@@ -16,5 +16,6 @@
         SwapTiles,
         SwapLines,
         PlusBomb,
+        Balloon,
     }
 }

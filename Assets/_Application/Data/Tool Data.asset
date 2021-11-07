@@ -36,8 +36,8 @@ MonoBehaviour:
       elementIcon: {fileID: 0}
     reqReferences: {fileID: 0}
     isExpanded: 1
-    _keyValues: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d000000
-    _keys: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d000000
+    _keyValues: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e000000
+    _keys: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e000000
     _values:
     - InitialUses: -1
       AwardedFor: 0
@@ -45,7 +45,7 @@ MonoBehaviour:
       EnabledSprite: {fileID: 0}
       DisabledSprite: {fileID: 0}
     - InitialUses: 0
-      AwardedFor: 4
+      AwardedFor: 2
       Tooltip: Destroys a vial.
       EnabledSprite: {fileID: 21300000, guid: d85f7d985d4eb42c59b5c993a50892c1, type: 3}
       DisabledSprite: {fileID: 21300000, guid: c18a46f05a119424a9739bfd00655f45, type: 3}
@@ -60,7 +60,7 @@ MonoBehaviour:
       EnabledSprite: {fileID: 0}
       DisabledSprite: {fileID: 0}
     - InitialUses: 0
-      AwardedFor: 2
+      AwardedFor: 0
       Tooltip: Destroys a row of vials.
       EnabledSprite: {fileID: 21300000, guid: 28ffc4c4c66ff493aafbf035f137ca8e, type: 3}
       DisabledSprite: {fileID: 21300000, guid: 983dab3a550a0b14581ee67b4d6670ab, type: 3}
@@ -110,3 +110,8 @@ MonoBehaviour:
       Tooltip: Destroys a 3x3 cross of vials.
       EnabledSprite: {fileID: 21300000, guid: d2bc8b31589a24ba8a18ab80bf2f1963, type: 3}
       DisabledSprite: {fileID: 21300000, guid: b324ba75e880f5a469c3f17bf52ee2c9, type: 3}
+    - InitialUses: 0
+      AwardedFor: 4
+      Tooltip: Floats a 3x3 block of vials to the top of the grid.
+      EnabledSprite: {fileID: 21300000, guid: e30b6b072c96f094ea1e0695d47434c5, type: 3}
+      DisabledSprite: {fileID: 21300000, guid: 1719ab2d76e08be4baae2490cb08e50a, type: 3}

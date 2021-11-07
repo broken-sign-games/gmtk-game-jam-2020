@@ -4534,8 +4534,8 @@ MonoBehaviour:
       elementIcon: {fileID: 0}
     reqReferences: {fileID: 0}
     isExpanded: 1
-    _keyValues: 01000000090000000b000000040000000a0000000d000000
-    _keys: 01000000090000000b000000040000000a0000000d000000
+    _keyValues: 0e000000090000000b000000010000000a0000000d000000
+    _keys: 0e000000090000000b000000010000000a0000000d000000
     _values:
     - {fileID: 6788153932243077280}
     - {fileID: 1570801440}
@@ -4770,12 +4770,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 28ffc4c4c66ff493aafbf035f137ca8e,
+      objectReference: {fileID: 21300000, guid: d85f7d985d4eb42c59b5c993a50892c1,
         type: 3}
     - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: tool
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
@@ -4905,7 +4905,7 @@ PrefabInstance:
     - target: {fileID: 6788153932471032803, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_Name
-      value: Remove Row Button
+      value: Remove Tile Button
       objectReference: {fileID: 0}
     - target: {fileID: 6788153932471032803, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
@@ -5499,6 +5499,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1506328415}
     m_Modifications:
+    - target: {fileID: 2091651223133000970, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e30b6b072c96f094ea1e0695d47434c5,
+        type: 3}
     - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: unmaskableCanvas
@@ -5509,6 +5515,11 @@ PrefabInstance:
       propertyPath: boardManipulator
       value: 
       objectReference: {fileID: 1689814306}
+    - target: {fileID: 6489495219025071405, guid: 7a1709738f09dfa41a33d8af3d3d425f,
+        type: 3}
+      propertyPath: tool
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 6788153932471032802, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5617,7 +5628,7 @@ PrefabInstance:
     - target: {fileID: 6788153932471032803, guid: 7a1709738f09dfa41a33d8af3d3d425f,
         type: 3}
       propertyPath: m_Name
-      value: Remove Tile Button
+      value: Balloon Button
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a1709738f09dfa41a33d8af3d3d425f, type: 3}

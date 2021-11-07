@@ -125,6 +125,8 @@ namespace GMTK2020
                 step = simulator.RemoveColor(gridPos); break;
             case Tool.Rotate3x3:
                 step = simulator.Rotate3x3Block(gridPos, rotSense); break;
+            case Tool.Balloon:
+                step = simulator.MoveBlockToTop(gridPos); break;
             case Tool.CreateWildcard:
                 step = simulator.CreateWildcard(gridPos); break;
             }
@@ -151,6 +153,7 @@ namespace GMTK2020
             case Tool.RemoveColor:
             case Tool.Rotate3x3:
             case Tool.CreateWildcard:
+            case Tool.Balloon:
                 throw new ArgumentOutOfRangeException(nameof(tool));
             }
 
