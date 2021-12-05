@@ -125,13 +125,15 @@ namespace GMTK2020.Rendering
             await AnimateRotatingTilesAsync(step.MovedTiles, step.Pivot, step.RotationSense);
         }
 
+        private Sequence predictionTween = null;
         private async Task AnimatePredictionStepAsync(PredictionStep predictionStep)
         {
-            Sequence seq = DOTween.Sequence();
+            predictionTween?.Complete();
+            predictionTween = DOTween.Sequence();
             foreach (Tile tile in predictionStep.AffectedTiles)
-                seq.Join(UpdatePrediction(tile));
+                predictionTween.Join(UpdatePrediction(tile));
 
-            await seq.Completion();
+            await predictionTween.Completion();
         }
 
         private async Task AnimateRefillStepAsync(RefillStep refillStep)
